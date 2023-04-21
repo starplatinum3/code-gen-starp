@@ -1,0 +1,62 @@
+server:
+#  port: 8080
+  port: 8889
+  servlet:
+    session:
+      timeout: PT8H
+
+  tomcat:
+    uri-encoding: UTF-8
+    max-http-header-size: 8096
+  undertow:
+    io-threads: 16
+    worker-threads: 400
+    buffer-size: 1024
+    direct-buffers: true
+
+  context:
+    url: https://localhost:${server.port}
+    #yml 换行
+spring:
+  #热部署生效
+  devtools:
+    restart:
+      enabled: true
+  datasource:
+
+    url: jdbc:mysql://localhost:3306/eyesight?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://localhost:3306/kinect?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    #url: jdbc:mysql://127.0.0.1:3306/kinect?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123
+
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validaionQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true,druid.stat.slowSqlMills=500
+#  redis:
+#    host: 127.0.0.1
+#    database: 0
+#    password: 123
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+#        format_sql: false
+        show_sql: true
+#        show_sql: false

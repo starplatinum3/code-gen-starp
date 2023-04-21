@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit" />
+  <meta name="force-rendering" content="webkit" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+
+
+</head>
+
+<body>
+
+  <script>
+    // import requests
+    // # baseUrl='http://localhost:8004/api'
+    // baseUrl = 'http://localhost:8003/api'
+    baseUrl = 'http://localhost:8889/all'
+    // http://localhost:8889/all/genCode
+    // {
+    // "table_schema": "exam"
+    // }
+    // {
+    // "table_schema": "public"
+    // }
+
+    entityName = 'eyesightRes'
+    // # path='EyesightResListGetCreateTime'
+    path = 'EyesightResListGetCreateTimeEyesightRes'
+    // path = 'save'
+    let dateList = [
+      "2022-02-23 13:13:08",
+      "2022-03-23 13:11:55",
+      "2022-04-23 13:13:23",
+      "2022-05-04 12:57:43",
+      "2022-05-19 13:03:10",
+      "2022-06-23 13:11:31",
+      "2022-06-23 13:12:26",
+      "2022-08-23 13:13:39",
+      "2022-10-01 13:00:57",
+      "2022-12-23 13:12:10",
+      "2023-03-02 12:57:14",
+      "2023-03-30 13:10:53",
+      "2023-05-23 13:04:55",
+      "2023-05-23 13:06:37",
+      "2023-06-22 13:11:05"
+    ]
+    // save
+    left_eye = 5.0
+    right_eye = 5.0
+    user_name = "starp"
+    // fetch()
+
+    // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+      // Default options are marked with *
+      const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data) // body data type must match "Content-Type" header
+      });
+      return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    function addDateZero(num) {
+      return (num < 10 ? '0' + num : num)
+    }
+    // 日期必须是 符合格式的 但是金数据填表的就不是正常数据啊
+    function formatDateTime(date) {
+      if (!!date) {
+        const d = new Date(date);
+        return d.getFullYear() + '-' + addDateZero(d.getMonth() + 1) + '-' + addDateZero(d.getDate()) + ' ' +
+          addDateZero(d.getHours()) + ':' + addDateZero(d.getMinutes()) + ':' + addDateZero(d.getSeconds());
+      } else {
+        return '';
+      }
+    }
+
+    // postData('https://example.com/answer', { answer: 42 })
+    //   .then(data => {
+    //     console.log(data); // JSON data parsed by `data.json()` call
+    //   });
+
+    // function changeDate(records) {
+    //   // DateUtil
+    //   // TimeUtil
+    //   // DateUtil
+    //   let res=[]
+    //   for (let o of records) {
+    //     // DateUtil.
+    //     // formatDateTime
+    //     res.push(
+    //       formatDateTime(o)
+    //     )
+    //     // o.createTimeStr = formatDateTime(o);
+
+    //     // o.createTimeStr = formatDateTime(o.createTime);
+    //     // o.createTime = this.$moment(o.createTime).format('YYYY-MM-DD HH:mm:ss')
+    //   }
+    //   return res
+    // },
+
+    function doSave(dataPost) {
+      // let  dataPost= {
+      //    "createTime":null ,
+      //    "createUserId":null ,
+      //    "departId":null ,
+      //    "departName":null ,
+      //    "deviceId":null ,
+      //    "deviceName":null ,
+      //    "enableMark":null ,
+      //    "id":null ,
+      //    "isDeleted":null ,
+      //    "leftEyesight":null ,
+      //    "memo":null ,
+      //    "rightEyesight":null ,
+      //    "testTime":null ,
+      //    "updateTime":null ,
+      //    "updateUserId":null ,
+      //    "userCode":null ,
+      //    "userId":null ,
+      //    "userName":null ,
+      //    "userSex":null
+      //             }
+
+
+      postData(`${baseUrl}/${entityName}/save`, dataPost)
+        .then(data => {
+          console.log("save done");
+          console.log(data); // JSON data parsed by `data.json()` call
+          // formatDateTime
+
+          // data = data.response
+          // data.sort((a, b) => a - b)
+          // let dates = data.map(o => {
+          //   return formatDateTime(o);
+          // })
+
+          // console.log(dates)
+        });
+    }
+
+    function saveDatesEye(dateList) {
+      for (let date of dateList) {
+        let dataPost = {
+          "createTime": date,
+          "createUserId": null,
+          "departId": null,
+          "departName": null,
+          "deviceId": null,
+          "deviceName": null,
+          "enableMark": null,
+          "id": null,
+          "isDeleted": null,
+          "leftEyesight": left_eye,
+          "memo": null,
+          "rightEyesight": right_eye,
+          "testTime": null,
+          "updateTime": null,
+          "updateUserId": null,
+          "userCode": 1,
+          "userId": null,
+          "userName": user_name,
+          "userSex": null
+        }
+
+        doSave(dataPost)
+      }
+
+    }
+// {
+//     "table_schema": "exam"
+//     }
+
+
+// main --======================
+    
+    postData(`http://localhost:8889/all/genCode`,{
+    "table_schema": "exam"
+    })
+      .then(res => {
+        console.log(res); // JSON data parsed by `data.json()` call
+        // formatDateTime
+
+        // data = data.response
+        // data.sort((a, b) => a - b)
+        // // saveDatesEye(data)
+        // let datesToSave = data.map(o => {
+        //   return new Date(o);
+        // })
+        // console.log('datesToSave')
+        // console.log(datesToSave)
+        // saveDatesEye(datesToSave)
+        // let dates = data.map(o => {
+        //   return formatDateTime(o);
+        // })
+        // console.log('dates')
+
+        // console.log(dates)
+      });
+
+
+
+    // postData(`${baseUrl}/${entityName}/${path}`, {
+    //     answer: 42
+    //   })
+    //   .then(data => {
+    //     console.log(data); // JSON data parsed by `data.json()` call
+    //     // formatDateTime
+
+    //     data = data.response
+    //     data.sort((a, b) => a - b)
+    //     // saveDatesEye(data)
+    //     let datesToSave = data.map(o => {
+    //       return new Date(o);
+    //     })
+    //     console.log('datesToSave')
+    //     console.log(datesToSave)
+    //     saveDatesEye(datesToSave)
+    //     let dates = data.map(o => {
+    //       return formatDateTime(o);
+    //     })
+    //     console.log('dates')
+
+    //     console.log(dates)
+    //   });
+
+    // let data = await postData(`${baseUrl}/${entityName}/${path}`, {
+    //   answer: 42
+    // })
+    // console.log(data);
+  </script>
+
+</body>
+
+</html>

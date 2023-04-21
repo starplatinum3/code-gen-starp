@@ -1,0 +1,31 @@
+
+# 应用服务 WEB 访问端口
+
+spring:
+  profiles:
+#    active: test
+#    active: testiot
+#    active: dev
+#    active: starp
+#    active: partyAns
+#    active: pwc
+    active: xiaoxin
+#    active: starpLoc
+#    active: mqp
+#    如果这里 用了 dev 环境，下面也写了数据库 会怎么样
+#    可以正常启动虽然不知道用了哪边的配置
+    #指定读取配置文件:dev(开发环境),prod(生产环境),test(测试环境)
+    #    直接写这么几句就行了  用了dev的 yml
+
+#    include: key
+  # 应用名称
+  application:
+    name: eye
+
+dbName: mqp_iot
+ip: starplatinumora.top
+mqtt:
+  host: "tcp://${ip}:1883"
+  client_id: mqpfjasga9d90a
+  username: 1
+  password: 1

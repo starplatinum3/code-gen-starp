@@ -1,0 +1,9 @@
+{
+  "className": "com.example.demo.controller.AllController",
+  "classURL": "/all",
+  "classDesc": "",
+  "methodName": "getAllURL",
+  "methodDesc": "getAllURL",
+  "methodURL": "/all/getAllURL",
+  "requestType": "POST"
+}
