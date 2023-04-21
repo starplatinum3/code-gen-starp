@@ -5,15 +5,15 @@ import java.util.Objects;
 
 public class ListUtil {
     public static void main(String[] args) {
-        String text=f" this is F-$String.class.getSimpleName() ";
-        System.out.println(text);
-//        this is F-String
-//        f"this F-$short.class.getMethod()"
-   boolean  eq=   Objects.equals($"Zircon: [ ${text.trim()} ]","Zircon: [ "+text.trim()+" ]");
-//        assert Objects.equals($"Zircon: [ ${text.trim()} ]","Zircon: [ "+text.trim()+" ]");
-//        Objects
-        System.out.println("eq");
-        System.out.println(eq);
+//         String text=f" this is F-$String.class.getSimpleName() ";
+//         System.out.println(text);
+// //        this is F-String
+// //        f"this F-$short.class.getMethod()"
+//    boolean  eq=   Objects.equals($"Zircon: [ ${text.trim()} ]","Zircon: [ "+text.trim()+" ]");
+// //        assert Objects.equals($"Zircon: [ ${text.trim()} ]","Zircon: [ "+text.trim()+" ]");
+// //        Objects
+//         System.out.println("eq");
+//         System.out.println(eq);
 //        eq
 //        true
 
