@@ -3,6 +3,9 @@
 java写实体类的时候太多了不想写，有没有代码生成器直接生成对应数据库的实体类？ - 求你别让我写论文的回答 - 知乎
 https://www.zhihu.com/question/541875395/answer/2566050039
 
+DB_HOST=locahost;DB_PASSWORD=123;DB_USER=admin;DB_NAME=public
+
+
 http://localhost:8889/all/genCode
 {
 "table_schema": "exam"

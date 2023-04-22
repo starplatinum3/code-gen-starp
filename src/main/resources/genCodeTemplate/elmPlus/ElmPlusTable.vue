@@ -1,5 +1,8 @@
 <template>
    <div class="app-container">
+
+   {ElSearchItemRows}
+
       <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
         {ElFormItemRows}
          <el-form-item>

@@ -638,26 +638,84 @@ public class TableInfo {
         return res.toString();
     }
 
-
     public String genElmCols() {
         StringBuilder res = new StringBuilder();
         for (ColumnInfo columnInfo : columnInfos) {
             String java字段名 = columnInfo.getJava字段名();
+            String javaFieldNameStartsWithUppercase = columnInfo.getJavaFieldNameStartsWithUppercase();
             String commentShow = columnInfo.getColumnCommentShow();
-//            String row = " <el-table-column prop=\"#java字段名#\" label=\"#commentShow#\" width=\"200\" align=\"center\"></el-table-column>\n";
-            String row = " <el-table-column prop=\"#java字段名#\" label=\"#commentShow#\" width=\"200\" align=\"center\">\n" +
+            int width = Math.max(commentShow.length() * 20, 100); // 根据列名长度计算列宽度，最小为100px
+            String row = "<el-table-column " +
+                    ":formatter=\"format{javaFieldNameStartsWithUppercase}\" " +
+                    " prop=\"#java字段名#\" label=\"#commentShow#\" " +
+                    "width=\"#width#\" align=\"center\" sortable show-overflow-tooltip>\n" +
                     "  <template slot-scope=\"scope\">\n" +
-                    "          <div v-html=\"scope.row.#java字段名#\"></div>\n" +
-                    "        </template>\n" +
+                    "    <div v-html=\"scope.row.#java字段名#\"></div>\n" +
+                    "  </template>\n" +
+                    "  :formatter=\"format#java字段名#\"\n" + // 添加自定义格式化函数
                     "</el-table-column>\n";
             row = row
                     .replace("#commentShow#", commentShow)
-                    .replace("#java字段名#", java字段名);
-            res.append(row);
+                    .replace("#java字段名#", java字段名)
+                    .replace("{javaFieldNameStartsWithUppercase}", javaFieldNameStartsWithUppercase)
+                    .replace("#width#", Integer.toString(width))
+            ;
 
+            // 添加自定义格式化函数
+//            row = row.replace(":formatter=\"format#java字段名#\"", "");
+            String column_type = columnInfo.getCOLUMN_TYPE();
+//            columnInfo.getColumnType()
+            if (column_type.toLowerCase().contains("date")) {
+                row = row.replace("</el-table-column>",
+                        ":formatter=\"format#java字段名#\"\n</el-table-column>");
+                row = row.replace("#java字段名#", java字段名);
+            }
+            res.append(row);
         }
         return res.toString();
     }
+
+    // 自定义格式化函数
+    public String genFormatFunctions() {
+        StringBuilder res = new StringBuilder();
+        for (ColumnInfo columnInfo : columnInfos) {
+            String java字段名 = columnInfo.getJava字段名();
+            String column_type = columnInfo.getCOLUMN_TYPE();
+            if (column_type.toLowerCase().contains("date")) {
+                res.append("format")
+                        .append(java字段名.substring(0, 1).toUpperCase())
+                        .append(java字段名.substring(1))
+                        .append("(row) {\n")
+                        .append("  const date = new Date(row.")
+                        .append(java字段名)
+                        .append(")\n")
+                        .append("  return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()\n")
+                        .append("}\n\n");
+            }
+        }
+        return res.toString();
+    }
+
+
+//    public String genElmCols() {
+//        StringBuilder res = new StringBuilder();
+//        for (ColumnInfo columnInfo : columnInfos) {
+//            String java字段名 = columnInfo.getJava字段名();
+//            String commentShow = columnInfo.getColumnCommentShow();
+////            String row = " <el-table-column prop=\"#java字段名#\" label=\"#commentShow#\" width=\"200\" align=\"center\"></el-table-column>\n";
+//            String row = " <el-table-column prop=\"#java字段名#\" label=\"#commentShow#\" width=\"200\" align=\"center\">\n" +
+//                    "  <template slot-scope=\"scope\">\n" +
+//                    "          <div v-html=\"scope.row.#java字段名#\"></div>\n" +
+//                    "        </template>\n" +
+//                    "</el-table-column>\n";
+//            row = row
+//                    .replace("#commentShow#", commentShow)
+//                    .replace("#java字段名#", java字段名);
+//            res.append(row);
+//
+//        }
+//        return res.toString();
+//    }
 
     public static void main2ElTableCols(String[] args) {
         String row = " <el-table-column prop=\"#java字段名#\" label=\"#commentShow#\" width=\"200\" align=\"center\"></el-table-column>\n";
@@ -758,6 +816,34 @@ public class TableInfo {
         return res.toString();
     }
 
+    public String genElSearchItemRows() {
+        StringBuilder res = new StringBuilder();
+        for (ColumnInfo columnInfo : columnInfos) {
+            String java字段名 = columnInfo.getJava字段名();
+            String commentShow = columnInfo.getColumnCommentShow();
+            String column_name = columnInfo.getCOLUMN_NAME();
+            String java字段类型 = columnInfo.获取java字段类型();
+            String javaFieldName = columnInfo.getJavaFieldName();
+            if (!"id".equals(column_name)) {
+                String row = " {commentShow}  <el-input\n" +
+                        "          placeholder=\"请输入{commentShow}\"\n" +
+                        "          :maxlength=\"10\"\n" +
+                        "          size=\"small\"\n" +
+                        "          clearable\n" +
+                        "          style=\"width: 200px\"\n" +
+                        "          v-model=\"query.{javaFieldName}\"\n" +
+                        "        ></el-input>\n";
+                row = row
+                        .replace("{commentShow}", commentShow)
+                        .replace("{javaFieldName}", javaFieldName)
+                ;
+                res.append(row);
+            }
+
+
+        }
+        return res.toString();
+    }
     public String genElFormItemRows() {
         StringBuilder res = new StringBuilder();
         for (ColumnInfo columnInfo : columnInfos) {
@@ -777,10 +863,6 @@ public class TableInfo {
                         "            />\n" +
                         "         </el-form-item>";
                 row = row
-//                        .replace("#commentShow#", commentShow)
-//                        .replace("#java字段名#", java字段名)
-//                        .replace("#column_name#", column_name)
-//                        .replace("#java字段类型#", java字段类型)
                         .replace("{commentShow}", commentShow)
                         .replace("{javaFieldName}", javaFieldName)
                 ;
@@ -801,17 +883,10 @@ public class TableInfo {
             String java字段类型 = columnInfo.获取java字段类型();
             String javaFieldName = columnInfo.getJavaFieldName();
             if (!"id".equals(column_name)) {
-                // <el-table-column type="selection" width="55" align="center" />
-//                String row = "<el-table-column type=\"selection\" width=\"55\" align=\"center\" />";
                 String row = "<el-table-column label=\"{commentShow}\" align=\"center\" prop=\"{javaFieldName}\" />";
                 row = row
-//                        .replace("#commentShow#", commentShow)
-//                        .replace("#java字段名#", java字段名)
-//                        .replace("#column_name#", column_name)
-//                        .replace("#java字段类型#", java字段类型)
                         .replace("{commentShow}", commentShow)
                         .replace("{javaFieldName}", javaFieldName)
-//                        .replace("{commentShow}", commentShow)
                 ;
                 res.append(row);
             }
@@ -846,18 +921,7 @@ public class TableInfo {
 
     public String genElmQueryInputs() {
         return genElmQueryInputs("query");
-//        StringBuilder res= new StringBuilder();
-//        for (ColumnInfo columnInfo : columnInfos) {
-//            String java字段名 = columnInfo.getJava字段名();
-//            String commentShow = columnInfo.getColumnCommentShow();
-//            String row=   " #commentShow#  <el-input v-model=\"query.#java字段名#\" placeholder=\"#commentShow#\" class=\"handle-input mr10\"></el-input>\n";
-//            row=  row
-//                    .replace("#commentShow#",commentShow)
-//                    .replace("#java字段名#",java字段名);
-//            res.append(row);
-//
-//        }
-//        return res.toString();
+
     }
 
     /**
@@ -871,7 +935,6 @@ public class TableInfo {
         for (ColumnInfo columnInfo : columnInfos) {
             String java字段名 = columnInfo.getJava字段名();
             String commentShow = columnInfo.getColumnCommentShow();
-//            String row=   " #commentShow#  <el-input v-model=\"#formName#.#java字段名#\" placeholder=\"#commentShow#\" class=\"handle-input mr10\"></el-input>\n";
             String row = " <el-form-item label=\"#commentShow#\">\n" +
                     "          <el-input  placeholder=\"请输入内容\" \n" +
                     ":maxlength=\"10\" size=\"small\" clearable\n" +
@@ -903,23 +966,9 @@ public class TableInfo {
 
     public String genJdlRows() {
         StringBuilder res = new StringBuilder();
-//        className
-//        className
-//        String jdl="entity #className# {\n" +
-//                "       #jdlRows#\n" +
-//                "}";
+
         for (ColumnInfo columnInfo : columnInfos) {
-//            String java字段名 = columnInfo.getJava字段名();
-//            String javaFieldName = columnInfo.getJavaFieldName();
-//            String javaFieldType = columnInfo.getJavaFieldType();
-////            String commentShow = columnInfo.getColumnCommentShow();
-////            String row=   " #commentShow#  <el-input v-model=\"#formName#.#java字段名#\" placeholder=\"#commentShow#\" class=\"handle-input mr10\"></el-input>\n";
-//            String row=   "   #javaFieldName# #javaFieldType#\n";
-//            row=  row
-//                    .replace("#javaFieldName#",javaFieldName)
-//                    .replace("#javaFieldType#",javaFieldType)
-////                    .replace("#formName#",formName)
-//            ;
+
             String jdlRow = columnInfo.getJdlRow();
             res.append(jdlRow);
 
@@ -928,15 +977,7 @@ public class TableInfo {
     }
 
     public String genColumnsDicMap(String export) throws Exception {
-//        writerColumns
-//        export const writerColumns = [
-//        export
-//        String export="export  ";
-//        String export=" ";
-//        boolean doExport=false;
-//        if(doExport){
-//            export="export  ";
-//        }
+
         String prefix =export+ " const #实体名#Columns = [ \n ".replace("#实体名#", 实体名);
         StringBuilder res = new StringBuilder(prefix);
         for (ColumnInfo columnInfo : columnInfos) {
@@ -957,13 +998,7 @@ public class TableInfo {
     }
 
     public String genColumnsDicMapUnderScore(String export) throws Exception {
-//        writerColumns
-//        export const writerColumns = [
-//        String export=" ";
-//        boolean doExport=false;
-//        if(doExport){
-//            export="export  ";
-//        }
+
         String prefix =export+ " const #实体名#ColumnsUnderScore = [ \n "
                 .replace("#实体名#", 实体名);
         StringBuilder res = new StringBuilder(prefix);
@@ -987,9 +1022,7 @@ public class TableInfo {
 
     }
     public String genTableNameExcelColsMapRow() throws Exception {
-//        writerColumns
-//        export const writerColumns = [
-//        String tableNameExcelColsMapRowTpl="'{tableName}':{tableName}Columns,";
+
         String tableNameExcelColsMapRowTpl="'{entityName}':{entityName}Columns,";
         String tableNameExcelColsMapRow=
                 tableNameExcelColsMapRowTpl
@@ -997,25 +1030,6 @@ public class TableInfo {
                         .replace("{entityName}",entityName)
                 ;
         return  tableNameExcelColsMapRow;
-//        tableNameExcelColsMapRowList.add(tableNameExcelColsMapRow);
-//
-//        String prefix = "export const #实体名#Columns = [ \n ".replace("#实体名#", 实体名);
-//        StringBuilder res = new StringBuilder(prefix);
-//        for (ColumnInfo columnInfo : columnInfos) {
-//            String java字段名 = columnInfo.getJava字段名();
-//            String commentShow = columnInfo.getColumnCommentShow();
-//
-//            String row = "{\n" +
-//                    "    label: \"#commentShow#\", key: \"#java字段名#\"\n" +
-//                    "  },\n";
-//            row = row
-//                    .replace("#commentShow#", commentShow)
-//                    .replace("#java字段名#", java字段名);
-//            res.append(row);
-//        }
-//        res.append(" ]\n");
-//        return res.toString();
-
     }
 
     public String genTableNameExcelColsMapRowUnderScore() throws Exception {
@@ -1034,7 +1048,6 @@ public class TableInfo {
         String tableNameExcelColsMapRowTpl="'{tableNameOrigin}':{entityName}ColumnsUnderScore,";
         String tableNameExcelColsMapRow=
                 tableNameExcelColsMapRowTpl
-//                        .replace("{tableName}",tableName)
                         .replace("{tableNameOrigin}",tableNameOrigin)
 //                        .replace("{tableName}",tableName)
                         .replace("{entityName}",entityName)
@@ -1045,8 +1058,6 @@ public class TableInfo {
 
     public String genMybatisPlusSelectPageEqualRows() {
 
-//        String prefix="export const #实体名#Columns = [ \n ".replace("#实体名#",实体名);
-//        StringBuilder res= new StringBuilder(prefix);
         StringBuilder MybatisPlusSelectPageLikeRows = new StringBuilder();
 //        类名
         for (ColumnInfo columnInfo : columnInfos) {
@@ -1501,11 +1512,8 @@ public class TableInfo {
     public String genReactRuoyiCols() {
         StringBuilder res = new StringBuilder();
         for (ColumnInfo columnInfo : columnInfos) {
-//            String java字段名 = columnInfo.getJava字段名();
             String commentShow = columnInfo.getColumnCommentShow();
-//            javafi
             String javaFieldName = columnInfo.getJavaFieldName();
-//            String row=   " #commentShow#  <el-input v-model=\"#formName#.#java字段名#\" placeholder=\"#commentShow#\" class=\"handle-input mr10\"></el-input>\n";
             String row = "{\n" +
                     "      title: <FormattedMessage id=\"system.#className#.#javaFieldName#\" defaultMessage=\"#commentShow#\" />,\n" +
                     "      dataIndex: '#javaFieldName#',\n" +
@@ -1534,7 +1542,6 @@ public class TableInfo {
         for (ColumnInfo columnInfo : columnInfos) {
             String java字段名 = columnInfo.getJava字段名();
             String commentShow = columnInfo.getColumnCommentShow();
-//            String row=   " #commentShow#  <el-input v-model=\"#formName#.#java字段名#\" placeholder=\"#commentShow#\" class=\"handle-input mr10\"></el-input>\n";
             String row = "{\n" +
                     "        title: '#commentShow#',\n" +
                     "        dataIndex: '#java字段名#',\n" +
@@ -2170,6 +2177,8 @@ public class TableInfo {
 //        entityName
 //        tablePreffix
         String ElFormItemRows = genElFormItemRows();
+        String ElSearchItemRows = genElSearchItemRows();
+//        ElSearchItemRows
         String elTableColumnRows = genElTableColumnRows();
         final String toEsEntityRows = genToEsEntityRows();
         code = code
@@ -2187,6 +2196,7 @@ public class TableInfo {
                 .replace("{NamesRows}", namesRows)
                 .replace("{toEsEntityRows}", toEsEntityRows)
                 .replace("{ElFormItemRows}", ElFormItemRows)
+                .replace("{ElSearchItemRows}", ElSearchItemRows)
                 .replace("{elTableColumnRows}", elTableColumnRows)
 
         ;
