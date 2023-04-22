@@ -828,7 +828,12 @@ public class TableInfo {
             String java字段名 = columnInfo.getJava字段名();
             String commentShow = columnInfo.getColumnCommentShow();
             String row = " <el-form-item label=\"#commentShow#\">\n" +
-                    "                    <el-input v-model=\"form.#java字段名#\"></el-input>\n" +
+                    "                    <el-input " +
+                    " placeholder=\"请输入内容\" \n" +
+                    ":maxlength=\"10\" size=\"small\" clearable\n" +
+                    "  style=\"width: 200px;\"" +
+                    "" +
+                    "v-model=\"form.#java字段名#\"></el-input>\n" +
                     "                </el-form-item>\n";
             row = row
                     .replace("#commentShow#", commentShow)
@@ -868,7 +873,9 @@ public class TableInfo {
             String commentShow = columnInfo.getColumnCommentShow();
 //            String row=   " #commentShow#  <el-input v-model=\"#formName#.#java字段名#\" placeholder=\"#commentShow#\" class=\"handle-input mr10\"></el-input>\n";
             String row = " <el-form-item label=\"#commentShow#\">\n" +
-                    "          <el-input v-model=\"#formName#.#java字段名#\"></el-input>\n" +
+                    "          <el-input  placeholder=\"请输入内容\" \n" +
+                    ":maxlength=\"10\" size=\"small\" clearable\n" +
+                    "  style=\"width: 200px;\"  v-model=\"#formName#.#java字段名#\"></el-input>\n" +
                     "        </el-form-item>\n";
             row = row
                     .replace("#commentShow#", commentShow)
