@@ -13,6 +13,7 @@
 
 <body>
 
+  <button onclick="genCode()">genCode</button>
   <script>
     // import requests
     // # baseUrl='http://localhost:8004/api'
@@ -185,6 +186,7 @@
 
 // main --======================
     
+ const genCode= ()=>{
     postData(`http://localhost:8889/all/genCode`,{
     "table_schema": "exam"
     })
@@ -209,6 +211,7 @@
         // console.log(dates)
       });
 
+    }
 
 
     // postData(`${baseUrl}/${entityName}/${path}`, {

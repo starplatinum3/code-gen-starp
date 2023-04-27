@@ -35,9 +35,15 @@
             </el-button >
 
             <el-table
+            border
+                  highlight-current-row
+                      v-loading="listLoading"
+                      fit
+                      style="width: 100%"
+                      @row-click="itemSelect"
                     @selection-change="handleSelectionChange"
                     :data="tableData"
-                    border
+
                     class="table"
                     ref="multipleTable"
                     header-cell-class-name="table-header"
@@ -143,6 +149,9 @@
 export default {
     name: 'company',
     data() {
+        let mockList=[
+            #jsonDefaultNull# 
+        ]
         return {
             selectedRow:{
 

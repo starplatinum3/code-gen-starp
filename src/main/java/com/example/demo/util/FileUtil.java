@@ -7,6 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 public class FileUtil {
@@ -32,6 +33,7 @@ public class FileUtil {
      * @return 字节数组
      * @throws Exception
      */
+    // utf-8
     public static byte[] readStream(InputStream inStream) throws Exception {
         ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
@@ -45,7 +47,7 @@ public class FileUtil {
     }
     public static String readStreamToString(InputStream inStream) throws Exception {
         byte[] bytes = readStream(inStream);
-        String string = new String(bytes);
+        String string = new String(bytes,"UTF-8");
         return string;
 
     }
@@ -111,9 +113,17 @@ public class FileUtil {
         }
 //        parent.toFile().exists()
 //        FileWriter ansi
-        try(FileWriter fileWriter=new FileWriter(javaFileNameAbsStr)){
-            fileWriter.write(code);
-        }
+// FileWriter utf-8 = new FileWriter(javaFileNameAbsStr, Charset.forName("UTF-8"));
+    //     try(FileWriter fileWriter=new FileWriter(javaFileNameAbsStr,
+    //    Charset.forName("UTF-8"))){
+    //         fileWriter.write(code);
+    //     }
+
+        try(BufferedWriter fileWriter = new BufferedWriter (new OutputStreamWriter
+         (new FileOutputStream (javaFileNameAbsStr,true),"UTF-8"));
+        ){
+             fileWriter.write(code);
+         }
 //        saveFile(javaFileNameAbsStr,code,false);
     }
 

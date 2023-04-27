@@ -665,11 +665,11 @@ public class TableInfo {
 //            row = row.replace(":formatter=\"format#java字段名#\"", "");
             String column_type = columnInfo.getCOLUMN_TYPE();
 //            columnInfo.getColumnType()
-            if (column_type.toLowerCase().contains("date")) {
-                row = row.replace("</el-table-column>",
-                        ":formatter=\"format#java字段名#\"\n</el-table-column>");
-                row = row.replace("#java字段名#", java字段名);
-            }
+//            if (column_type.toLowerCase().contains("date")) {
+//                row = row.replace("</el-table-column>",
+//                        ":formatter=\"format#java字段名#\"\n</el-table-column>");
+//                row = row.replace("#java字段名#", java字段名);
+//            }
             res.append(row);
         }
         return res.toString();
@@ -858,7 +858,7 @@ public class TableInfo {
                         "    v-model=\"queryParams.{javaFieldName}\"\n" +
                         "    placeholder=\"请输入{commentShow}\"\n" +
                         "    clearable\n" +
-                        "            style=\"width: 200px\"\n" +
+                        "            style=\"width: 200px\"  \n" +
                         "    @keyup.enter=\"handleQuery\"\n" +
                         "            />\n" +
                         "         </el-form-item>";
@@ -906,7 +906,7 @@ public class TableInfo {
                     "                    <el-input " +
                     " placeholder=\"请输入内容\" \n" +
                     ":maxlength=\"10\" size=\"small\" clearable\n" +
-                    "  style=\"width: 200px;\"" +
+                    "  style=\"width: 200px;\"  " +
                     "" +
                     "v-model=\"form.#java字段名#\"></el-input>\n" +
                     "                </el-form-item>\n";
@@ -938,7 +938,7 @@ public class TableInfo {
             String row = " <el-form-item label=\"#commentShow#\">\n" +
                     "          <el-input  placeholder=\"请输入内容\" \n" +
                     ":maxlength=\"10\" size=\"small\" clearable\n" +
-                    "  style=\"width: 200px;\"  v-model=\"#formName#.#java字段名#\"></el-input>\n" +
+                    "  style=\"width: 200px;\"   v-model=\"#formName#.#java字段名#\"></el-input>\n" +
                     "        </el-form-item>\n";
             row = row
                     .replace("#commentShow#", commentShow)
