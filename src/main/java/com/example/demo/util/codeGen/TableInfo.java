@@ -5,6 +5,9 @@ import com.example.demo.util.DateUtilSt;
 import com.example.demo.util.FileUtil;
 import com.example.demo.util.StrUtil;
 import com.example.demo.util.StringUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 //import com.gm.wj.entity.ColumnInfo;
 //import com.gm.wj.util.StrUtil;
 import lombok.Data;
@@ -14,8 +17,10 @@ import org.springframework.core.io.PathResource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -62,6 +67,7 @@ public class TableInfo {
 //        实体名 = StringUtils.lowerCaseFirst(类名);
     }
 
+    
     String genJsonDefaultNull() {
         if (columnInfos == null) {
             return "{ }";
@@ -82,6 +88,68 @@ public class TableInfo {
 
 //        return rows;
 
+    }
+
+    private static final List<String> NAMES = Arrays.asList("Alice", "Bob", "Charlie", "David", "Eva");
+    private static final List<String> STATES = Arrays.asList("waiting", "running", "stopped");
+
+//     需要一个genJsonMock 函数 ，根据不同的字段 生成不同的默认值，比如是名字 就随机名字，
+//     是时间就随机时间，是数字就随机数字。数字如果是年龄 要考虑年龄段，状态要给几个状态，比如等待中、运行中之类的
+    public static String genJsonMock(List<ColumnInfo> columnInfos) {
+        if (columnInfos == null) {
+            return "{ }";
+        }
+
+        Random rand = new Random();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode rootNode = mapper.createObjectNode();
+
+        for (ColumnInfo columnInfo : columnInfos) {
+            String javaFieldName = columnInfo.getJavaFieldName();
+        //     String type = columnInfo.getType();
+            String type =   columnInfo.getDATA_TYPE();
+
+        //     "VARCHAR"
+        //      if (type.equalsIgnoreCase("string")) 
+            if (type.equalsIgnoreCase("VARCHAR")) {
+                if ("name".equalsIgnoreCase(javaFieldName)) {
+                    rootNode.put(javaFieldName, NAMES.get(rand.nextInt(NAMES.size())));
+                } else {
+                    rootNode.put(javaFieldName, "");
+                }
+            } else if (type.equalsIgnoreCase("int")) {
+                if ("age".equalsIgnoreCase(javaFieldName)) {
+                    int ageGroup = rand.nextInt(3);
+                    switch (ageGroup) {
+                        case 0:
+                            rootNode.put(javaFieldName, rand.nextInt(18) + 1);
+                            break;
+                        case 1:
+                            rootNode.put(javaFieldName, rand.nextInt(20) + 18);
+                            break;
+                        case 2:
+                            rootNode.put(javaFieldName, rand.nextInt(80) + 38);
+                            break;
+                    }
+                } else {
+                    rootNode.put(javaFieldName, rand.nextInt(100));
+                }
+            } else if (type.equalsIgnoreCase("date")) {
+                rootNode.put(javaFieldName, "2023-04-27 03:12:09");
+            } else if (type.equalsIgnoreCase("boolean")) {
+                rootNode.put(javaFieldName, true);
+            } else if (type.equalsIgnoreCase("enum")) {
+                if ("state".equalsIgnoreCase(javaFieldName)) {
+                    rootNode.put(javaFieldName, STATES.get(rand.nextInt(STATES.size())));
+                } else {
+                    rootNode.put(javaFieldName, "");
+                }
+            } else {
+                rootNode.putNull(javaFieldName);
+            }
+        }
+
+        return rootNode.toString();
     }
 
     String genIViewColumns() {
