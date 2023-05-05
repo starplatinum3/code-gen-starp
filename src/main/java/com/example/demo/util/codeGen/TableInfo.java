@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 //import com.gm.wj.entity.ColumnInfo;
 //import com.gm.wj.util.StrUtil;
 import lombok.Data;
+//import top.starp.util.MockGenerator;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 
@@ -96,6 +98,7 @@ public class TableInfo {
 //     需要一个genJsonMock 函数 ，根据不同的字段 生成不同的默认值，比如是名字 就随机名字，
 //     是时间就随机时间，是数字就随机数字。数字如果是年龄 要考虑年龄段，状态要给几个状态，比如等待中、运行中之类的
     public static String genJsonMock(List<ColumnInfo> columnInfos) {
+        // MockGenerator.genMock(tablePreffix)
         if (columnInfos == null) {
             return "{ }";
         }

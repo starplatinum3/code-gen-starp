@@ -29,3 +29,6 @@ mqtt:
   client_id: mqpfjasga9d90a
   username: 1
   password: 1
+
+feishuAppSecret: ${feishuAppSecret:123456}
+feishuAppId: ${feishuAppId:123456}
