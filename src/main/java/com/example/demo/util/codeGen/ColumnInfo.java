@@ -28,6 +28,31 @@ import java.util.Map;
 //PlanTimeSlotRepository
 //ColumnInfoRepository
 public class ColumnInfo {
+//   public ColumnInfo(String javaFieldName, String COLUMN_TYPE,String  COLLATION_NAME){
+//        this.javaFieldName=
+//        javaFieldName;
+//        this.COLLATION_NAME=COLLATION_NAME;
+////        this.  COLUMN_COMMENT=COLUMN_COMMENT;
+//    this.   COLUMN_TYPE=COLUMN_TYPE;
+////        getCOLUMN_TYPE()
+//    }
+    public ColumnInfo(String javaFieldName, String DATA_TYPE,String  COLLATION_NAME){
+        this.javaFieldName=
+                javaFieldName;
+        this.COLLATION_NAME=COLLATION_NAME;
+//        this.  COLUMN_COMMENT=COLUMN_COMMENT;
+        this.   DATA_TYPE=DATA_TYPE;
+//        getCOLUMN_TYPE()
+    }
+//    public ColumnInfo(String COLLATION_NAME,String javaFieldName,String  COLUMN_COMMENT){
+//        this.javaFieldName=
+//                javaFieldName;
+//        this.COLLATION_NAME=COLLATION_NAME;
+//        this.  COLUMN_COMMENT=COLUMN_COMMENT;
+//        COLUMN_TYPE=
+//                getCOLUMN_TYPE()
+//    }
+
     public String getTABLE_CATALOG() {
         return TABLE_CATALOG;
     }

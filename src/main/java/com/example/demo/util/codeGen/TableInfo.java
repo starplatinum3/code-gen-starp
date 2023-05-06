@@ -15,6 +15,7 @@ import lombok.Data;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
+import top.starp.util.ElmGenKt;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -640,6 +641,7 @@ public class TableInfo {
         for (ColumnInfo columnInfo : columnInfos) {
 //            String java字段名 = columnInfo.getJava字段名();
             String commentShow = columnInfo.getColumnCommentShow();
+//            ElmGenKt.gen_form_item()
 //            String javaFieldType = columnInfo.getJavaFieldType();
 //            String columnName = columnInfo.getCOLUMN_NAME();
 //            columnInfo.getJavaFieldType();
@@ -914,6 +916,18 @@ public class TableInfo {
 
         }
         return res.toString();
+    }
+
+    public static void mainInptStr(String[] args) {
+        String row = " {commentShow}  <el-input\n" +
+                "          placeholder=\"请输入{commentShow}\"\n" +
+                "          :maxlength=\"10\"\n" +
+                "          size=\"small\"\n" +
+                "          clearable\n" +
+                "          style=\"width: 200px\"\n" +
+                "          v-model=\"query.{javaFieldName}\"\n" +
+                "        ></el-input>\n";
+        System.out.println(row);
     }
     public String genElFormItemRows() {
         StringBuilder res = new StringBuilder();
@@ -2677,7 +2691,10 @@ public class TableInfo {
         return res.toString();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        mainInptStr(args);
+    }
+    public static void mainGen(String[] args) throws Exception {
         TableInfo tableInfo = new TableInfo();
 //        tableInfo.se
 //        String genFindFirstRows = tableInfo.genFindFirstRows();
