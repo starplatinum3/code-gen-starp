@@ -1517,7 +1517,45 @@ public class TableInfo {
         return code;
     }
 
+    public String genElementTableVue3() throws Exception {
+//        ElementTableVue3.vue
+//        D:\proj\springBoot\code-gen-starp\src\main\resources\genCodeTemplate\elmPlus
+        String code = FileUtil.readResourceFileData("genCodeTemplate/elmPlus/ElementTableVue3.vue");
+//        String iViewFormInputs = genIViewFormInputs();
+        String jsonDefaultNull = genJsonDefaultNull();
+//        String iViewColumnsRows = genIViewColumnsRows();
+        String elmCols = genElmCols();
+        String formItemRows = ElmGenKt.gen_form_item_rows(columnInfos);
+        String elmFormItems = genElmFormItems();
+        String elmQueryInputs = genElmQueryInputs();
+//        genElTableColumnRows()
+//        genElementTableMybatisPlus()
+        String s = genJsonMock(columnInfos);
+        String elTableColumnRows = genElTableColumnRows();
+        String elmQueryInputsSelectedRow = genElmQueryInputs("selectedRow");
+        code = code
+//                .replace("#formInputs#", iViewFormInputs)
+                .replace("#类名#", 类名)
+                .replace("#实体名#", 实体名)
+//                .replace("#实体名#", 实体名)
+                .replace("#elmFormItems#", elmFormItems)
+                .replace("#elmCols#", elmCols)
+                .replace("#jsonDefaultNull#", jsonDefaultNull)
+                .replace("#elmQueryInputs#", elmQueryInputs)
+                .replace("#elmFormItemsSelectedRow#", elmQueryInputsSelectedRow)
+                .replace("{formItemRows}", formItemRows)
+                .replace("{entityName}", entityName)
+                .replace("{className}", className)
+                .replace("{elTableColumnRows}", elTableColumnRows)
+//                .replace("#jsonDefaultNull#", jsonDefaultNull)
+//                .replace("#iViewColumnsRows#", iViewColumnsRows)
+        ;
+        java.nio.file.Path dictDataPath = Paths.get(pathFileString,
+                "elementUi", "ElementTableVue3", className + "Table.vue");
+        FileUtil.writeCode(dictDataPath, code);
 
+        return code;
+    }
     public String genReactRuoyiDrawerFormRows() {
         StringBuilder res = new StringBuilder();
         for (ColumnInfo columnInfo : columnInfos) {

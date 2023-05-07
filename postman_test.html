@@ -187,8 +187,9 @@
 // main --======================
     
  const genCode= ()=>{
+  // "table_schema": "exam"
     postData(`http://localhost:8889/all/genCode`,{
-    "table_schema": "exam"
+    "table_schema": "hotel"
     })
       .then(res => {
         console.log(res); // JSON data parsed by `data.json()` call

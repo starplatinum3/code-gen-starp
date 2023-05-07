@@ -8,36 +8,11 @@
             date
             search
         />
+        {formItemRows}
         <div class="reserved-order__table">
             <el-table :data="list" :default-sort="defaultSort" stripe border>
-                <el-table-column
-                    label="订单号"
-                    width="200"
-                    prop="oid"
-                    align="center"
-                    sortable
-                ></el-table-column>
-                <el-table-column
-                    label="房间类型"
-                    prop="typeText"
-                    width="200"
-                    align="center"
-                    sortable
-                    :sort-method="sortType"
-                ></el-table-column>
-                <el-table-column
-                    label="预订时间"
-                    width="210"
-                    prop="reservationDate"
-                    align="center"
-                    sortable
-                    :sort-method="sortReserved"
-                ></el-table-column>
-                <el-table-column
-                    label="联系方式"
-                    prop="contact"
-                    align="center"
-                ></el-table-column>
+                {elTableColumnRows}
+              
                 <el-table-column align="center" label="操作" width="300">
                     <template #default="scope">
                         <div class="l-flex l-flex__justify--around">
@@ -84,7 +59,7 @@ import { ElMessage } from 'element-plus';
 import loading from '@/utils/loading';
 import socketIOTool from '@/utils/socketIOTool';
 // function getOrdersRequest(state) {
-import { getOrdersRequest, deleteOrderRequest } from '@/utils/orderRequest';
+import { get{className}sRequest, delete{className}Request } from '@/utils/{entityName}Request';
 import {
     getFormatDate,
     getFormatNextDate,
@@ -178,6 +153,33 @@ export default {
             list: mockList,
         });
 
+const rules = reactive({
+            idkey: [
+                { required: true, message: '密保不能为空', trigger: 'blur' },
+            ],
+            password: [
+                { required: true, message: '密码不能为空', trigger: 'blur' },
+                {
+                    pattern: /^\w{4,20}$/,
+                    message: '长度4-20的数字或字母或下划线',
+                    trigger: 'blur',
+                },
+            ],
+            againPassword: [
+                { required: true, message: '密码不能为空', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value !== form.password) {
+                            callback(new Error('两次密码输入不一致'));
+                        } else {
+                            callback();
+                        }
+                    },
+                    trigger: 'blur',
+                },
+            ],
+        });
+
         const defaultSort = { prop: 'reservationDate', order: 'ascending' };
 
         const sortType = (a, b) => {
@@ -238,6 +240,11 @@ export default {
                 loading.close();
             });
 
+            const setTableData = (tableData,res) => {
+                tableData.origin = res;
+                tableData.list = res;
+        };
+
         const toModifyOrder = (order) => {
             router.push({
                 name: 'ModifyOrder',
@@ -293,6 +300,7 @@ export default {
             toModifyOrder,
             toCheckIn,
             deleteOder,
+              rules,
         };
     },
 };

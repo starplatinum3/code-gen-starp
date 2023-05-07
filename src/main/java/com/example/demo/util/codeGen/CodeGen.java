@@ -759,6 +759,7 @@ static  boolean doWriteRuoyi=false;
                 tableInfo.genIViewApi();
                 tableInfo.genElementUiTable();
                 tableInfo.genElementTableMybatisPlus();
+                tableInfo.genElementTableVue3();
                 tableInfo.genElementUiForm();
                 tableInfo.genEntity(packageName);
                 tableInfo.genElmPlusTable(packageName);
