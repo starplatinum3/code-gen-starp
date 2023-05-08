@@ -1,9 +1,6 @@
 package top.starp.util
 
-import com.example.demo.util.FileUtil
 import com.example.demo.util.codeGen.ColumnInfo
-import com.example.demo.util.codeGen.TableInfo
-import java.nio.file.Paths
 
 //fun gen_form_item(columnInfos: List<ColumnInfo>) {
 ////    一个列表 把form_item 这些放进去，最后 join成一个字符串
@@ -39,6 +36,58 @@ import java.nio.file.Paths
 //public
 val haveRules = false
 
+fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
+    val res = StringBuilder()
+    for (columnInfo in columnInfos) {
+        val java字段名 = columnInfo.java字段名
+        val commentShow = columnInfo.columnCommentShow
+        val column_name = columnInfo.columN_NAME
+        val java字段类型 = columnInfo.获取java字段类型()
+        val javaFieldName = columnInfo.javaFieldName
+        if ("id" != column_name) {
+            var row =  """
+                <el-table-column label="$commentShow" align="center" prop="$javaFieldName" >
+                
+                </el-table-column>
+                
+                <el-table-column
+                  prop="字段名"
+                  label="列标题"
+                  width="宽度"
+                  min-width="最小宽度"
+                  fixed="left"
+                  :render-header="自定义渲染函数"
+                  sortable="custom"
+                  :sort-method="自定义排序函数"
+                  :sort-by="排序字段名"
+                  :sort-orders="['asc', 'desc']"
+                  :resizable="true"
+                  :formatter="格式化函数"
+                  :show-overflow-tooltip="true"
+                  align="center"
+                  header-align="center"
+                  class-name="自定义 class 名称"
+                  label-class-name="自定义 class 名称"
+                  selectable="true"
+                  reserve-selection="true"
+                  :filters="筛选项数组"
+                  filter-placement="bottom-start"
+                  filter-multiple="true"
+                  :filter-method="自定义筛选函数"
+                  :filtered-value="筛选条件数组"
+                  column-key="列唯一标识符"
+                    >
+             </el-table-column>
+            """.trimIndent()
+//            var row = "<el-table-column label=\"{commentShow}\" align=\"center\" prop=\"{javaFieldName}\" />"
+            row = row
+                    .replace("{commentShow}", commentShow)
+                    .replace("{javaFieldName}", javaFieldName)
+            res.append(row)
+        }
+    }
+    return res.toString()
+}
 
 fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 
