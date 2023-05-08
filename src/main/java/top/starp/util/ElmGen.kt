@@ -73,7 +73,7 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
                 ""
             }
         }
-           label="$columnCommentShow"
+        
            
             class="check-in__item"
         >
