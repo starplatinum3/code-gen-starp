@@ -36,24 +36,29 @@ import java.nio.file.Paths
 //    }
 //
 //}
+//public
 val haveRules = false
+
 
 fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 
+//    ElmG
 
     val formItems = columnInfos.map { columnInfo ->
         val javaFieldName = columnInfo.javaFieldName
         val columnCommentShow = columnInfo.columnCommentShow
+//        label="$columnCommentShow"
 //       val v= haveRules?"""
 //       :rules="rules.$javaFieldName
 //       """":""
-        val v = if (haveRules) {
-            """
-    :rules="rules.$javaFieldName"
-    """
-        } else {
-            ""
-        }
+//        val v = if (haveRules) {
+//            """
+//    :rules="rules.$javaFieldName"
+//    """
+//        } else {
+//            ""
+//        }
+//        ElMGen
 
         """
        
@@ -68,8 +73,8 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
                 ""
             }
         }
+           label="$columnCommentShow"
            
-            label="$columnCommentShow"
             class="check-in__item"
         >
          $columnCommentShow

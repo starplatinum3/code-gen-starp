@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class ListUtil {
     public static void main(String[] args) {
+//        ElmGenKt.v
+//        ElmGenKt.
 //         String text=f" this is F-$String.class.getSimpleName() ";
 //         System.out.println(text);
 // //        this is F-String

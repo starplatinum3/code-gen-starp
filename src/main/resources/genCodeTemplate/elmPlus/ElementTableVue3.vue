@@ -80,7 +80,7 @@ export default {
         store.commit('clearNoticeOrderCount');
 
         const reload = inject('reload');
-
+const form = reactive({jsonDefaultNull});
         const searchOptions = [
             {
                 label: '订单编号',
@@ -301,6 +301,7 @@ const rules = reactive({
             toCheckIn,
             deleteOder,
               rules,
+                form,
         };
     },
 };
