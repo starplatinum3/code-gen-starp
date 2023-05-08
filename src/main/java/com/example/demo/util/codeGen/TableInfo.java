@@ -1528,10 +1528,11 @@ public class TableInfo {
         String formItemRows = ElmGenKt.gen_form_item_rows(columnInfos);
         String elmFormItems = genElmFormItems();
         String elmQueryInputs = genElmQueryInputs();
+        String elTableColumnRows = ElmGenKt.genElTableColumnRows(columnInfos);
 //        genElTableColumnRows()
 //        genElementTableMybatisPlus()
         String s = genJsonMock(columnInfos);
-        String elTableColumnRows = genElTableColumnRows();
+//        String elTableColumnRows = genElTableColumnRows();
         String elmQueryInputsSelectedRow = genElmQueryInputs("selectedRow");
         code = code
 //                .replace("#formInputs#", iViewFormInputs)
