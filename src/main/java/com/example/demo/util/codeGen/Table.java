@@ -33,8 +33,10 @@ public class Table {
     private BigInteger autoIncrement;
     private BigInteger version;
     private String createOptions;
-    private boolean temporary;
-    private String createTime;
+//    private boolean temporary;
+    private String temporary;
+//    private String createTime;
+    private Timestamp createTime;
     private BigInteger maxIndexLength;
     private BigInteger maxDataLength;
     private String tableCollation;
@@ -73,8 +75,10 @@ public class Table {
         this.autoIncrement = (BigInteger) map.get("AUTO_INCREMENT");
         this.version = (BigInteger) map.get("VERSION");
         this.createOptions = (String) map.get("CREATE_OPTIONS");
-        this.temporary = (Boolean) map.get("TEMPORARY");
-        this.createTime = (String) map.get("CREATE_TIME");
+//        this.temporary = (Boolean) map.get("TEMPORARY");
+        this.temporary = (String) map.get("TEMPORARY");
+//        this.createTime = (String) map.get("CREATE_TIME");
+        this.createTime = (Timestamp) map.get("CREATE_TIME");
         this.maxIndexLength = (BigInteger) map.get("MAX_INDEX_LENGTH");
         this.maxDataLength = (BigInteger) map.get("MAX_DATA_LENGTH");
         this.tableCollation = (String) map.get("TABLE_COLLATION");
@@ -252,21 +256,21 @@ public class Table {
         this.createOptions = createOptions;
     }
 
-    public boolean isTemporary() {
-        return temporary;
-    }
+//    public boolean isTemporary() {
+//        return temporary;
+//    }
+//
+//    public void setTemporary(boolean temporary) {
+//        this.temporary = temporary;
+//    }
 
-    public void setTemporary(boolean temporary) {
-        this.temporary = temporary;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
+//    public String getCreateTime() {
+//        return createTime;
+//    }
+//
+//    public void setCreateTime(String createTime) {
+//        this.createTime = createTime;
+//    }
 
     public BigInteger getMaxIndexLength() {
         return maxIndexLength;
