@@ -4,10 +4,7 @@ import com.example.demo.entity.Acc;
 import com.example.demo.entity.ReturnT;
 import com.example.demo.repository.AccRepository;
 import com.example.demo.repository.ToolDAO;
-import com.example.demo.util.FileUtil;
-import com.example.demo.util.MongoReq;
-import com.example.demo.util.StrUtil;
-import com.example.demo.util.StringUtils;
+import com.example.demo.util.*;
 import com.example.demo.util.codeGen.CodeGen;
 import com.example.demo.util.codeGen.ColumnInfo;
 import com.example.demo.util.codeGen.TableInfo;
@@ -373,6 +370,13 @@ public class AllController {
                 .foreignField("entryId")
                 .as("userDoc");
         String userDoc = "userDoc";
+//        nowcoder_resp
+
+        List<Document> documents = MongoUtil.mongoJoin("nowcoder"
+                , "nowcoder_resp"
+                , "recommendData.entityId"
+                , "entryId"
+                , mongoTemplate);
 
 //        Aggregation agg = Aggregation.newAggregation(
 //                lookupOperation,

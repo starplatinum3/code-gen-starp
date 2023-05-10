@@ -7,6 +7,17 @@
   <meta name="force-rendering" content="webkit" />
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
   <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/json-viewer/2.2.1/jquery.json-viewer.css"> -->
+<link rel="stylesheet" href="file:///D:\env\js\jquery.json-viewer-master\json-viewer\jquery.json-viewer.css">
+<!-- <link rel="stylesheet" href="file:///D:\env\js\jquery.json-viewer-master\json-viewer\jquery.json-viewer.css"> -->
+<!-- D:\proj\python\my_util_py_pub\js\jquery-1.12.3.js -->
+<!-- "D:\env\js\jquery.json-viewer-master\json-viewer\jquery.json-viewer.js" -->
+<script src="file:///D:\proj\python\my_util_py_pub\js\jquery-1.12.3.js"></script>
+
+<!-- "D:\env\js\jquery.json-viewer-master\json-viewer\jquery.json-viewer.css" -->
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/json-viewer/2.2.1/jquery.json-viewer.min.js"></script> -->
+  <script src="file:///D:\env\js\jquery.json-viewer-master\json-viewer\jquery.json-viewer.js"></script>
 
 
 </head>
@@ -24,6 +35,7 @@
   <div>
     resp
     <div id="res"></div>
+     <div id="json-data"></div>
   </div>
 
 
@@ -279,7 +291,9 @@ const setRes =  (res) =>{
       // resDiv.innerText=JSON.stringify(res)
       // res 
       // document.getElementById('res').innerText=JSON.stringify(res)
-      setRes(res)
+      // setRes(res)
+      // const jsonData = { "name": "John", "age": 30, "city": "New York" };
+    $("#json-data").jsonViewer(res);
 
       // .then(res => {
       //   console.log(res); 
