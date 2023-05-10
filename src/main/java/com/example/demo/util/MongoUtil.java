@@ -30,7 +30,7 @@ public class MongoUtil {
              aggregation = Aggregation.newAggregation(
 //                projectionOperation,
                     lookupOperation
-//                    ,  Aggregation.unwind(joinDoc)
+                    ,  Aggregation.unwind(joinDoc)
 //                    ,projectionOperation
 //                Aggregation.project()
 //                        .and("momentDataContent").as("momentDataContent")
@@ -41,7 +41,7 @@ public class MongoUtil {
             aggregation = Aggregation.newAggregation(
 //                projectionOperation,
                     lookupOperation
-//                    ,  Aggregation.unwind(joinDoc)
+                    ,  Aggregation.unwind(joinDoc)
                     ,projectionOperation
 //                Aggregation.project()
 //                        .and("momentDataContent").as("momentDataContent")
@@ -138,10 +138,11 @@ public class MongoUtil {
 ////                        .and("joinDoc.content").as("joinDocContents")
 //        );
 
-        return mongoJoin(mongoReq.getLocalDoc()
-                , mongoReq.otherDoc
+        return mongoJoin(
+                mongoReq.getLocalDoc()
                 , mongoReq.otherDoc
                 , mongoReq.localField
+                , mongoReq.foreignField
                 , mongoTemplate
                 , projectionOperation);
 
@@ -149,10 +150,15 @@ public class MongoUtil {
     public static List<Document> mongoJoin(MongoReq mongoReq
             , MongoTemplate mongoTemplate) {
 
-        return mongoJoin(mongoReq.getLocalDoc()
-                , mongoReq.otherDoc
+//        System.out.println( "mongoReq.otherDoc");
+//        System.out.println( mongoReq.otherDoc);
+//        System.out.println( "mongoReq.otherDoc");
+//        System.out.println( mongoReq.otherDoc);
+        return mongoJoin(
+                mongoReq.getLocalDoc()
                 , mongoReq.otherDoc
                 , mongoReq.localField
+                , mongoReq.foreignField
                 , mongoTemplate
                );
 
