@@ -298,6 +298,20 @@ const setJoin =  (res) =>{
   }
   return resList
  }
+
+ const getCommentListOfJoinDoc =(obj)=>{
+  // obj. userDoc[0].content
+  let  resList=[]
+  console.log("obj. joinDoc");
+  console.log(obj. joinDoc);
+
+  for(let respData of obj. joinDoc){
+
+    // respData.content
+    resList.push(respData.content)
+  }
+  return resList
+ }
     const  joinJobCollectionsAsync =async () => {
       let res = await postData(`http://localhost:8889/all/joinJobCollections`, {
         "table_schema": "hotel"
@@ -315,6 +329,7 @@ const setJoin =  (res) =>{
         o.momentData.content
         // o. userDoc[0].content
       //  let  CommentList= getCommentList(o. userDoc)
+      //  let  CommentList= getCommentListOfJoinDoc(o)
        let  CommentList= getCommentList(o)
 
        console.log("========");
@@ -380,8 +395,8 @@ const setJoin =  (res) =>{
         o.momentData.content
         // o. userDoc[0].content
       //  let  CommentList= getCommentList(o. userDoc)
-       let  CommentList= getCommentList(o)
-
+      //  let  CommentList= getCommentList(o)
+       let  CommentList=    getCommentListOfJoinDoc(o)
        console.log("========");
        console.log("ask");
        console.log(ask);

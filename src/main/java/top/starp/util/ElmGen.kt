@@ -179,6 +179,28 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
     return formItems.joinToString("\n")
 }
 
+fun gen_form_item_rows_add(columnInfos: List<ColumnInfo>): String {
+
+
+    val formItems = columnInfos.map { columnInfo ->
+        val javaFieldName = columnInfo.javaFieldName
+        val columnCommentShow = columnInfo.columnCommentShow
+        """
+        <el-form-item prop="number" label="$columnCommentShow">
+                    <el-input
+                        v-model="form.$javaFieldName"
+                        placeholder="$columnCommentShow"
+                        class="add-room__input"
+                    >
+                    </el-input>
+                </el-form-item>
+    """.trimIndent()
+
+    }
+    return formItems.joinToString("\n")
+}
+
+
 //@Throws(Exception::class)
 //fun genElementTableMybatisPlus(tableInfo: TableInfo): String? {
 //    var code = FileUtil.readResourceFileData("genCodeTemplate/elementUi/ElementTableMybatisPlus.vue")
