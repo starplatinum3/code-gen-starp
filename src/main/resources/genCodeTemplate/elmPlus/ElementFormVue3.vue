@@ -1,7 +1,7 @@
 <template>
     <div class="add-room">
         <div class="form__title">
-            <h2>添加新房间</h2>
+            <h2>添加新{tableComment}</h2>
         </div>
         <div class="add-room__form">
             <el-form
@@ -40,7 +40,7 @@
             </el-form-item> -->
                 <el-form-item>
                     <el-button class="form__btn" type="primary" @click="add{className}"
-                        >添加新{commetShow}</el-button
+                        >添加新{tableComment}</el-button
                     >
                 </el-form-item>
             </el-form>

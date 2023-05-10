@@ -1595,6 +1595,7 @@ public class TableInfo {
         String jsonDefaultNull = genJsonDefaultNull();
 //        String iViewColumnsRows = genIViewColumnsRows();
         String elmCols = genElmCols();
+        String tableComment = table.getTableComment();
 //        cla
 //        comm
         String form_item_rows_add = ElmGenKt.gen_form_item_rows_add(columnInfos);
@@ -1625,6 +1626,7 @@ public class TableInfo {
                 .replace("{jsonDefaultNull}", jsonDefaultNull)
                 .replace("{form_item_rows_add}", form_item_rows_add)
                 .replace("{tableName}", tableName)
+                .replace("{tableComment}", tableComment)
 //                .replace("#jsonDefaultNull#", jsonDefaultNull)
 //                .replace("#iViewColumnsRows#", iViewColumnsRows)
         ;
