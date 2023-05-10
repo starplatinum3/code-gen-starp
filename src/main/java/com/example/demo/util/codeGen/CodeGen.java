@@ -671,7 +671,9 @@ public class CodeGen {
     static String iView项目src目录 = iView项目目录 + "\\src";
     static String iView项目utils目录 = iView项目src目录 + "/utils";
 static  boolean doWriteRuoyi=false;
-    public static String gen(Map<String, List<ColumnInfo>> mapTableCols, String table_schema) throws Exception {
+    public static String gen(Map<String, List<ColumnInfo>> mapTableCols
+            , String table_schema
+    ,List<Table> tables ) throws Exception {
         AtomicReference<String> columnsDicMapCode = new AtomicReference<>("// xlsx中文字段和后端数据库的映射\n");
 //        java.nio.file.Path pathFile = Paths.get(filePathRoot, DateUtilSt.getNowFileFormat());
         java.nio.file.Path pathFile = Paths.get(filePathRoot, table_schema, DateUtilSt.getNowFileFormat());
@@ -734,6 +736,13 @@ static  boolean doWriteRuoyi=false;
 //                System.out.println(javaController);
 
                 TableInfo tableInfo = new TableInfo(tableName, columnInfos);
+                List<Table> tableOfThisTableName = tables.stream().filter(o -> {
+                    return o.getTableName().equals(tableName);
+                }).collect(Collectors.toList());
+                Table tableOfThisTableNameFirst = tableOfThisTableName.get(0);
+
+                tableInfo.setTable(tableOfThisTableNameFirst);
+//                tableInfo.set
                 tableInfo.setPathFileString(pathFileString);
 //                tableInfo.
                 String export=" ";

@@ -31,7 +31,9 @@ import java.util.stream.Collectors;
 
 @Data
 public class TableInfo {
-  public    static final String tablePreffix = "t_";
+
+    Table table;
+    public    static final String tablePreffix = "t_";
     /**
      * 下划线
      */

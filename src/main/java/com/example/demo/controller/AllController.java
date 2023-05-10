@@ -8,6 +8,7 @@ import com.example.demo.repository.ToolDAO;
 import com.example.demo.util.*;
 import com.example.demo.util.codeGen.CodeGen;
 import com.example.demo.util.codeGen.ColumnInfo;
+import com.example.demo.util.codeGen.Table;
 import com.example.demo.util.codeGen.TableInfo;
 import com.lark.oapi.Client;
 import com.lark.oapi.core.cache.LocalCache;
@@ -622,6 +623,9 @@ public class AllController {
 //        String pathString = "C:/path/to/file.txt";
         Path path = Paths.get(tplPath);
 
+
+
+
 //        FileUtil.writeCode();
 //        {postMethodRows}
         return resultList;
@@ -664,6 +668,9 @@ public class AllController {
         List<Map<String, Object>> maps =
 //                toolDAO.selectTableNames(table_schema, "base table");
                 toolDAO.selectTableNames(table_schema);
+//        TableInfo
+//        List<Table> tables = Table.mapsToObjs(maps);
+//        Table(maps )
 //        List<TableName> tableNames = userDAO.selectTableNamesToObj("gcsm", "base table");
         Map<String, Object> stringObjectMap = maps.get(0);
 //        Map
@@ -827,6 +834,12 @@ public class AllController {
         List<Map<String, Object>> maps =
 //                toolDAO.selectTableNames(table_schema, "base table");
                 toolDAO.selectTableNames(table_schema);
+        List<Table> tables = Table.mapsToObjs(maps);
+        Map<String, Object> stringObjectMap = maps.get(0);
+//        Map
+        Set<String> tableInfoKeys = stringObjectMap.keySet();
+        System.out.println("tableInfoKeys");
+        System.out.println(tableInfoKeys);
 //        List<TableName> tableNames = userDAO.selectTableNamesToObj("gcsm", "base table");
 //        System.out.println(maps);
 //        log.info("selectTableNames");
@@ -905,7 +918,7 @@ public class AllController {
 //        System.out.println(mapTableCols);
 
         try {
-            CodeGen.gen(mapTableCols, table_schema);
+            CodeGen.gen(mapTableCols, table_schema,tables);
         } catch (Exception e) {
             e.printStackTrace();
         }
