@@ -53,7 +53,7 @@ public static void main(String[] args) {
 //mybatis 返回 类型
     @Query(value = "SELECT \n" +
             "\n" +
-            "table_name \n" +
+            "*  \n" +
             "\n" +
             "FROM\n" +
             "\n" +

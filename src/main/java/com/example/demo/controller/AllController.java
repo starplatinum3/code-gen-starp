@@ -665,6 +665,11 @@ public class AllController {
 //                toolDAO.selectTableNames(table_schema, "base table");
                 toolDAO.selectTableNames(table_schema);
 //        List<TableName> tableNames = userDAO.selectTableNamesToObj("gcsm", "base table");
+        Map<String, Object> stringObjectMap = maps.get(0);
+//        Map
+        Set<String> tableInfoKeys = stringObjectMap.keySet();
+        System.out.println("tableInfoKeys");
+        System.out.println(tableInfoKeys);
         System.out.println(maps);
         log.info("selectTableNames");
         log.info("maps {}", maps);
