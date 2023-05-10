@@ -30,7 +30,7 @@ public class MongoUtil {
              aggregation = Aggregation.newAggregation(
 //                projectionOperation,
                     lookupOperation
-                    ,  Aggregation.unwind(joinDoc)
+//                    ,  Aggregation.unwind(joinDoc)
 //                    ,projectionOperation
 //                Aggregation.project()
 //                        .and("momentDataContent").as("momentDataContent")
@@ -41,7 +41,7 @@ public class MongoUtil {
             aggregation = Aggregation.newAggregation(
 //                projectionOperation,
                     lookupOperation
-                    ,  Aggregation.unwind(joinDoc)
+//                    ,  Aggregation.unwind(joinDoc)
                     ,projectionOperation
 //                Aggregation.project()
 //                        .and("momentDataContent").as("momentDataContent")
@@ -53,8 +53,10 @@ public class MongoUtil {
         return mongoTemplate.aggregate(aggregation, localDoc, Document.class).getMappedResults();
     }
 
-    public static List<Document> mongoJoin(String localDoc,
-                                           String otherDoc, String localField
+    public static List<Document> mongoJoin(
+            String localDoc,
+              String otherDoc
+            , String localField
             , String foreignField
             , MongoTemplate mongoTemplate
         ) {
@@ -154,6 +156,11 @@ public class MongoUtil {
 //        System.out.println( mongoReq.otherDoc);
 //        System.out.println( "mongoReq.otherDoc");
 //        System.out.println( mongoReq.otherDoc);
+//        String localDoc,
+//        String otherDoc
+//            , String localField
+//            , String foreignField
+//            , MongoTemplate mongoTemplate
         return mongoJoin(
                 mongoReq.getLocalDoc()
                 , mongoReq.otherDoc

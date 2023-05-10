@@ -366,6 +366,11 @@ public class AllController {
 //                        )
 //                );
 
+
+//        equalMap=null, localDoc=nowcoder, otherDoc=nowcoder_resp,
+//        localField=momentData.entityId, foreignField=entryId)]
+//        nowcoder  nowcoder_resp nowcoder_resp
+//        recommendData.entityId
         LookupOperation lookupOperation = LookupOperation.newLookup()
                 .from("nowcoder_resp")
                 .localField("recommendData.entityId")
@@ -500,7 +505,8 @@ public class AllController {
 //        for
         for (Document document : documents) {
 //            String momentData = document.getString("momentData");
-            JSONObject momentData =(JSONObject) document.get("momentData");
+//            JSONObject momentData =(JSONObject) document.get("momentData");
+            Document momentData =(Document) document.get("momentData");
             String content = momentData.getString("content");
             System.out.println("content");
             System.out.println(content);
