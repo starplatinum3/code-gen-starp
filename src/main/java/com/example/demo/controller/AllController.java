@@ -372,11 +372,7 @@ public class AllController {
         String userDoc = "userDoc";
 //        nowcoder_resp
 
-        List<Document> documents = MongoUtil.mongoJoin("nowcoder"
-                , "nowcoder_resp"
-                , "recommendData.entityId"
-                , "entryId"
-                , mongoTemplate);
+
 
 //        Aggregation agg = Aggregation.newAggregation(
 //                lookupOperation,
@@ -470,8 +466,25 @@ public class AllController {
 //————————————————
 //        版权声明：本文为CSDN博主「野人204666」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
 //        原文链接：https://blog.csdn.net/u012565113/article/details/82978095
+
+
+
         return mongoTemplate.aggregate(aggregation, "nowcoder", Document.class).getMappedResults();
 //        return mongoTemplate.aggregate(agg, colAName, Document.class).getMappedResults();
+    }
+
+    @PostMapping("/nowcoder_resp_join")
+    public  Object nowcoder_resp_join(@RequestBody MongoReq mongoReq){
+//      return MongoUtil.mongoJoin("nowcoder"
+//                , "nowcoder_resp"
+//                , "recommendData.entityId"
+//                , "entryId"
+//                , mongoTemplate);
+//        List<Document> documents = MongoUtil.mongoJoin(mongoReq, mongoTemplate);
+//        for (Document document : documents) {
+////            document.get("")
+//        }
+        return   MongoUtil.mongoJoin(mongoReq,mongoTemplate);
     }
 
     @Autowired

@@ -276,6 +276,24 @@ document.getElementById('res')
 const setRes =  (res) =>{
   resDiv.innerText=JSON.stringify(res)
 }
+const setJoin =  (res) =>{
+  // resDiv.innerText=JSON.stringify(res)
+  $("#json-data").jsonViewer(res);
+}
+
+ const getCommentList =(obj)=>{
+  // obj. userDoc[0].content
+  let  resList=[]
+  console.log("obj. userDoc");
+  console.log(obj. userDoc);
+
+  for(let respData of obj. userDoc){
+
+    // respData.content
+    resList.push(respData.content)
+  }
+  return resList
+ }
     const  joinJobCollectionsAsync =async () => {
       let res = await postData(`http://localhost:8889/all/joinJobCollections`, {
         "table_schema": "hotel"
@@ -287,7 +305,21 @@ const setRes =  (res) =>{
         if (o.userDoc && o.userDoc.length > 0) {
           console.log(o);
         }
+        // java 
+        // set 
+        let ask=
+        o.momentData.content
+        // o. userDoc[0].content
+      //  let  CommentList= getCommentList(o. userDoc)
+       let  CommentList= getCommentList(o)
+
+       console.log("========");
+       console.log("ask");
+       console.log(ask);
+       console.log("CommentList");
+       console.log(CommentList);
       }
+      // momentData
       // resDiv.innerText=JSON.stringify(res)
       // res 
       // document.getElementById('res').innerText=JSON.stringify(res)

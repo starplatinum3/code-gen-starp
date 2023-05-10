@@ -11,4 +11,9 @@ public class MongoReq {
     String collectionName;
     Map<String,Object> likeMap;
     Map<String,Object>  equalMap;
+
+    String localDoc;
+    String otherDoc;
+    String localField;
+      String foreignField;
 }

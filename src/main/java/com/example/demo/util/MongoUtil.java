@@ -28,4 +28,14 @@ public class MongoUtil {
         );
         return mongoTemplate.aggregate(aggregation, localDoc, Document.class).getMappedResults();
     }
+
+    public static List<Document> mongoJoin(MongoReq mongoReq
+            , MongoTemplate mongoTemplate) {
+        return mongoJoin(mongoReq.getLocalDoc()
+                , mongoReq.otherDoc
+                , mongoReq.otherDoc
+                , mongoReq.localField
+                , mongoTemplate);
+
+    }
 }
