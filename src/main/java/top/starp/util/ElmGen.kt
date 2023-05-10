@@ -1,5 +1,6 @@
 package top.starp.util
 
+import com.example.demo.common.MysqlDataType
 import com.example.demo.util.codeGen.ColumnInfo
 
 //fun gen_form_item(columnInfos: List<ColumnInfo>) {
@@ -132,7 +133,38 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 
     val formItems = columnInfos.map { columnInfo ->
         val javaFieldName = columnInfo.javaFieldName
+//        columnInfo.datA_TYPE
+//        javaFieldName.contais("url")
+
         val columnCommentShow = columnInfo.columnCommentShow
+        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
+        if(containsUrlIgnoreCase){
+           return """
+            <el-form-item>
+                    <el-upload
+                        ref="uploadElem"
+                        class="l-flex"
+                        action="http://localhost:9092/uploadIntroImg"
+                        :http-request="uploadImg"
+                        list-type="picture-card"
+                        :file-list="upload.list"
+                        :auto-upload="false"
+                        :limit="1"
+                        :on-preview="imgPreview"
+                        :on-change="verifyFileType"
+                    >
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                    <el-dialog v-model="dialogVisible">
+                        <div style="text-align: center">
+                            <img :src="upload.img" style="width: 100%" />
+                        </div>
+                    </el-dialog>
+                    <p class="hotel-intro__tip">只能上传一张图片</p>
+                </el-form-item>
+        """.trimIndent()
+        }
+
 //        label="$columnCommentShow"
 //       val v= haveRules?"""
 //       :rules="rules.$javaFieldName
@@ -146,7 +178,12 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 //        }
 //        ElMGen
 
-        """
+//        MysqlDataType.isNumberType()
+//        if (MysqlDataType.isTextType(columnInfo.datA_TYPE)) {
+//
+//        }
+
+     return   """
        
         <el-form-item
             prop="$javaFieldName"
@@ -175,6 +212,8 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
                       
                     </el-form-item>
         """.trimIndent()
+
+
     }
     return formItems.joinToString("\n")
 }
