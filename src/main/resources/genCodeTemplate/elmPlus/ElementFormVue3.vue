@@ -181,28 +181,7 @@ export default {
             });
         };
 
-        const addRoom = () => {
-            formElem.value.validate((valid) => {
-                if (valid) {
-                    addRoomRequest(form)
-                        .then((res) => {
-                            if (res.state) {
-                                // uploadElem.value.submit();
-                                ElMessage.success(res.msg);
-                                formElem.value.resetFields();
-                            } else {
-                                errorMsg.value = res.msg;
-                            }
-
-                            loading.close();
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            loading.close();
-                        });
-                }
-            });
-        };
+       
 
         const add{className} = () => {
             formElem.value.validate((valid) => {
