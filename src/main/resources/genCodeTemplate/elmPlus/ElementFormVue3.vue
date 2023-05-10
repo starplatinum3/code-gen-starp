@@ -62,7 +62,9 @@ import { uploadImgRequest } from '@/utils/roomRequest';
 import HttpUtil from '@/utils/HttpUtil';
 import StatusSelect from '@/components/StatusSelect.vue';
 import ElmStatusSelect from '@/components/ElmStatusSelect.vue';
-
+import HttpUtil from '@/utils/HttpUtil';
+import k from '@/utils/Tables';
+import UiUtil from '@/utils/UiUtil';
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\ElmStatusSelect.vue
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\StatusSelect.vue
 // D:\proj\makeBook\hotel\hotel-management-origin\src\views\hall\roomTypeInfo\AddRoomTypeInfo.vue
@@ -81,7 +83,9 @@ export default {
             tv: 0,
             extra: '',
         });
+        const form = reactive({jsonDefaultNull});
 
+        let  tableName=k.{entityName}
         console.log("form");
         console.log(form);
         const uploadElem = ref(null);
