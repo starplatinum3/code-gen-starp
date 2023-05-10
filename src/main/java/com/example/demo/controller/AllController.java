@@ -35,6 +35,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.ExposedFields;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
+import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -484,7 +485,11 @@ public class AllController {
 //        for (Document document : documents) {
 ////            document.get("")
 //        }
-        return   MongoUtil.mongoJoin(mongoReq,mongoTemplate);
+        ProjectionOperation projectionOperation = Aggregation.project()
+                .and("momentData.content").as("momentDataContent")
+                .and(  "joinDoc.content").as("joinDocContent");
+        return   MongoUtil.mongoJoin(mongoReq,mongoTemplate
+        ,projectionOperation);
     }
 
     @Autowired
