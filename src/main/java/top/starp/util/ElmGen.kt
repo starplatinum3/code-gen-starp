@@ -50,6 +50,7 @@ fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
                     sortable
                     align="center" prop="$javaFieldName" >
                 </el-table-column>
+                
             """.trimIndent()
 //            var row = "<el-table-column label=\"{commentShow}\" align=\"center\" prop=\"{javaFieldName}\" />"
 //            row = row
@@ -60,6 +61,70 @@ fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
     }
     return res.toString()
 }
+
+//fun ddd(){
+////    bed_type
+//    """
+//        <template>
+//    <el-select v-model="selectedValue" @change="handleChange">
+//        <el-option
+//            v-for="(option, index) in options"
+//            :key="index"
+//            :label="option.text"
+//            :value="option.value"
+//        />
+//    </el-select>
+//</template>
+//
+//  <script>
+//export default {
+//    props: {
+//        value: {
+//            type: Number,
+//            default: 0,
+//        },
+//    },
+//    data() {
+//        return {
+//            options: [
+//
+//                {
+//                    text: '大床间',
+//                value: 0,
+//            },
+//            {
+//                text: '单人间',
+//                value: 1,
+//            },
+//            {
+//                text: '双人间',
+//                value: 2,
+//            },
+//
+//
+//
+//            ],
+//            selectedValue: this.value,
+//        };
+//    },
+//    computed: {
+//        selectedText() {
+//            const option = this.options.find(
+//                (opt) => opt.value === this.selectedValue
+//            );
+//            return option ? option.text : '';
+//        },
+//    },
+//    methods: {
+//        handleChange() {
+//            this.$emit('input', this.selectedValue);
+//        },
+//    },
+//};
+//</script>
+//
+//    """.trimIndent()
+//}
 
 fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 

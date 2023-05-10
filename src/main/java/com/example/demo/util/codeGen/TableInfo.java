@@ -16,6 +16,7 @@ import lombok.Data;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import top.starp.util.ElmGenKt;
+import top.starp.util.RoomMockData;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,14 +113,35 @@ public class TableInfo {
             String javaFieldName = columnInfo.getJavaFieldName();
         //     String type = columnInfo.getType();
             String type =   columnInfo.getDATA_TYPE();
-
+//            String randomString = top.starp.util.StringUtils.generateRandomString();
         //     "VARCHAR"
-        //      if (type.equalsIgnoreCase("string")) 
+        //      if (type.equalsIgnoreCase("string"))
+//            "typeName":"","area":null,"bedType":"","layout":"","amenities":null,"price":null,"photoUrl":null
             if (type.equalsIgnoreCase("VARCHAR")) {
                 if ("name".equalsIgnoreCase(javaFieldName)) {
                     rootNode.put(javaFieldName, NAMES.get(rand.nextInt(NAMES.size())));
-                } else {
-                    rootNode.put(javaFieldName, "");
+                }
+               else if ("typeName".equalsIgnoreCase(javaFieldName)) {
+//                    String randomTypeName = RoomMockData.getRandomTypeName();
+                    rootNode.put(javaFieldName, RoomMockData.getRandomTypeName());
+                }
+//                javaFieldName.contains()
+//                javaFieldName
+//                containsIgnoreCase
+
+                else if (  top.starp.util.StringUtils.containsIgnoreCase(javaFieldName,"BED")) {
+                    rootNode.put(javaFieldName, RoomMockData.getRandomBedType());
+                }
+                else if (  top.starp.util.StringUtils.containsIgnoreCase(javaFieldName,"LAYOUT")) {
+                    rootNode.put(javaFieldName, RoomMockData.getRandomLayout());
+                }
+//                else if (  top.starp.util.StringUtils.containsIgnoreCase(javaFieldName,"AMENITIE")) {
+//                    rootNode.put(javaFieldName, RoomMockData.getRandomAmenities());
+//                }
+//                AMENITIES
+                else {
+                    String randomString = top.starp.util.StringUtils.generateRandomString();
+                    rootNode.put(javaFieldName, randomString);
                 }
             } else if (type.equalsIgnoreCase("int")) {
                 if ("age".equalsIgnoreCase(javaFieldName)) {
@@ -146,7 +168,9 @@ public class TableInfo {
                 if ("state".equalsIgnoreCase(javaFieldName)) {
                     rootNode.put(javaFieldName, STATES.get(rand.nextInt(STATES.size())));
                 } else {
-                    rootNode.put(javaFieldName, "");
+                    rootNode.put(javaFieldName,
+                            top.starp.util.StringUtils.generateRandomString()
+                    );
                 }
             } else {
                 rootNode.putNull(javaFieldName);
@@ -1531,7 +1555,7 @@ public class TableInfo {
         String elTableColumnRows = ElmGenKt.genElTableColumnRows(columnInfos);
 //        genElTableColumnRows()
 //        genElementTableMybatisPlus()
-        String s = genJsonMock(columnInfos);
+        String jsonMock = genJsonMock(columnInfos);
 //        String elTableColumnRows = genElTableColumnRows();
         String elmQueryInputsSelectedRow = genElmQueryInputs("selectedRow");
         code = code
@@ -1545,6 +1569,7 @@ public class TableInfo {
                 .replace("#elmQueryInputs#", elmQueryInputs)
                 .replace("#elmFormItemsSelectedRow#", elmQueryInputsSelectedRow)
                 .replace("{formItemRows}", formItemRows)
+                .replace("{jsonMock}", jsonMock)
                 .replace("{entityName}", entityName)
                 .replace("{className}", className)
                 .replace("{elTableColumnRows}", elTableColumnRows)

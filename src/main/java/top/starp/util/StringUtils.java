@@ -1,7 +1,8 @@
-package com.example.demo.util;
+package top.starp.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.util.StrUtil;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -859,6 +860,13 @@ public class StringUtils {
     }
     public static void main(String[] args) {
         test6();
+    }
+
+    public static boolean containsIgnoreCase(String str, String searchStr) {
+        if (str == null || searchStr == null) {
+            return false;
+        }
+        return str.toLowerCase().contains(searchStr.toLowerCase());
     }
 
     public static String getRandomString(int length) {

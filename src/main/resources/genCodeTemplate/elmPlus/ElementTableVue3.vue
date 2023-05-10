@@ -24,6 +24,13 @@
                                 办理入住
                             </el-button>
                             <el-button
+                                          size="mini"
+                                      type="primary"
+                                            @click="addOne(scope.row)"
+                                         >
+                                           新增
+                                 </el-button>
+                            <el-button
                                 size="mini"
                                 @click="toModifyOrder(scope.row)"
                             >
@@ -58,6 +65,10 @@ import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import loading from '@/utils/loading';
 import socketIOTool from '@/utils/socketIOTool';
+import HttpUtil from '../utils/HttpUtil';
+import k from '../utils/Tables';
+import UiUtil from '../utils/UiUtil';
+
 // function getOrdersRequest(state) {
 import { get{className}sRequest, delete{className}Request } from '@/utils/{entityName}Request';
 import {
@@ -134,24 +145,17 @@ const form = reactive({jsonDefaultNull});
             }
         );
 
-        // let mockList=[
-        //     {
 
-        //     }
-        // ]
         let mockList=[
-    {
-        oid: "123456789",
-        typeText: "双人房",
-        reservationDate: new Date("2023-05-01 12:00:00"),
-        contact: "12345678901"
-    }
+    {jsonMock}
 ]
 
         const tableData = reactive({
             origin: [],
             list: mockList,
         });
+
+
 
 const rules = reactive({
             idkey: [
@@ -189,7 +193,7 @@ const rules = reactive({
         const sortReserved = (a, b) => {
             return a.reservation_time - b.reservation_time;
         };
-
+const tableName=k.{entityName}
         const typeTextArray = ['大床间', '单人间', '双人间'];
         console.log("socketIOTool.on('new-order', (");
         socketIOTool.on('new-order', (socket) => {
@@ -210,6 +214,7 @@ const rules = reactive({
             tableData.list = newList;
         });
 
+     UiUtil.getList(tableName,tableData,{})
         // loading.start();
         console.log("getOrdersRequest 获取用户");
         // 获取用户
@@ -245,6 +250,13 @@ const rules = reactive({
                 tableData.list = res;
         };
 
+        HttpUtil.getList(tableName,{})
+                .then(res=>{
+                    console.log(res);
+                }).catch(err=>{
+                    console.log(err);
+                })
+
         const toModifyOrder = (order) => {
             router.push({
                 name: 'ModifyOrder',
@@ -253,6 +265,13 @@ const rules = reactive({
             });
         };
 
+ const addOne = (order) => {
+            router.push({
+                name: 'CheckIn',
+                query: { oid: order.oid },
+                params: { uid: order.uid },
+            });
+        };
         const toCheckIn = (order) => {
             router.push({
                 name: 'CheckIn',
@@ -302,6 +321,7 @@ const rules = reactive({
             deleteOder,
               rules,
                 form,
+                addOne,
         };
     },
 };

@@ -15,20 +15,11 @@
 
   <button onclick="genCode()">genCode</button>
   <!-- <bu  -->
-  <button onclick="getAllURL()">getAllURL</button>
-  <button onclick="joinJobCollections()">joinJobCollections</button>
-  <button onclick="joinJobCollectionsAsync()">joinJobCollectionsAsync</button>
-  <button onclick="count()">count</button>
-  <input type="text" id="collectionNameInput" value="job" placeholder="请输入集合名称">
-  
-  <div>
-    resp
-    <div id="res"></div>
-  </div>
+    <button onclick="getAllURL()">getAllURL</button>
 
-
-
-  <script>
+    
+    
+    <script>
     // import requests
     // # baseUrl='http://localhost:8004/api'
     // baseUrl = 'http://localhost:8003/api'
@@ -193,118 +184,53 @@
       }
 
     }
-    // {
-    //     "table_schema": "exam"
-    //     }
+// {
+//     "table_schema": "exam"
+//     }
 
 
-    // main --======================
-
-    const genCode = () => {
-      // "table_schema": "exam"
-      postData(`http://localhost:8889/all/genCode`, {
-          "table_schema": "hotel"
-        })
-        .then(res => {
-          console.log(res); // JSON data parsed by `data.json()` call
-          // formatDateTime
-
-          // data = data.response
-          // data.sort((a, b) => a - b)
-          // // saveDatesEye(data)
-          // let datesToSave = data.map(o => {
-          //   return new Date(o);
-          // })
-          // console.log('datesToSave')
-          // console.log(datesToSave)
-          // saveDatesEye(datesToSave)
-          // let dates = data.map(o => {
-          //   return formatDateTime(o);
-          // })
-          // console.log('dates')
-
-          // console.log(dates)
-        });
-
-    }
-    const getAllURL = () => {
-      // "table_schema": "exam"
-      postData(`http://localhost:8889/all/getAllURL`, {
-          "table_schema": "hotel"
-        })
-        .then(res => {
-          console.log(res);
-
-        });
-
-    }
-    const joinJobCollections = () => {
-      postData(`http://localhost:8889/all/joinJobCollections`, {
-          "table_schema": "hotel"
-        })
-        .then(res => {
-          console.log(res);
-          // res
-          for (let o of res) {
-            if (o.userDoc && o.userDoc.length > 0) {
-              console.log(o);
-            }
-          }
-        });
-
-    }
-    // async function
-//     const joinJobCollectionsAsync = async () => {
-//   // 异步函数的实现代码
-// }
-
-const resDiv=
-document.getElementById('res')
-
-const setRes =  (res) =>{
-  resDiv.innerText=JSON.stringify(res)
-}
-    const  joinJobCollectionsAsync =async () => {
-      let res = await postData(`http://localhost:8889/all/joinJobCollections`, {
-        "table_schema": "hotel"
-      })
-
-      console.log(res);
-      // res
-      for (let o of res) {
-        if (o.userDoc && o.userDoc.length > 0) {
-          console.log(o);
-        }
-      }
-      // resDiv.innerText=JSON.stringify(res)
-      // res 
-      // document.getElementById('res').innerText=JSON.stringify(res)
-      setRes(res)
-
-      // .then(res => {
-      //   console.log(res); 
-      //   // res
-      //   for(let o  of res){
-      //     if(o.userDoc&&o.userDoc.length>0){
-      //       console.log(o);
-      //     }
-      //   }
-      // });
-
-    }
+// main --======================
     
-    const  count =async () => {
-      // let collectionName='nowcoder'
-      let collectionName = document.getElementById("collectionNameInput").value;
+ const genCode= ()=>{
+  // "table_schema": "exam"
+    postData(`http://localhost:8889/all/genCode`,{
+    "table_schema": "hotel"
+    })
+      .then(res => {
+        console.log(res); // JSON data parsed by `data.json()` call
+        // formatDateTime
 
-    let postDataForm={
-      collectionName
+        // data = data.response
+        // data.sort((a, b) => a - b)
+        // // saveDatesEye(data)
+        // let datesToSave = data.map(o => {
+        //   return new Date(o);
+        // })
+        // console.log('datesToSave')
+        // console.log(datesToSave)
+        // saveDatesEye(datesToSave)
+        // let dates = data.map(o => {
+        //   return formatDateTime(o);
+        // })
+        // console.log('dates')
+
+        // console.log(dates)
+      });
+
+    }
+    const getAllURL= ()=>{
+  // "table_schema": "exam"
+    postData(`http://localhost:8889/all/getAllURL`,{
+    "table_schema": "hotel"
+    })
+      .then(res => {
+        console.log(res); 
+     
+      });
+
     }
 
-      let res = await postData(`http://localhost:8889/all/count`,postDataForm)
-      console.log(res);
-      setRes(res)
-    }
+ {postMethodRows}
     // postData(`${baseUrl}/${entityName}/${path}`, {
     //     answer: 42
     //   })
