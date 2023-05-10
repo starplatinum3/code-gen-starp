@@ -1633,7 +1633,7 @@ public class TableInfo {
 //        k.
 //        k.elementUi
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,
-                "elementUi", "ElementTableVue3","Add"+ className + ".vue");
+                "elementUi", "ElementTableVue3","form","Add"+ className + ".vue");
         FileUtil.writeCode(dictDataPath, code);
 
         return code;
