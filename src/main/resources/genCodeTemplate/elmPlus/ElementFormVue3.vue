@@ -39,8 +39,8 @@
                 <p class="add-room__tip">只能上传一张图片</p>
             </el-form-item> -->
                 <el-form-item>
-                    <el-button class="form__btn" type="primary" @click="addRoom"
-                        >添加新房间</el-button
+                    <el-button class="form__btn" type="primary" @click="add{className}"
+                        >添加新{commetShow}</el-button
                     >
                 </el-form-item>
             </el-form>
@@ -76,13 +76,7 @@ export default {
     },
     setup() {
         const formElem = ref(null);
-        const form = reactive({
-            number: '',
-            type: 0,
-            shower: 0,
-            tv: 0,
-            extra: '',
-        });
+        
         const form = reactive({jsonDefaultNull});
 
         let  tableName=k.{entityName}

@@ -17,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import top.starp.util.ElmGenKt;
 import top.starp.util.RoomMockData;
+import top.starp.util.k;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -1592,6 +1593,8 @@ public class TableInfo {
         String jsonDefaultNull = genJsonDefaultNull();
 //        String iViewColumnsRows = genIViewColumnsRows();
         String elmCols = genElmCols();
+//        cla
+//        comm
         String form_item_rows_add = ElmGenKt.gen_form_item_rows_add(columnInfos);
         String formItemRows = ElmGenKt.gen_form_item_rows(columnInfos);
         String elmFormItems = genElmFormItems();
@@ -1623,6 +1626,8 @@ public class TableInfo {
 //                .replace("#jsonDefaultNull#", jsonDefaultNull)
 //                .replace("#iViewColumnsRows#", iViewColumnsRows)
         ;
+//        k.
+//        k.elementUi
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,
                 "elementUi", "ElementTableVue3", className + "Table.vue");
         FileUtil.writeCode(dictDataPath, code);
