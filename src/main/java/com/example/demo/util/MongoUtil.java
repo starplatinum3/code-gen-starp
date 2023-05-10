@@ -17,7 +17,7 @@ public class MongoUtil {
                                            String otherDoc, String localField
             , String foreignField
             , MongoTemplate mongoTemplate
-    ,ProjectionOperation projectionOperation) {
+            , ProjectionOperation projectionOperation) {
         String joinDoc = "joinDoc";
         LookupOperation lookupOperation = LookupOperation.newLookup()
                 .from(otherDoc)
@@ -25,17 +25,45 @@ public class MongoUtil {
                 .foreignField(foreignField)
                 .as(joinDoc);
         Criteria criteria = Criteria.where(joinDoc).ne(Collections.emptyList());
+        Aggregation aggregation ;
+        if(projectionOperation==null)  {
+             aggregation = Aggregation.newAggregation(
+//                projectionOperation,
+                    lookupOperation
+//                    ,  Aggregation.unwind(joinDoc)
+//                    ,projectionOperation
+//                Aggregation.project()
+//                        .and("momentDataContent").as("momentDataContent")
+//                        .and("joinDocs.content").as("joinDocContent")
+                    , Aggregation.match(criteria)
+            );
+        }else{
+            aggregation = Aggregation.newAggregation(
+//                projectionOperation,
+                    lookupOperation
+//                    ,  Aggregation.unwind(joinDoc)
+                    ,projectionOperation
+//                Aggregation.project()
+//                        .and("momentDataContent").as("momentDataContent")
+//                        .and("joinDocs.content").as("joinDocContent")
+                    , Aggregation.match(criteria)
+            );
+        }
 
-        Aggregation aggregation = Aggregation.newAggregation(
-                projectionOperation,
-                lookupOperation
-                , Aggregation.match(criteria)
-        );
         return mongoTemplate.aggregate(aggregation, localDoc, Document.class).getMappedResults();
     }
 
+    public static List<Document> mongoJoin(String localDoc,
+                                           String otherDoc, String localField
+            , String foreignField
+            , MongoTemplate mongoTemplate
+        ) {
+      return   mongoJoin(localDoc,otherDoc,localField,foreignField,mongoTemplate,null);
+
+    }
+
     public static List<Document> mongoJoin(MongoReq mongoReq
-            , MongoTemplate mongoTemplate,  ProjectionOperation projectionOperation) {
+            , MongoTemplate mongoTemplate, ProjectionOperation projectionOperation) {
 //        Aggregation aggregation = Aggregation.newAggregation(
 //                Aggregation.project()
 //                        .and("momentData.content").as("momentDataContent")
@@ -115,7 +143,18 @@ public class MongoUtil {
                 , mongoReq.otherDoc
                 , mongoReq.localField
                 , mongoTemplate
-        ,projectionOperation);
+                , projectionOperation);
+
+    }
+    public static List<Document> mongoJoin(MongoReq mongoReq
+            , MongoTemplate mongoTemplate) {
+
+        return mongoJoin(mongoReq.getLocalDoc()
+                , mongoReq.otherDoc
+                , mongoReq.otherDoc
+                , mongoReq.localField
+                , mongoTemplate
+               );
 
     }
 }

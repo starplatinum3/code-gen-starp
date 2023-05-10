@@ -30,6 +30,10 @@
   <button onclick="joinJobCollections()">joinJobCollections</button>
   <button onclick="joinJobCollectionsAsync()">joinJobCollectionsAsync</button>
   <button onclick="count()">count</button>
+  <button onclick="nowcoder_resp_join()">nowcoder_resp_join</button>
+
+
+  
   <input type="text" id="collectionNameInput" value="job" placeholder="请输入集合名称">
   
   <div>
@@ -339,6 +343,68 @@ const setJoin =  (res) =>{
 
     }
     
+    const  nowcoder_resp_join =async () => {
+      let  baseUrl='http://localhost:8889'
+    //   String localDoc;
+    // String otherDoc;
+    // String localField;
+    //   String foreignField;
+    let  localDoc='nowcoder'
+    let  otherDoc='nowcoder_resp'
+    let  localField='recommendData.entityId'
+    let  foreignField='entryId'
+
+      let  params={
+        localDoc,
+        otherDoc,
+        localField,
+        foreignField
+      }
+
+      // {
+      //   "table_schema": "hotel"
+      // }
+      let res = await postData(`${baseUrl}/all/nowcoder_resp_join`,params )
+
+      console.log(res);
+      // res
+      for (let o of res) {
+        if (o.userDoc && o.userDoc.length > 0) {
+          console.log(o);
+        }
+        // java 
+        // set 
+        let ask=
+        o.momentData.content
+        // o. userDoc[0].content
+      //  let  CommentList= getCommentList(o. userDoc)
+       let  CommentList= getCommentList(o)
+
+       console.log("========");
+       console.log("ask");
+       console.log(ask);
+       console.log("CommentList");
+       console.log(CommentList);
+      }
+      // momentData
+      // resDiv.innerText=JSON.stringify(res)
+      // res 
+      // document.getElementById('res').innerText=JSON.stringify(res)
+      // setRes(res)
+      // const jsonData = { "name": "John", "age": 30, "city": "New York" };
+    $("#json-data").jsonViewer(res);
+
+      // .then(res => {
+      //   console.log(res); 
+      //   // res
+      //   for(let o  of res){
+      //     if(o.userDoc&&o.userDoc.length>0){
+      //       console.log(o);
+      //     }
+      //   }
+      // });
+
+    }
     const  count =async () => {
       // let collectionName='nowcoder'
       let collectionName = document.getElementById("collectionNameInput").value;

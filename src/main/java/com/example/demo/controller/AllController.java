@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.Acc;
 import com.example.demo.entity.ReturnT;
 import com.example.demo.repository.AccRepository;
@@ -476,20 +477,39 @@ public class AllController {
 
     @PostMapping("/nowcoder_resp_join")
     public  Object nowcoder_resp_join(@RequestBody MongoReq mongoReq){
-//      return MongoUtil.mongoJoin("nowcoder"
-//                , "nowcoder_resp"
-//                , "recommendData.entityId"
-//                , "entryId"
-//                , mongoTemplate);
+
 //        List<Document> documents = MongoUtil.mongoJoin(mongoReq, mongoTemplate);
 //        for (Document document : documents) {
 ////            document.get("")
 //        }
-        ProjectionOperation projectionOperation = Aggregation.project()
-                .and("momentData.content").as("momentDataContent")
-                .and(  "joinDoc.content").as("joinDocContent");
-        return   MongoUtil.mongoJoin(mongoReq,mongoTemplate
-        ,projectionOperation);
+
+//        2023-05-10 10:55:19.080  INFO 40344 --- [nio-8889-exec-3] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:6, serverValue:1330}] to 43.142.150.223:27017
+//        ProjectionOperation projectionOperation = Aggregation.project()
+//                .and("momentData.content").as("momentDataContent")
+//                .and(  "joinDoc.content").as("joinDocContent");
+
+
+//        return MongoUtil.mongoJoin(
+//                "nowcoder"
+//                , "nowcoder_resp"
+//                , "recommendData.entityId"
+//                , "entryId"
+//                , mongoTemplate
+//                ,projectionOperation);
+        List<Document> documents = MongoUtil.mongoJoin(mongoReq, mongoTemplate  );
+//        for
+        for (Document document : documents) {
+//            String momentData = document.getString("momentData");
+            JSONObject momentData =(JSONObject) document.get("momentData");
+            String content = momentData.getString("content");
+            System.out.println("content");
+            System.out.println(content);
+        }
+        return documents;
+//        ],
+//        momentData
+//        return   MongoUtil.mongoJoin(mongoReq,mongoTemplate
+//        ,projectionOperation);
     }
 
     @Autowired
