@@ -6,10 +6,7 @@ import com.alibaba.fastjson.JSONReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsonschema.JsonSchema;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +15,20 @@ import java.util.Scanner;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_ENUMS_USING_TO_STRING;
 
 public class JsonUtil {
+  public  static    void writeJsonToFile(    JSON faskjson ,String  fileName){
+//        JSONObject faskjson = new JSONObject("{\"name\":\"fask\", \"age\":25, \"gender\":\"male\"}");
+
+        try {
+//            FileWriter file = new FileWriter("faskjson.json");
+            FileWriter file = new FileWriter(fileName);
+            file.write(faskjson.toString());
+            file.flush();
+            file.close();
+            System.out.println("Successfully wrote JSONObject to file.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 //    private JSONReader getJsonReader(String srcPath) {
 //        JSONReader jsonReader = null;
 //        try {

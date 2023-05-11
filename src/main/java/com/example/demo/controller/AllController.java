@@ -1,15 +1,18 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.Acc;
 import com.example.demo.entity.ReturnT;
 import com.example.demo.repository.AccRepository;
 import com.example.demo.repository.ToolDAO;
 import com.example.demo.util.*;
+import com.example.demo.util.StringUtils;
 import com.example.demo.util.codeGen.CodeGen;
 import com.example.demo.util.codeGen.ColumnInfo;
 import com.example.demo.util.codeGen.Table;
 import com.example.demo.util.codeGen.TableInfo;
+import com.google.gson.JsonObject;
 import com.lark.oapi.Client;
 import com.lark.oapi.core.cache.LocalCache;
 import com.lark.oapi.core.enums.BaseUrlEnum;
@@ -21,10 +24,15 @@ import com.lark.oapi.service.docx.v1.model.CreateDocumentReq;
 import com.lark.oapi.service.docx.v1.model.CreateDocumentReqBody;
 import com.lark.oapi.service.docx.v1.model.CreateDocumentResp;
 import com.lark.oapi.service.drive.v1.model.*;
+import com.mongodb.client.MongoCollection;
+import com.sangupta.har.HarUtils;
+import com.sangupta.har.model.Har;
+import com.sangupta.har.model.HarEntry;
 import com.sun.xml.txw2.output.ResultFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.bson.Document;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +59,7 @@ import javax.annotation.Resource;
 import javax.xml.transform.Result;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.Proxy;
 import java.nio.file.Path;
@@ -75,6 +84,7 @@ import com.lark.oapi.core.httpclient.OkHttpTransport;
 import com.lark.oapi.core.response.RawResponse;
 import com.lark.oapi.core.token.AccessTokenType;
 import com.lark.oapi.okhttp.OkHttpClient;
+import top.starp.util.*;
 
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
@@ -482,7 +492,9 @@ public class AllController {
     }
 
     @PostMapping("/nowcoder_resp_join")
-    public  Object nowcoder_resp_join(@RequestBody MongoReq mongoReq){
+    public  Object nowcoder_resp_join(@RequestBody MongoReq mongoReq
+//            ,  @RequestBody WriteFileDto writeFileDto
+   ){
 
 //        List<Document> documents = MongoUtil.mongoJoin(mongoReq, mongoTemplate);
 //        for (Document document : documents) {
@@ -504,6 +516,9 @@ public class AllController {
 //                ,projectionOperation);
         List<Document> documents = MongoUtil.mongoJoin(mongoReq, mongoTemplate  );
 //        for
+//        List<JSONObject>listAsk=new ArrayList<>();
+//        List<JSONObject>listAsk=new ArrayList<>();
+        JSONArray listAsk=new JSONArray();
         for (Document document : documents) {
 //            String momentData = document.getString("momentData");
 //            JSONObject momentData =(JSONObject) document.get("momentData");
@@ -511,7 +526,42 @@ public class AllController {
             String content = momentData.getString("content");
             System.out.println("content");
             System.out.println(content);
+            String ask=content;
+//            content": "类型#裤*版型#宽松*风格#性感*图案#线条*裤型#阔腿裤", "summary":
+//            Document joinDoc =(Document)   document.get("joinDoc");
+//            ArrayList<Document> joinDoc =(ArrayList<Document>)   document.get("joinDoc");
+////            java.util.ArrayList cannot be cast to org.bson.Document
+////            joinDoc:
+//            for (Document commentData : joinDoc) {
+//                String contentCommentData = commentData.getString("content");
+//                System.out.println("contentCommentData");
+//                System.out.println(contentCommentData);
+//            }
+            String allCommentData = getAllCommentData(document);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("content",ask);
+            jsonObject.put("summary",allCommentData);
+            listAsk.add(jsonObject);
+//            System.out.println("joinDoc");
+//            System.out.println(joinDoc);
+////            document.f
+////            joinDoc.forEach(o->o.ge);
+////            joinDoc.getas
+//            String content1 = joinDoc.getString("content");
+
         }
+//        String filePath = writeFileDto.getFilePath();
+//        JSONObject faskjson 写出一个文件
+        String nowFileFormat = DateUtilSt.getNowFileFormat();
+        String outPath = "D:\\i-brain\\nowcoder_join/nowcoder_join_{nowFileFormat}.json"
+                .replace("{nowFileFormat}", nowFileFormat);
+        System.out.println("outPath");
+        System.out.println(outPath);
+        JsonUtil.writeJsonToFile(listAsk,outPath);
+        int size = listAsk.size();
+//        System.out.println("size listAsk");
+//        System.out.println(size);
+        log.info("size listAsk {}" ,size);
         return documents;
 //        ],
 //        momentData
@@ -519,13 +569,122 @@ public class AllController {
 //        ,projectionOperation);
     }
 
+    @PostMapping("/nowcoderHarList_insert")
+    public  Object nowcoderHarList_insert() throws IOException {
+
+//        getNowcoderHarList
+//        List<List<Document>> nowcoderHarList = HarUtilKt.getNowcoderHarList("D:\\download\\www.nowcoder.com工作4.har");
+
+        String filePath="D:\\download\\www.nowcoder.com工作4.har";
+        String collectionName = "nowcoder";
+        List<Document> nowcoderHarList = getNowcoderHarListPat(filePath);
+        Collection<Document> documents1 = mongoTemplate.insert(nowcoderHarList,collectionName);
+//        for (List<Document> documents : nowcoderHarList) {
+////            k.elementUi
+////            Collection<Document> documents1 = mongoTemplate.insertAll(documents,"1");
+//            Collection<Document> documents1 = mongoTemplate.insert(documents,"1");
+//        }
+//        MongoReq mongoReq = new MongoReq();
+//        nowcoder_resp_join()
+        return ReturnT.success(documents1);
+
+    }
+
+    public static List<List<Document>> getNowcoderHarList(String filepath) throws IOException {
+        File file = new File(filepath);
+        Har read = HarUtils.read(file);
+        int index = 0;
+        List<List<Document>> list = new ArrayList<>();
+        for (HarEntry entry : read.log.entries) {
+            if (!entry.request.url.contains("recommend")) {
+                continue;
+            }
+            if (index == 0) {
+                String jsonStr = entry.response.content.text;
+                JSONArray parseJsonGetRecords = HarUtilKt. parseJsonGetRecords(jsonStr);
+                if (parseJsonGetRecords != null) {
+                    List<Document> jsonArrayToDocuments = JsonUtilKt. jsonArrayToDocuments(parseJsonGetRecords);
+                    list.add(jsonArrayToDocuments);
+                }
+            }
+            index++;
+        }
+        return list;
+    }
+
+    public static List<Document> getNowcoderHarListPat(String filepath) throws IOException {
+        File file = new File(filepath);
+        Har read = HarUtils.read(file);
+        int index = 0;
+//        List<List<Document>> list = new ArrayList<>();
+        List<Document> list = new ArrayList<>();
+        for (HarEntry entry : read.log.entries) {
+            if (!entry.request.url.contains("recommend")) {
+                continue;
+            }
+            if (index == 0) {
+                String jsonStr = entry.response.content.text;
+                JSONArray parseJsonGetRecords = HarUtilKt. parseJsonGetRecords(jsonStr);
+                if (parseJsonGetRecords != null) {
+                    List<Document> jsonArrayToDocuments = JsonUtilKt. jsonArrayToDocuments(parseJsonGetRecords);
+//                    list.add(jsonArrayToDocuments);
+//                    ListUtil.
+//                    list
+                    list.addAll(jsonArrayToDocuments);
+                }
+            }
+            index++;
+        }
+        return list;
+    }
+    //    , MongoCollection<Document> collection
+    public static void traverseFolder(File folder) {
+        if (folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+//                file.name.startsWith("")
+                    boolean isHar = file.getName().endsWith(".har")
+                            && file.getName().contains("nowcoder.com");
+//                nowcoder.com
+//                file.name.contains("nowcoder.com")
+                    if (!isHar) {
+                        continue;
+                    }
+//                nowcoder.com工作回暖了
+                    System.out.println(file.getAbsolutePath());
+//                    insertFile(file, collection);
+                    List<List<Document>> nowcoderHarList = HarUtilKt.getNowcoderHarList(file.getAbsolutePath());
+//                if (file.isDirectory()) {
+//                    System.out.println(file.getAbsolutePath());
+////                    insertFile(file,collection)
+//                }
+                }
+            }
+        }
+    }
+
+
+    public static String getAllCommentData(Document document){
+        ArrayList<Document> joinDoc =(ArrayList<Document>)   document.get("joinDoc");
+//            java.util.ArrayList cannot be cast to org.bson.Document
+//            joinDoc:
+        StringBuilder res= new StringBuilder();
+        for (Document commentData : joinDoc) {
+            String contentCommentData = commentData.getString("content");
+//            System.out.println("contentCommentData");
+//            System.out.println(contentCommentData);
+            res.append(contentCommentData).append("\n");
+        }
+        return res.toString();
+    }
     @Autowired
     WebApplicationContext applicationContext;
 
     @ApiOperation(value = "getAllURL", notes = "getAllURL")
     @RequestMapping(value = "/getAllURL", method = RequestMethod.POST)
     public Object getAllURL() throws FileNotFoundException {
-        String postMethodRows = "";
+        StringBuilder postMethodRows = new StringBuilder();
         List<Map<String, String>> resultList = new ArrayList<>();
 
 
@@ -584,7 +743,7 @@ public class AllController {
                     "                        }";
 
             postMethod = postMethod.replace("${methodName}", methodName);
-            postMethodRows += postMethod + "\n";
+            postMethodRows.append(postMethod).append("\n");
 //            System.out.println("postMethod");
             System.out.println(postMethod);
             if (annotations != null) {
@@ -617,7 +776,7 @@ public class AllController {
         String tplPath = "D:\\proj\\springBoot\\code-gen-starp\\src\\main\\resources\\genCodeTemplate\\api\\postman_test.html";
 //        FileUtil.readResourceFileData()
         String tpl = FileUtil.readAll(tplPath);
-        String code = tpl.replace("{postMethodRows}", postMethodRows);
+        String code = tpl.replace("{postMethodRows}", postMethodRows.toString());
 //        Path fileName = new Path("1").getFileName();
 //        java  用 字符串 创建一个 Path
 //        String pathString = "C:/path/to/file.txt";
