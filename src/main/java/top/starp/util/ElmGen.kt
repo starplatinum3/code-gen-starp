@@ -45,10 +45,20 @@ fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
         val column_name = columnInfo.columN_NAME
 //        val java字段类型 = columnInfo.获取java字段类型()
         val javaFieldName = columnInfo.javaFieldName
+        // Name todo
+       val checkIfShouldTypeFormmaterYes= checkIfShouldTypeFormmater(javaFieldName)
+       val formatter= if(checkIfShouldTypeFormmaterYes){
+            """
+                :formatter="${javaFieldName}Formatter"
+            """.trimIndent()
+        }else{
+            ""
+       }
         if ("id" != column_name) {
             val row =  """
                 <el-table-column label="$commentShow" 
                     sortable
+                    $formatter
                     align="center" prop="$javaFieldName" >
                 </el-table-column>
                 
@@ -126,18 +136,73 @@ fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
 //
 //    """.trimIndent()
 //}
+//Level
+fun  checkIfShouldTypeFormmater(javaFieldName:String): Boolean {
+    return checkIfShouldType(javaFieldName,listOf("level","sex","status","type","time","date"));
+}
 
+fun  checkIfShouldUploadType(javaFieldName:String): Boolean {
+//    val shouldUploadTypeList= listOf<String>("url","pic")
+//    for ( type in shouldUploadTypeList){
+//        val should=
+//                StringUtils.containsIgnoreCase(javaFieldName, type)
+//        if(should){
+//            return true
+//        }
+//    }
+//    return false
+
+    val shouldUploadTypeList= listOf<String>("url","pic")
+    return checkIfShouldType(javaFieldName,shouldUploadTypeList)
+}
+
+fun  checkIfShouldType(javaFieldName:String,shouldUploadTypeList: List<String>): Boolean {
+//    val shouldUploadTypeList= listOf<String>("url","pic")
+    for ( type in shouldUploadTypeList){
+        val should=
+                StringUtils.containsIgnoreCase(javaFieldName, type)
+        if(should){
+            return true
+        }
+    }
+    return false
+}
+fun  checkIfShouldTextAreaType(javaFieldName:String): Boolean {
+//    val shouldUploadTypeList= listOf<String>("url","pic")
+//   return checkIfShouldType(javaFieldName,shouldUploadTypeList)
+    return checkIfShouldType(javaFieldName,listOf("intro","extra"))
+//    for ( type in shouldUploadTypeList){
+//        val should=
+//                StringUtils.containsIgnoreCase(javaFieldName, type)
+//        if(should){
+//            return true
+//        }
+//    }
+//    return false
+}
+fun  checkIfShouldTypePassword   (javaFieldName:String): Boolean {
+    return checkIfShouldType(javaFieldName,listOf("password","pass"))
+}
 fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 
 //    ElmG
 
+//   val shouldUploadTypeList= listOf<String>("url","pic")
+//    for ( type in shouldUploadTypeList){
+//        val should=
+//        StringUtils.containsIgnoreCase(javaFieldName, type)
+//        if(should){
+//            return true
+//        }
+//    }
     val formItems = columnInfos.map { columnInfo ->
         val javaFieldName = columnInfo.javaFieldName
 //        columnInfo.datA_TYPE
 //        javaFieldName.contais("url")
 
         val columnCommentShow = columnInfo.columnCommentShow
-        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
+        val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
+//        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
         if(containsUrlIgnoreCase){
            return """
             <el-form-item>
@@ -164,6 +229,48 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
                 </el-form-item>
         """.trimIndent()
         }
+        if(
+                checkIfShouldTextAreaType(javaFieldName)
+        ){
+          return  """
+            <el-form-item prop="$javaFieldName" label="$columnCommentShow">
+                    <el-input
+                        type="textarea"
+                        v-model="form.$javaFieldName"
+                        placeholder="输入其他内容"
+                        maxlength="254"
+                        rows="5"
+                        show-word-limit
+                    >
+                        <template #prefix>
+                            <i class="el-icon-lock form__icon"></i>
+                        </template>
+                    </el-input>
+                </el-form-item>
+        """.trimIndent()
+        }
+
+        if(
+                checkIfShouldTypePassword(javaFieldName)
+        )
+        {
+
+         return   """
+                <el-form-item prop="$javaFieldName" label="密码">
+                    <el-input
+                        v-model="form.$javaFieldName"
+                        placeholder="请输入密码(长度4-20的数字或字母或下划线)"
+                        show-password
+                    >
+                        <template #prefix>
+                            <i class="el-icon-lock form__icon"></i>
+                        </template>
+                    </el-input>
+                </el-form-item>
+            """.trimIndent()
+        }
+
+
 
 //        label="$columnCommentShow"
 //       val v= haveRules?"""
@@ -183,21 +290,19 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 //
 //        }
 
+      val  rules=if (haveRules) {
+            """
+    :rules="rules.$javaFieldName"
+    """
+        } else {
+            ""
+        }
+
      return   """
        
         <el-form-item
             prop="$javaFieldName"
-            ${
-            if (haveRules) {
-                """
-    :rules="rules.$javaFieldName"
-    """
-            } else {
-                ""
-            }
-        }
-        
-           
+            $rules
             class="check-in__item"
         >
          $columnCommentShow

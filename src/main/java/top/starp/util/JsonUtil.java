@@ -1,20 +1,21 @@
-package com.example.demo.util;
+package top.starp.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONReader;
+import com.example.demo.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsonschema.JsonSchema;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_ENUMS_USING_TO_STRING;
 
 public class JsonUtil {
+
 
     public static String getString(JSONObject extraInfo,String key){
         if(extraInfo==null){

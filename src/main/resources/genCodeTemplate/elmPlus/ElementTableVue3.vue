@@ -9,6 +9,9 @@
             search
         />
         {formItemRows}
+
+                <el-button type="primary" @click="search">查询</el-button>
+
         <div class="reserved-order__table">
             <el-table :data="list" :default-sort="defaultSort" stripe border>
                 {elTableColumnRows}
@@ -24,25 +27,26 @@
                                 办理入住
                             </el-button>
                             <el-button
-                                          size="mini"
+                                    size="mini"
                                       type="primary"
-                                            @click="addOne(scope.row)"
+                                     @click="addOne(scope.row)"
                                          >
                                            新增
                                  </el-button>
-                            <el-button
+                                 <el-button
                                 size="mini"
-                                @click="toModifyOrder(scope.row)"
+                                @click="toModify(scope.row)"
                             >
-                                修改订单
+                                修改
                             </el-button>
+                         
                             <el-popconfirm
                                 icon="el-icon-info"
                                 iconColor="red"
                                 confirmButtonText="是"
                                 cancelButtonText="否"
                                 title="确定要删除吗？"
-                                @confirm="deleteOder(scope.row)"
+                                @confirm="deleteOne(scope.row)"
                             >
                                 <template #reference>
                                     <el-button size="mini" type="danger">
@@ -50,6 +54,8 @@
                                     </el-button>
                                 </template>
                             </el-popconfirm>
+
+                            
                         </div>
                     </template>
                 </el-table-column>
@@ -65,9 +71,9 @@ import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import loading from '@/utils/loading';
 import socketIOTool from '@/utils/socketIOTool';
-import HttpUtil from '../utils/HttpUtil';
-import k from '../utils/Tables';
-import UiUtil from '../utils/UiUtil';
+import HttpUtil from '@/utils/HttpUtil';
+import k from '@/utils/Tables';
+import UiUtil from '@/utils/UiUtil';
 
 // function getOrdersRequest(state) {
 import { get{className}sRequest, delete{className}Request } from '@/utils/{entityName}Request';
@@ -102,6 +108,11 @@ const form = reactive({jsonDefaultNull});
                 value: 'contact',
             },
         ];
+
+        const search = () => {
+                    // HttpUtil.getList(tableName,this.form)
+                    UiUtil.getList(tableName,tableData,this.form)
+                }
 
         const conditionsData = reactive({
             conditions: [],
@@ -265,13 +276,23 @@ const tableName=k.{entityName}
             });
         };
 
- const addOne = (order) => {
+        const toModify = (order) => {
             router.push({
-                name: 'CheckIn',
+                name: 'Modify{className}r',
+                query: { oid: order.oid },
+                params: { state: 0 },
+            });
+        };
+
+        const addOne = (order) => {
+            router.push({
+                name: 'add{className}',
                 query: { oid: order.oid },
                 params: { uid: order.uid },
             });
         };
+        
+
         const toCheckIn = (order) => {
             router.push({
                 name: 'CheckIn',
@@ -309,7 +330,37 @@ const tableName=k.{entityName}
                 });
         };
 
+        const deleteOne = (item) => {
+            loading.start();
+            HttpUtil.delete(item)
+            // deleteOrderRequest(order.oid)
+                .then((res) => {
+                    if (res.state) {
+                        let index = tableData.list.findIndex((value) => {
+                            return item.id === value.id;
+                        });
+                        tableData.list.splice(index, 1);
+//                         使用 splice() 方法从 tableData.list 数组中删除指定索引位置 index 处的一个元素。
+// 删除后，splice() 方法会返回被删除的元素，但在这段代码中并没有使用它，因此可以忽略返回值。
+                        tableData.origin = tableData.list;
+                        ElMessage.success(res.msg);
+
+                        reload();
+                    } else {
+                        ElMessage.error(res.msg);
+                    }
+
+                    loading.close();
+                })
+
+                .catch((err) => {
+                    console.log(err);
+                    ElMessage.error('fail');
+                    loading.close();
+                });
+        };
         return {
+            deleteOne,
             searchOptions,
             ...toRefs(conditionsData),
             ...toRefs(tableData),
@@ -317,6 +368,7 @@ const tableName=k.{entityName}
             sortType,
             sortReserved,
             toModifyOrder,
+            toModify,
             toCheckIn,
             deleteOder,
               rules,

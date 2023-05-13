@@ -44,11 +44,23 @@
                     >
                 </el-form-item>
             </el-form>
+
+               <!-- 分页组件 -->
+    <el-pagination
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="total"
+      layout="prev, pager, next"
+      @current-change="handlePageChange"
+    ></el-pagination>
+    
         </div>
     </div>
 </template>
 
 <script>
+// import { ref } from 'vue';
+import { ElPagination } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import loading from '@/utils/loading';
@@ -64,6 +76,8 @@ import StatusSelect from '@/components/StatusSelect.vue';
 import ElmStatusSelect from '@/components/ElmStatusSelect.vue';
 import HttpUtil from '@/utils/HttpUtil';
 import k from '@/utils/Tables';
+import { ref } from 'vue';
+
 import UiUtil from '@/utils/UiUtil';
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\ElmStatusSelect.vue
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\StatusSelect.vue
@@ -73,8 +87,22 @@ export default {
     components: {
         ElmStatusSelect,
         StatusSelect,
+        ElPagination,
     },
     setup() {
+
+        const currentPage = ref(1);
+    const pageSize = 10;
+    const total = ref(0);
+
+    const handlePageChange = (newPage) => {
+      // 处理分页变更事件
+      currentPage.value = newPage;
+      // 根据新的页码请求数据或执行其他操作
+      fetchData(newPage);
+    };
+
+
         const formElem = ref(null);
         
         const form = reactive({jsonDefaultNull});
@@ -101,6 +129,24 @@ export default {
             ],
         });
 
+
+
+                const search = () => {
+                            // HttpUtil.getList(tableName,this.form)
+                            // UiUtil.getList(tableName,tableData,form)
+                            // list
+                            UiUtil.list(tableName,tableData,form)
+                        }
+
+                        const addOne = (order) => {
+                                    // D:\proj\makeBook\hotel\hotel-management-origin\src\views\hall\roomTypeInfo\AddRoomTypeInfo.vue
+                                    router.push({
+                                        name: 'Add{className}',
+                                        query: { oid: order.oid },
+                                        params: { uid: order.uid },
+                                    });
+                                };
+
         const typeOptions = [
             {
                 label: '大床间',
@@ -115,6 +161,14 @@ export default {
                 value: 2,
             },
         ];
+
+         const tableData = reactive({
+                    origin: [],
+                    list: [],
+                    search: [],
+                });
+
+                    UiUtil.list(tableName,tableData,{})
         const roomTypeOptions = [
             {
                     text: '大床间',
@@ -168,6 +222,15 @@ export default {
             fileList.splice(0, 1);
         };
 
+        const addOne = (order) => {
+            router.push({
+                name: 'add{className}',
+                query: { oid: order.oid },
+                params: { uid: order.uid },
+            });
+        };
+        
+
         const uploadImg = (obj) => {
             let formData = new FormData();
             formData.append('file', obj.file);
@@ -207,6 +270,13 @@ export default {
         };
 
         return {
+            currentPage,
+      pageSize,
+      total,
+      handlePageChange,
+  ...toRefs(tableData),
+ search,
+            addOne,
             form,
             formElem,
             rules,
