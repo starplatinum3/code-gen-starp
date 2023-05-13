@@ -141,6 +141,10 @@ fun  checkIfShouldTypeFormmater(javaFieldName:String): Boolean {
     return checkIfShouldType(javaFieldName,listOf("level","sex","status","type","time","date"));
 }
 
+fun  checkIfShouldTypeTime(javaFieldName:String): Boolean {
+    return checkIfShouldType(javaFieldName,listOf("date","time"));
+}
+
 fun  checkIfShouldUploadType(javaFieldName:String): Boolean {
 //    val shouldUploadTypeList= listOf<String>("url","pic")
 //    for ( type in shouldUploadTypeList){
@@ -182,6 +186,154 @@ fun  checkIfShouldTextAreaType(javaFieldName:String): Boolean {
 }
 fun  checkIfShouldTypePassword   (javaFieldName:String): Boolean {
     return checkIfShouldType(javaFieldName,listOf("password","pass"))
+}
+
+fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
+    val javaFieldName = columnInfo.javaFieldName
+//        columnInfo.datA_TYPE
+//        javaFieldName.contais("url")
+
+    val columnCommentShow = columnInfo.columnCommentShow
+    val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
+//        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
+    if(containsUrlIgnoreCase){
+        return """
+            <el-form-item>
+                    <el-upload
+                        ref="uploadElem"
+                        class="l-flex"
+                        action="http://localhost:9092/uploadIntroImg"
+                        :http-request="uploadImg"
+                        list-type="picture-card"
+                        :file-list="upload.list"
+                        :auto-upload="false"
+                        :limit="1"
+                        :on-preview="imgPreview"
+                        :on-change="verifyFileType"
+                    >
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                    <el-dialog v-model="dialogVisible">
+                        <div style="text-align: center">
+                            <img :src="upload.img" style="width: 100%" />
+                        </div>
+                    </el-dialog>
+                    <p class="hotel-intro__tip">只能上传一张图片</p>
+                </el-form-item>
+        """.trimIndent()
+    }
+
+    if(
+            checkIfShouldTypeTime(javaFieldName)
+    ){
+        return  """
+           <el-form-item
+                label="$columnCommentShow"
+                class="search-filter__item"
+                v-if="date"
+            >
+                <el-date-picker
+                    v-model="form.$javaFieldName"
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :disabledDate="disabledDate"
+                    size="small"
+                >
+                </el-date-picker>
+            </el-form-item>
+        """.trimIndent()
+    }
+
+    if(
+            checkIfShouldTextAreaType(javaFieldName)
+    ){
+        return  """
+            <el-form-item prop="$javaFieldName" label="$columnCommentShow">
+                    <el-input
+                        type="textarea"
+                        v-model="form.$javaFieldName"
+                        placeholder="输入其他内容"
+                        maxlength="254"
+                        rows="5"
+                        show-word-limit
+                    >
+                        <template #prefix>
+                            <i class="el-icon-lock form__icon"></i>
+                        </template>
+                    </el-input>
+                </el-form-item>
+        """.trimIndent()
+    }
+
+    if(
+            checkIfShouldTypePassword(javaFieldName)
+    )
+    {
+
+        return   """
+                <el-form-item prop="$javaFieldName" label="密码">
+                    <el-input
+                        v-model="form.$javaFieldName"
+                        placeholder="请输入密码(长度4-20的数字或字母或下划线)"
+                        show-password
+                    >
+                        <template #prefix>
+                            <i class="el-icon-lock form__icon"></i>
+                        </template>
+                    </el-input>
+                </el-form-item>
+            """.trimIndent()
+    }
+
+
+
+//        label="$columnCommentShow"
+//       val v= haveRules?"""
+//       :rules="rules.$javaFieldName
+//       """":""
+//        val v = if (haveRules) {
+//            """
+//    :rules="rules.$javaFieldName"
+//    """
+//        } else {
+//            ""
+//        }
+//        ElMGen
+
+//        MysqlDataType.isNumberType()
+//        if (MysqlDataType.isTextType(columnInfo.datA_TYPE)) {
+//
+//        }
+
+    val  rules=if (haveRules) {
+        """
+    :rules="rules.$javaFieldName"
+    """
+    } else {
+        ""
+    }
+
+    return   """
+       
+        <el-form-item
+            prop="$javaFieldName"
+            $rules
+            class="check-in__item"
+        >
+         $columnCommentShow
+         <el-input
+          placeholder="请输入$columnCommentShow"
+          :maxlength="10"
+          size="small"
+          clearable
+          style="width: 200px"
+          v-model="form.$javaFieldName"
+        ></el-input>
+                      
+                    </el-form-item>
+        """.trimIndent()
+
 }
 fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 
@@ -229,6 +381,29 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
                 </el-form-item>
         """.trimIndent()
         }
+
+        if(
+                checkIfShouldTypeTime(javaFieldName)
+        ){
+            return  """
+           <el-form-item
+                label="$columnCommentShow"
+                class="search-filter__item"
+                v-if="date"
+            >
+                <el-date-picker
+                    v-model="form.$javaFieldName"
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :disabledDate="disabledDate"
+                    size="small"
+                >
+                </el-date-picker>
+            </el-form-item>
+        """.trimIndent()
+        }
+
         if(
                 checkIfShouldTextAreaType(javaFieldName)
         ){

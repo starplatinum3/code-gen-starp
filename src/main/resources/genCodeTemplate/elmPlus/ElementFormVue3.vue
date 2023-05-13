@@ -229,6 +229,14 @@ export default {
                 params: { uid: order.uid },
             });
         };
+
+         const toModify = (order) => {
+                    router.push({
+                        name: 'Modify{className}',
+                        query: { oid: order.oid },
+                        params: { state: 0 },
+                    });
+                };
         
 
         const uploadImg = (obj) => {
@@ -276,6 +284,7 @@ export default {
       handlePageChange,
   ...toRefs(tableData),
  search,
+ toModify,
             addOne,
             form,
             formElem,
