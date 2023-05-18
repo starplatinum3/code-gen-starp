@@ -15,29 +15,7 @@
                 <p class="form__msg">{{ errorMsg }}</p>
                 {form_item_rows_add}
                
-                <!-- <el-form-item>
-                <el-upload
-                    ref="uploadElem"
-                    class="l-flex"
-                    action="http://localhost:9092/uploadImg"
-                    :http-request="uploadImg"
-                    list-type="picture-card"
-                    :file-list="upload.list"
-                    :auto-upload="false"
-                    :limit="1"
-                    :on-preview="imgPreview"
-                    :on-change="verifyFileType"
-                    :on-success="onSuccessHandle"
-                >
-                    <i class="el-icon-plus"></i>
-                </el-upload>
-                <el-dialog v-model="dialogVisible">
-                    <div style="text-align: center">
-                        <img :src="upload.img" style="width: 100%" />
-                    </div>
-                </el-dialog>
-                <p class="add-room__tip">只能上传一张图片</p>
-            </el-form-item> -->
+
                 <el-form-item>
                     <el-button class="form__btn" type="primary" @click="add{className}"
                         >添加新{tableComment}</el-button
@@ -59,6 +37,8 @@
 </template>
 
 <script>
+import { reactive, toRefs, inject, watch } from 'vue';
+
 // import { ref } from 'vue';
 import { ElPagination } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
@@ -250,7 +230,6 @@ export default {
             });
         };
 
-       
 
         const add{className} = () => {
             formElem.value.validate((valid) => {
@@ -301,6 +280,7 @@ export default {
             onSuccessHandle,
             uploadImg,
             roomTypeOptions,
+              dialogVisible,
         };
     },
 };

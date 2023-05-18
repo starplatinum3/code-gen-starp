@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import Options from '@/utils/options';
 import { reactive, toRefs, inject, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -330,6 +331,32 @@ const tableName=k.{entityName}
                 });
         };
 
+     // 放大图片
+            let dialogVisible = ref(false);
+            const imgPreview = (file) => {
+                form.img = file.url;
+                dialogVisible.value = true;
+            };
+
+            const verifyFileType = (file, fileList) => {
+                if (!file.raw.type.includes('image')) {
+                    fileList.splice(0, 1);
+                    ElMessage.warning('上传文件类型必须是图片!');
+                    return false;
+                }
+                upload.img = file.url;
+            };
+
+            const uploadImg = (obj) => {
+                let formData = new FormData();
+                formData.append('file', obj.file);
+                formData.append('type', -1);
+                formData.append('oldImgName', upload.oldImgName);
+
+                uploadIntroImgRequest(formData).then((res) => {
+                    console.log(res.msg);
+                });
+            };
         const deleteOne = (item) => {
             loading.start();
             HttpUtil.delete(item)
@@ -360,6 +387,7 @@ const tableName=k.{entityName}
                 });
         };
         return {
+        verifyFileType,
             deleteOne,
             searchOptions,
             ...toRefs(conditionsData),
@@ -374,6 +402,10 @@ const tableName=k.{entityName}
               rules,
                 form,
                 addOne,
+                  dialogVisible,
+                            imgPreview,
+                            verifyFileType,
+                            uploadImg,
         };
     },
 };

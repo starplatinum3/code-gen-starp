@@ -218,9 +218,10 @@
 
     const genCode = () => {
       // "table_schema": "exam"
-      postData(`http://localhost:8889/all/genCode`, {
+      let formData={
           "table_schema": "hotel"
-        })
+        }
+      postData(`http://localhost:8889/all/genCode`,formData)
         .then(res => {
           console.log(res); // JSON data parsed by `data.json()` call
           // formatDateTime

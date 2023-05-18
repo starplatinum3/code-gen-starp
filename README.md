@@ -6,7 +6,9 @@ https://www.zhihu.com/question/541875395/answer/2566050039
 mvn spring-boot:run
 DB_HOST=locahost;DB_PASSWORD=123;DB_USER=admin;DB_NAME=public
 
-
+{
+"table_schema": "hotel"
+}
 http://localhost:8889/all/genCode
 {
 "table_schema": "exam"
