@@ -270,12 +270,7 @@ const rules = reactive({
                 tableData.list = res;
                };
 
-        HttpUtil.getList(tableName,{})
-                .then(res=>{
-                    console.log(res);
-                }).catch(err=>{
-                    console.log(err);
-                })
+
 
         const toModifyOrder = (order) => {
             router.push({
@@ -305,6 +300,16 @@ const rules = reactive({
                 params: { uid: order.uid },
             });
         };
+
+        const addOne = (item) => {
+                    let id = item.id;
+                    let oid = item.oid;
+                    router.push({
+                        name: 'AddGuest',
+                        query: { oid, id },
+                        params: { uid: item.uid },
+                    });
+                };
         
 
         const toCheckIn = (order) => {
