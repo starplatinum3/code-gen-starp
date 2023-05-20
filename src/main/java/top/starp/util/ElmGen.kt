@@ -192,6 +192,20 @@ fun  checkIfShouldTypeSelect  (javaFieldName:String): Boolean {
     return checkIfShouldType(javaFieldName,listOf("status"))
 }
 
+fun gen_form_item_vue3_wrap_col(columnInfo :ColumnInfo): String {
+   val form_item_vue3= gen_form_item_vue3(columnInfo)
+   return """
+        <el-col
+                    :xs="{ span: 24 }"
+                    :sm="{ span: 12 }"
+                    :md="{ span: 12 }"
+                    :lg="{ span: 8 }"
+                    :xl="{ span: 8 }"
+                >
+                $form_item_vue3
+                </el-col>
+    """.trimIndent()
+}
 fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
     val javaFieldName = columnInfo.javaFieldName
 //        columnInfo.datA_TYPE
@@ -203,6 +217,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
     if(containsUrlIgnoreCase){
         return """
             <el-form-item>
+            $javaFieldName
                     <el-upload
                         ref="uploadElem"
                         class="l-flex"
@@ -300,10 +315,13 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
     )
     {
 
+//        label="密码"
         return   """
-                <el-form-item prop="$javaFieldName" label="密码">
+                <el-form-item prop="$javaFieldName" >
+                $columnCommentShow
                     <el-input
                         v-model="form.$javaFieldName"
+                        style="width: 200px"
                         placeholder="请输入密码(长度4-20的数字或字母或下划线)"
                         show-password
                     >
@@ -315,153 +333,9 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
             """.trimIndent()
     }
 
-
-
-//        label="$columnCommentShow"
-//       val v= haveRules?"""
-//       :rules="rules.$javaFieldName
-//       """":""
-//        val v = if (haveRules) {
-//            """
-//    :rules="rules.$javaFieldName"
-//    """
-//        } else {
-//            ""
-//        }
-//        ElMGen
-
-//        MysqlDataType.isNumberType()
-//        if (MysqlDataType.isTextType(columnInfo.datA_TYPE)) {
-//
-//        }
-
-    val  rules=if (haveRules) {
-        """
-    :rules="rules.$javaFieldName"
-    """
-    } else {
-        ""
-    }
-
-    return   """
-       
-        <el-form-item
-            prop="$javaFieldName"
-            $rules
-            class="check-in__item"
-        >
-         $columnCommentShow
-         <el-input
-          placeholder="请输入$columnCommentShow"
-          :maxlength="10"
-          size="small"
-          clearable
-          style="width: 200px"
-          v-model="form.$javaFieldName"
-        ></el-input>
-                      
-                    </el-form-item>
-        """.trimIndent()
-
-}
-fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
-
-//    ElmG
-
-//   val shouldUploadTypeList= listOf<String>("url","pic")
-//    for ( type in shouldUploadTypeList){
-//        val should=
-//        StringUtils.containsIgnoreCase(javaFieldName, type)
-//        if(should){
-//            return true
-//        }
-//    }
-    val formItems = columnInfos.map { columnInfo ->
-     return   gen_form_item_vue3(columnInfo)
-//
-//        val javaFieldName = columnInfo.javaFieldName
-////        columnInfo.datA_TYPE
-////        javaFieldName.contais("url")
-//
-//        val columnCommentShow = columnInfo.columnCommentShow
-//        val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
-////        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
-//        if(containsUrlIgnoreCase){
-//           return """
-//            <el-form-item>
-//                    <el-upload
-//                        ref="uploadElem"
-//                        class="l-flex"
-//                        action="http://localhost:9092/uploadIntroImg"
-//                        :http-request="uploadImg"
-//                        list-type="picture-card"
-//                        :file-list="upload.list"
-//                        :auto-upload="false"
-//                        :limit="1"
-//                        :on-preview="imgPreview"
-//                        :on-change="verifyFileType"
-//                    >
-//                        <i class="el-icon-plus"></i>
-//                    </el-upload>
-//                    <el-dialog v-model="dialogVisible">
-//                        <div style="text-align: center">
-//                            <img :src="upload.img" style="width: 100%" />
-//                        </div>
-//                    </el-dialog>
-//                    <p class="hotel-intro__tip">只能上传一张图片</p>
-//                </el-form-item>
-//        """.trimIndent()
-//        }
-//
-//        if(
-//                checkIfShouldTypeTime(javaFieldName)
-//        ){
-//            return  """
-//           <el-form-item
-//                label="$columnCommentShow"
-//                class="search-filter__item"
-//                v-if="date"
-//            >
-//                <el-date-picker
-//                    v-model="form.$javaFieldName"
-//                    type="daterange"
-//                    start-placeholder="开始日期"
-//                    end-placeholder="结束日期"
-//                    :disabledDate="disabledDate"
-//                    size="small"
-//                >
-//                </el-date-picker>
-//            </el-form-item>
-//        """.trimIndent()
-//        }
-//
-//        if(
-//                checkIfShouldTextAreaType(javaFieldName)
-//        ){
-//          return  """
-//            <el-form-item prop="$javaFieldName" label="$columnCommentShow">
-//                    <el-input
-//                        type="textarea"
-//                        v-model="form.$javaFieldName"
-//                        placeholder="输入其他内容"
-//                        maxlength="254"
-//                        rows="5"
-//                        show-word-limit
-//                    >
-//                        <template #prefix>
-//                            <i class="el-icon-lock form__icon"></i>
-//                        </template>
-//                    </el-input>
-//                </el-form-item>
-//        """.trimIndent()
-//        }
-//
-//        if(
-//                checkIfShouldTypePassword(javaFieldName)
-//        )
-//        {
-//
-//         return   """
+//    columnInfo.isDateType
+//    if (columnInfo.isNumberType) {
+//        return   """
 //                <el-form-item prop="$javaFieldName" label="密码">
 //                    <el-input
 //                        v-model="form.$javaFieldName"
@@ -474,58 +348,72 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 //                    </el-input>
 //                </el-form-item>
 //            """.trimIndent()
-//        }
-//
-//
-//
-////        label="$columnCommentShow"
-////       val v= haveRules?"""
-////       :rules="rules.$javaFieldName
-////       """":""
-////        val v = if (haveRules) {
-////            """
-////    :rules="rules.$javaFieldName"
-////    """
-////        } else {
-////            ""
-////        }
-////        ElMGen
-//
-////        MysqlDataType.isNumberType()
-////        if (MysqlDataType.isTextType(columnInfo.datA_TYPE)) {
-////
-////        }
-//
-//      val  rules=if (haveRules) {
-//            """
-//    :rules="rules.$javaFieldName"
-//    """
-//        } else {
-//            ""
-//        }
-//
-//     return   """
-//
-//        <el-form-item
-//            prop="$javaFieldName"
-//            $rules
-//            class="check-in__item"
-//        >
-//         $columnCommentShow
-//         <el-input
-//          placeholder="请输入$columnCommentShow"
-//          :maxlength="10"
-//          size="small"
-//          clearable
-//          style="width: 200px"
-//          v-model="form.$javaFieldName"
-//        ></el-input>
-//
-//                    </el-form-item>
-//        """.trimIndent()
+//    }
+//    if(
+//            checkIfShouldTypePassword(javaFieldName)
+//    )
+
+
+//    v-model
+    val  v_model=if (columnInfo.isNumberType) {
+        """
+    v-model.number
+    """
+    } else {
+        "v-model"
+    }
+
+    val  el_input_conf_type=if (columnInfo.isNumberType) {
+        """
+          v-number-range="{ min: 0, max: 20 }"
+          type="number"
+          
+    """
+    } else {
+        """
+    """
+    }
+    val  rules=if (haveRules) {
+        """
+    :rules="rules.$javaFieldName"
+    """
+    } else {
+        ""
+    }
+//    v-number-range="{ min: 0, max: 20 }"
+
+    return   """
+       
+        <el-form-item
+            prop="$javaFieldName"
+            $rules
+            class="check-in__item"
+        >
+         $columnCommentShow
+         <el-input
+          placeholder="请输入$columnCommentShow"
+            :maxlength="10"
+            size="small"
+            clearable
+            style="width: 200px"
+            $v_model="form.$javaFieldName"
+            $el_input_conf_type
+        ></el-input>
+                      
+                    </el-form-item>
+        """.trimIndent()
+
+}
+fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
+
+    val formItems = columnInfos.map { columnInfo ->
+//           gen_form_item_vue3(columnInfo)
+        gen_form_item_vue3_wrap_col(columnInfo)
 
 
     }
+    println("formItems")
+    println(formItems)
     return formItems.joinToString("\n")
 }
 
@@ -533,7 +421,8 @@ fun gen_form_item_rows_add(columnInfos: List<ColumnInfo>): String {
 
 
     val formItems = columnInfos.map { columnInfo ->
-       return gen_form_item_vue3(columnInfo)
+//        这里不能 return 不然直接return 这第一个了 是函数return了
+    gen_form_item_vue3(columnInfo)
 //        val javaFieldName = columnInfo.javaFieldName
 //        val columnCommentShow = columnInfo.columnCommentShow
 //        """
@@ -548,6 +437,8 @@ fun gen_form_item_rows_add(columnInfos: List<ColumnInfo>): String {
 //    """.trimIndent()
 
     }
+    println("formItems")
+    println(formItems)
     return formItems.joinToString("\n")
 }
 

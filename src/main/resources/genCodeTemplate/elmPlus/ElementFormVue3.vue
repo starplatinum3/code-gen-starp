@@ -37,8 +37,7 @@
 </template>
 
 <script>
-import { reactive, toRefs, inject, watch } from 'vue';
-
+import { reactive, ref,toRefs, inject, watch } from 'vue';
 // import { ref } from 'vue';
 import { ElPagination } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
@@ -51,7 +50,6 @@ import { uploadImgRequest } from '@/utils/roomRequest';
 
 // import HttpUtil from '../../../utils/HttpUtil';
 // import HttpUtil from 'src/utils/HttpUtil';
-import HttpUtil from '@/utils/HttpUtil';
 import StatusSelect from '@/components/StatusSelect.vue';
 import ElmStatusSelect from '@/components/ElmStatusSelect.vue';
 import HttpUtil from '@/utils/HttpUtil';
@@ -63,7 +61,7 @@ import UiUtil from '@/utils/UiUtil';
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\StatusSelect.vue
 // D:\proj\makeBook\hotel\hotel-management-origin\src\views\hall\roomTypeInfo\AddRoomTypeInfo.vue
 export default {
-    name: 'Add{tableName}',
+     name: 'Add{className}',
     components: {
         ElmStatusSelect,
         StatusSelect,
@@ -202,14 +200,6 @@ export default {
             fileList.splice(0, 1);
         };
 
-        const addOne = (order) => {
-            router.push({
-                name: 'add{className}',
-                query: { oid: order.oid },
-                params: { uid: order.uid },
-            });
-        };
-
          const toModify = (order) => {
                     router.push({
                         name: 'Modify{className}',
@@ -256,6 +246,8 @@ export default {
             });
         };
 
+         const btnNameUpAdd = ref("添加");
+
         return {
             currentPage,
       pageSize,
@@ -264,6 +256,7 @@ export default {
   ...toRefs(tableData),
  search,
  toModify,
+  add{className},
             addOne,
             form,
             formElem,
@@ -273,7 +266,6 @@ export default {
             typeOptions,
             options,
             errorMsg,
-            addRoom,
             dialogVisible,
             imgPreview,
             verifyFileType,
@@ -281,6 +273,7 @@ export default {
             uploadImg,
             roomTypeOptions,
               dialogVisible,
+                 btnNameUpAdd,
         };
     },
 };

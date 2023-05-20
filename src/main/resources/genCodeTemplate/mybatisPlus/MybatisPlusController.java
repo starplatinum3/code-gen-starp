@@ -13,26 +13,30 @@ package #包名#.controller;
 
 //import org.springframework.data.domain.*;
 //import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
 
 //import #包名#.util.JsonUtil;
 //import #包名#.util.ReturnT;
-import  #包名#.utility.#returnType#;
+
 
 //import #包名#.util.#returnType#;
 //import #包名#.util.StrUtil;
 //import #包名#.util.page.StarpPage;
 //import #包名#.repository.#类名#Repository;
-import #包名#.service.#类名#Service;
-import #包名#.domain.#类名#;
+
 
 //import #包名#.entity.#类名#;
 //import #包名#.util.StringUtils;
-import #包名#.utility.StringUtils;
+//import #包名#.utility.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.*;
+import #包名#.service.#类名#Service;
+import #包名#.domain.#类名#;
+import  #包名#.utility.#returnType#;
+import top.starp.util.ReturnT;
+import top.starp.util.StringUtils;
 
 import javax.annotation.Resource;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -49,8 +53,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 //@Api(tags = "#实体名#")
-//@CrossOrigin
-@CrossOrigin(allowCredentials = "true")
+@CrossOrigin
+//@CrossOrigin(allowCredentials = "true")
 @RestController
 @RequestMapping("/#实体名#")
 //@RequestMapping("/api/#实体名#")
@@ -140,7 +144,19 @@ public class #类名#ControllerMbp {
         }
         }
 
-
+@PostMapping("/delete")
+//    @ApiOperation(value = "delete", notes = "delete")
+public Object delete(@RequestBody  #类名# #实体名#) {
+        try {
+        Integer id = #实体名#.getId();
+//            Integer id = #实体名#.get#类名#Id();
+        #实体名#Service.removeById(id);
+        return #returnType#.success("删除成功");
+        } catch (Exception e) {
+        e.printStackTrace();
+        return #returnType#.error(e.getMessage());
+        }
+        }
 
 
 

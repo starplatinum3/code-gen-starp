@@ -8,7 +8,15 @@
             date
             search
         />
+        <el-row
+        type="flex"
+        justify="end"
+        style="flex-wrap: wrap; flex-direction: row"
+          >
+
         {formItemRows}
+
+        </el-row>
 
                 <el-button type="primary" @click="search">查询</el-button>
 
@@ -19,13 +27,7 @@
                 <el-table-column align="center" label="操作" width="300">
                     <template #default="scope">
                         <div class="l-flex l-flex__justify--around">
-                            <el-button
-                                size="mini"
-                                type="primary"
-                                @click="toCheckIn(scope.row)"
-                            >
-                                办理入住
-                            </el-button>
+
                             <el-button
                                     size="mini"
                                       type="primary"
@@ -60,13 +62,27 @@
                     </template>
                 </el-table-column>
             </el-table>
+
+
+
+                  <el-pagination
+                                :page-sizes="[10, 20, 30, 40]"
+                                :page-size="pagination.pageSize"
+                                :current-page="pagination.currentPage"
+                                :total="pagination.total"
+                                @size-change="handleSizeChange"
+                                layout="total, sizes, prev, pager, next, ->, jumper"
+                                @current-change="handleCurrentChange"
+                            ></el-pagination>
+
         </div>
     </div>
 </template>
 
 <script>
+import { reactive, ref, toRefs, inject, watch,computed } from 'vue';
+
 import Options from '@/utils/options';
-import { reactive, toRefs, inject, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
@@ -75,6 +91,8 @@ import socketIOTool from '@/utils/socketIOTool';
 import HttpUtil from '@/utils/HttpUtil';
 import k from '@/utils/Tables';
 import UiUtil from '@/utils/UiUtil';
+import { ElPagination } from 'element-plus';
+
 
 // function getOrdersRequest(state) {
 import { get{className}sRequest, delete{className}Request } from '@/utils/{entityName}Request';
@@ -89,8 +107,58 @@ export default {
     name: 'ReservedOrder',
     components: {
         SearchFilter,
+        ElPagination,
     },
     setup() {
+const tableName=k.{entityName}
+
+      let mockList=[
+    {jsonMock}
+]
+
+        const tableData = reactive({
+            origin: [],
+            list: mockList,
+        });
+
+
+    //   const currentPage = ref(1);
+    //     const pageSize = 10;
+    //     const total = ref(0);
+    //     const handlePageChange = (newPage) => {
+    //       // 处理分页变更事件
+    //       currentPage.value = newPage;
+    //       // 根据新的页码请求数据或执行其他操作
+    //       fetchData(newPage);
+    //     };
+
+          const currentPage = ref(1);
+                const pageSize = ref(10);
+                const handleSizeChange = (val) => {
+                    pageSize.value = val;
+                    currentPage.value = 1; // 重置为第一页
+                };
+                const handleCurrentChange = (val) => {
+                    currentPage.value = val;
+                };
+                 const total = ref(10);
+
+                const handlePageChange = (newPage) => {
+                    // 处理分页变更事件
+                    currentPage.value = newPage;
+                    // 根据新的页码请求数据或执行其他操作
+                    fetchData(newPage);
+                };
+
+
+            const setPageData = (res) => {
+                    let data= res.data
+                currentPage.value=data.currentPage
+                total.value=data.total
+                };
+
+
+
         console.log("set up");
         const router = useRouter();
         const store = useStore();
@@ -112,44 +180,16 @@ const form = reactive({jsonDefaultNull});
 
         const search = () => {
                     // HttpUtil.getList(tableName,this.form)
-                    UiUtil.getList(tableName,tableData,this.form)
+                 //   UiUtil.getList(tableName,tableData,this.form)
+                    UiUtil.selectPage(tableName, tableData, form, pagination);
                 }
 
         const conditionsData = reactive({
             conditions: [],
         });
 
-        // 查询
-        const search = () => {
-            let list = tableData.origin;
-
-            for (let condition of conditionsData.conditions) {
-                if (condition.key === 'type') {
-                    list = list.filter((order) => {
-                        return order.type === condition.value;
-                    });
-                }
-
-                if (condition.key === 'date') {
-                    list = list.filter((order) => {
-                        return (
-                            condition.value[0] <= order.reservation_time &&
-                            order.reservation_time <= condition.value[1]
-                        );
-                    });
-                }
-
-                if (condition.key === 'search') {
-                    const keywordReg = new RegExp(condition.value);
-
-                    list = list.filter((order) => {
-                        return keywordReg.test(order[condition.searchKey]);
-                    });
-                }
-            }
-            tableData.list = list;
-        };
-
+ // UiUtil.selectPage(tableName,tableData,form)
+  // UiUtil.selectPage(tableName,tableData,{})
         watch(
             () => conditionsData.conditions,
             () => {
@@ -158,14 +198,23 @@ const form = reactive({jsonDefaultNull});
         );
 
 
-        let mockList=[
-    {jsonMock}
-]
-
-        const tableData = reactive({
-            origin: [],
-            list: mockList,
+  const pagination = reactive({
+            currentPage: 1,
+            pageSize: 10,
+            total: 0,
         });
+        const handleSizeChange = (val) => {
+            pagination.pageSize = val;
+            pagination.currentPage = 1; // 重置为第一页
+        };
+
+        const handleCurrentChange = (val) => {
+            pagination.currentPage = val;
+            UiUtil.selectPage(tableName, tableData, form, pagination);
+
+            //   UiUtil.selectPage(tableName, tableData, form, currentPage.value, pageSize.value)
+        };
+
 
 
 
@@ -205,7 +254,7 @@ const rules = reactive({
         const sortReserved = (a, b) => {
             return a.reservation_time - b.reservation_time;
         };
-const tableName=k.{entityName}
+   // UiUtil.selectPage(tableName, tableData, form, pagination);
         const typeTextArray = ['大床间', '单人间', '双人间'];
         console.log("socketIOTool.on('new-order', (");
         socketIOTool.on('new-order', (socket) => {
@@ -226,41 +275,17 @@ const tableName=k.{entityName}
             tableData.list = newList;
         });
 
-     UiUtil.getList(tableName,tableData,{})
+     // UiUtil.getList(tableName,tableData,{})
         // loading.start();
         console.log("getOrdersRequest 获取用户");
         // 获取用户
         // function getOrdersRequest(state) {
-        getOrdersRequest(0)
-            .then((res) => {
-                console.log("getOrdersRequest");
-                console.log(res);
-                for (let order of res) {
-                    order.typeText = typeTextArray[order.type];
 
-                    let date = getFormatDate(order.reservation_time);
-                    let nextDate = getFormatNextDate(
-                        order.reservation_time,
-                        order.reservation_during
-                    );
-
-                    order.placeTime = getFormatDateTime(order.place_time);
-                    order.reservationDate = date + ' 至 ' + nextDate;
-                }
-                tableData.origin = res;
-                tableData.list = res;
-
-                // loading.close();
-            })
-            .catch((err) => {
-                console.log(err);
-                loading.close();
-            });
 
             const setTableData = (tableData,res) => {
                 tableData.origin = res;
                 tableData.list = res;
-        };
+               };
 
         HttpUtil.getList(tableName,{})
                 .then(res=>{
@@ -279,7 +304,7 @@ const tableName=k.{entityName}
 
         const toModify = (order) => {
             router.push({
-                name: 'Modify{className}r',
+                name: 'Modify{className}',
                 query: { oid: order.oid },
                 params: { state: 0 },
             });
@@ -287,7 +312,7 @@ const tableName=k.{entityName}
 
         const addOne = (order) => {
             router.push({
-                name: 'add{className}',
+                name: 'Add{className}',
                 query: { oid: order.oid },
                 params: { uid: order.uid },
             });
@@ -347,6 +372,7 @@ const tableName=k.{entityName}
                 upload.img = file.url;
             };
 
+search()
             const uploadImg = (obj) => {
                 let formData = new FormData();
                 formData.append('file', obj.file);
@@ -357,6 +383,11 @@ const tableName=k.{entityName}
                     console.log(res.msg);
                 });
             };
+
+            const deleteOne = (item) => {
+                        UiUtil.deleteOne(tableName, item, tableData, reload);
+                    };
+
         const deleteOne = (item) => {
             loading.start();
             HttpUtil.delete(item)
@@ -387,6 +418,13 @@ const tableName=k.{entityName}
                 });
         };
         return {
+         search,
+            //    currentPage,
+           //     pageSize,
+          //    total,
+                 //   handlePageChange,
+                       pagination,
+
         verifyFileType,
             deleteOne,
             searchOptions,

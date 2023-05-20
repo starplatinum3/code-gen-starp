@@ -1580,9 +1580,13 @@ public class TableInfo {
 //                .replace("#jsonDefaultNull#", jsonDefaultNull)
 //                .replace("#iViewColumnsRows#", iViewColumnsRows)
         ;
-        java.nio.file.Path dictDataPath = Paths.get(pathFileString,
-                "elementUi", "ElementTableVue3", className + "Table.vue");
-        FileUtil.writeCode(dictDataPath, code);
+//        java.nio.file.Path dictDataPath = Paths.get(pathFileString,
+//                "elementUi", "ElementTableVue3", className + "Table.vue");
+        java.nio.file.Path outFilePath = Paths.get(pathFileString,
+                "elementUi", "ElementTableVue3",
+                entityName,
+                className + "Table.vue");
+        FileUtil.writeCode(outFilePath, code);
 
         return code;
     }
@@ -1598,7 +1602,12 @@ public class TableInfo {
         String tableComment = table.getTableComment();
 //        cla
 //        comm
+//        System.out.println();
+//        log
+
         String form_item_rows_add = ElmGenKt.gen_form_item_rows_add(columnInfos);
+        System.out.println("form_item_rows_add enKt.gen_form_item_rows_add(");
+        System.out.println(form_item_rows_add);
         String formItemRows = ElmGenKt.gen_form_item_rows(columnInfos);
         String elmFormItems = genElmFormItems();
         String elmQueryInputs = genElmQueryInputs();
@@ -1632,8 +1641,12 @@ public class TableInfo {
         ;
 //        k.
 //        k.elementUi
+//        tableName
+//        entityName
+//        java.nio.file.Path dictDataPath = Paths.get(pathFileString,
+//                "elementUi", "ElementTableVue3",entityName,"form","Add"+ className + ".vue");
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,
-                "elementUi", "ElementTableVue3","form","Add"+ className + ".vue");
+                "elementUi", "ElementTableVue3",entityName,"Add"+ className + ".vue");
         FileUtil.writeCode(dictDataPath, code);
 
         return code;
