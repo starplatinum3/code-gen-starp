@@ -1599,7 +1599,9 @@ public class TableInfo {
         String jsonDefaultNull = genJsonDefaultNull();
 //        String iViewColumnsRows = genIViewColumnsRows();
         String elmCols = genElmCols();
-        String tableComment = table.getTableComment();
+//        String tableComment = table.getTableComment();
+//        getTableCommentShow
+        String tableComment = table.getTableCommentShow();
 //        cla
 //        comm
 //        System.out.println();

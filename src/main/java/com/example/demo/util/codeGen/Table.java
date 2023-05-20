@@ -2,6 +2,7 @@ package com.example.demo.util.codeGen;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import top.starp.util.StringUtils;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -121,6 +122,18 @@ public class Table {
     }
 
     public String getTableComment() {
+//        tableComment
+        return tableComment;
+    }
+
+    public String getTableCommentShow() {
+//        if(tableComment==null){
+//            return  tableName;
+//        }
+        if(StringUtils.isNullOrEmpty(tableComment)){
+            return tableName;
+        }
+//        tableComment
         return tableComment;
     }
 

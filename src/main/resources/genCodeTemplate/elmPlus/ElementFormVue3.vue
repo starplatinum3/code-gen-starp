@@ -226,7 +226,7 @@ export default {
                 if(!valid){
                     return
                 }
-                HttpUtil.add(tableName, form)
+                HttpUtil.save(tableName, form)
                 .then(res => {
                         if (res.state) {
                             // uploadElem.value.submit();
