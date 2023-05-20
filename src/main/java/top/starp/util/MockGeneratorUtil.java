@@ -1,5 +1,6 @@
  package top.starp.util;
 
+ import com.example.demo.util.DataTypeMap;
  import com.example.demo.util.codeGen.ColumnInfo;
  import com.google.gson.JsonObject;
 // import org.apache.commons.lang3.StringUtils;
@@ -46,9 +47,13 @@
                      mockValue = names[(int) (Math.random() * names.length)];
                  } else {
                      // mockValue = StringUtils.EMPTY;
-                     mockValue ="";
+                     mockValue =RandomStringUtils.generateRandomString();
                  }
-             } else if (type.equalsIgnoreCase("INT")) {
+             } else if ( columnInfo.isNumberType()) {
+//                 type.equalsIgnoreCase("INT")
+//                 DataTypeMap.
+//                 columnInfo.isNumberType()
+//                 DataType
                  if ("age".equalsIgnoreCase(javaFieldName)) {
                      int ageGroup = (int) (Math.random() * 3);
                      switch (ageGroup) {
@@ -67,8 +72,11 @@
                  }
 //                 System.out.println("mockValue int");
 //                 System.out.println(mockValue);
-             } else if (type.equalsIgnoreCase("DATE")) {
+
+//                 type.equalsIgnoreCase("DATE")
+             } else if ( columnInfo.isDateType()) {
                  mockValue = new Date();
+//                 type.is
              } else if (type.equalsIgnoreCase("BOOLEAN")) {
                  mockValue = true;
              } else if (type.equalsIgnoreCase("ENUM")) {
@@ -89,7 +97,11 @@
              } else if (type.equalsIgnoreCase("FLOAT")) {
                  mockValue = (float) (Math.random() * 100);
              } else {
-                 mockValue = null;
+//                 mockValue = null;
+                 String randomString = RandomStringUtils.generateRandomString();
+                 mockValue =randomString;
+//                 MockGeneratorUtil.g
+//                 RandomUtil.randomInt()
              }
 
              if (mockValue != null) {

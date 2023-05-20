@@ -40,7 +40,7 @@
 import { reactive, ref,toRefs, inject, watch } from 'vue';
 // import { ref } from 'vue';
 import { ElPagination } from 'element-plus';
-import { reactive, ref, watch } from 'vue';
+
 import { ElMessage } from 'element-plus';
 import loading from '@/utils/loading';
 import { addRoomRequest } from '@/utils/roomRequest';
@@ -54,7 +54,7 @@ import StatusSelect from '@/components/StatusSelect.vue';
 import ElmStatusSelect from '@/components/ElmStatusSelect.vue';
 import HttpUtil from '@/utils/HttpUtil';
 import k from '@/utils/Tables';
-import { ref } from 'vue';
+//import { ref } from 'vue';
 
 import UiUtil from '@/utils/UiUtil';
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\ElmStatusSelect.vue

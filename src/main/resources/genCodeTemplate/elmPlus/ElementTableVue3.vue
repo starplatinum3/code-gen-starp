@@ -95,7 +95,7 @@ import { ElPagination } from 'element-plus';
 
 
 // function getOrdersRequest(state) {
-import { get{className}sRequest, delete{className}Request } from '@/utils/{entityName}Request';
+// import { get{className}sRequest, delete{className}Request } from '@/utils/{entityName}Request';
 import {
     getFormatDate,
     getFormatNextDate,
@@ -132,23 +132,6 @@ const tableName=k.{entityName}
     //       fetchData(newPage);
     //     };
 
-          const currentPage = ref(1);
-                const pageSize = ref(10);
-                const handleSizeChange = (val) => {
-                    pageSize.value = val;
-                    currentPage.value = 1; // 重置为第一页
-                };
-                const handleCurrentChange = (val) => {
-                    currentPage.value = val;
-                };
-                 const total = ref(10);
-
-                const handlePageChange = (newPage) => {
-                    // 处理分页变更事件
-                    currentPage.value = newPage;
-                    // 根据新的页码请求数据或执行其他操作
-                    fetchData(newPage);
-                };
 
 
             const setPageData = (res) => {
@@ -310,6 +293,11 @@ const rules = reactive({
             });
         };
 
+        const upload = reactive({
+                    img: '',
+                    list: [],
+                });
+
         const addOne = (order) => {
             router.push({
                 name: 'Add{className}',
@@ -327,34 +315,7 @@ const rules = reactive({
             });
         };
 
-        const deleteOder = (order) => {
-            loading.start();
-            deleteOrderRequest(order.oid)
-                .then((res) => {
-                    if (res.state) {
-                        let index = tableData.list.findIndex((value) => {
-                            return order.oid === value.oid;
-                        });
-                        tableData.list.splice(index, 1);
-//                         使用 splice() 方法从 tableData.list 数组中删除指定索引位置 index 处的一个元素。
-// 删除后，splice() 方法会返回被删除的元素，但在这段代码中并没有使用它，因此可以忽略返回值。
-                        tableData.origin = tableData.list;
-                        ElMessage.success(res.msg);
 
-                        reload();
-                    } else {
-                        ElMessage.error(res.msg);
-                    }
-
-                    loading.close();
-                })
-
-                .catch((err) => {
-                    console.log(err);
-                    ElMessage.error('fail');
-                    loading.close();
-                });
-        };
 
      // 放大图片
             let dialogVisible = ref(false);
@@ -416,6 +377,7 @@ search()
                             imgPreview,
                             verifyFileType,
                             uploadImg,
+                              upload,
         };
     },
 };

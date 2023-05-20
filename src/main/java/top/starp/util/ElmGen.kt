@@ -212,12 +212,13 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
 //        javaFieldName.contais("url")
 
     val columnCommentShow = columnInfo.columnCommentShow
+//    图片 是不用搜索的 吧  但是 上传是要的
     val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
 //        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
     if(containsUrlIgnoreCase){
         return """
             <el-form-item>
-            $javaFieldName
+            $columnCommentShow
                     <el-upload
                         ref="uploadElem"
                         class="l-flex"
