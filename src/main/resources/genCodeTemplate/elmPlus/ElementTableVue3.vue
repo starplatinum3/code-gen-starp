@@ -293,19 +293,12 @@ const rules = reactive({
                     list: [],
                 });
 
-        const addOne = (order) => {
-            router.push({
-                name: 'Add{className}',
-                query: { oid: order.oid },
-                params: { uid: order.uid },
-            });
-        };
 
         const addOne = (item) => {
                     let id = item.id;
                     let oid = item.oid;
                     router.push({
-                        name: 'AddGuest',
+                        name: 'Add{className}',
                         query: { oid, id },
                         params: { uid: item.uid },
                     });
