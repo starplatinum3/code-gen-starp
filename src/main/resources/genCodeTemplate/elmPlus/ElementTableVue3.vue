@@ -388,35 +388,7 @@ search()
                         UiUtil.deleteOne(tableName, item, tableData, reload);
                     };
 
-        const deleteOne = (item) => {
-            loading.start();
-            HttpUtil.delete(item)
-            // deleteOrderRequest(order.oid)
-                .then((res) => {
-                    if (res.state) {
-                        let index = tableData.list.findIndex((value) => {
-                            return item.id === value.id;
-                        });
-                        tableData.list.splice(index, 1);
-//                         使用 splice() 方法从 tableData.list 数组中删除指定索引位置 index 处的一个元素。
-// 删除后，splice() 方法会返回被删除的元素，但在这段代码中并没有使用它，因此可以忽略返回值。
-                        tableData.origin = tableData.list;
-                        ElMessage.success(res.msg);
 
-                        reload();
-                    } else {
-                        ElMessage.error(res.msg);
-                    }
-
-                    loading.close();
-                })
-
-                .catch((err) => {
-                    console.log(err);
-                    ElMessage.error('fail');
-                    loading.close();
-                });
-        };
         return {
          search,
             //    currentPage,
