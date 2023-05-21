@@ -192,6 +192,20 @@ fun  checkIfShouldTypeSelect  (javaFieldName:String): Boolean {
     return checkIfShouldType(javaFieldName,listOf("status"))
 }
 
+fun gen_form_item_vue3_wrap_col_search(columnInfo :ColumnInfo): String {
+    val form_item_vue3= gen_form_item_vue3_search(columnInfo)
+    return """
+        <el-col
+                    :xs="{ span: 24 }"
+                    :sm="{ span: 12 }"
+                    :md="{ span: 12 }"
+                    :lg="{ span: 8 }"
+                    :xl="{ span: 8 }"
+                >
+                $form_item_vue3
+                </el-col>
+    """.trimIndent()
+}
 fun gen_form_item_vue3_wrap_col(columnInfo :ColumnInfo): String {
    val form_item_vue3= gen_form_item_vue3(columnInfo)
    return """
@@ -205,6 +219,236 @@ fun gen_form_item_vue3_wrap_col(columnInfo :ColumnInfo): String {
                 $form_item_vue3
                 </el-col>
     """.trimIndent()
+}
+
+
+
+fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
+    val javaFieldName = columnInfo.javaFieldName
+//        columnInfo.datA_TYPE
+//        javaFieldName.contais("url")
+
+    val columnCommentShow = columnInfo.columnCommentShow
+//    图片 是不用搜索的 吧  但是 上传是要的
+    val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
+//        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
+//    upload
+    if(containsUrlIgnoreCase){
+        return """
+            <el-form-item>
+            $columnCommentShow
+                    <el-upload
+                        ref="uploadElem"
+                        class="l-flex"
+                        action="http://localhost:9092/uploadIntroImg"
+                        :http-request="uploadImg"
+                        list-type="picture-card"
+                        :file-list="upload.list"
+                        :auto-upload="false"
+                        :limit="1"
+                        :on-preview="imgPreview"
+                        :on-change="verifyFileType"
+                    >
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                    <el-dialog v-model="dialogVisible">
+                        <div style="text-align: center">
+                            <img :src="form.$javaFieldName" style="width: 100%" />
+                        </div>
+                    </el-dialog>
+                    <p class="hotel-intro__tip">只能上传一张图片</p>
+                </el-form-item>
+        """.trimIndent()
+    }
+
+    if(
+            checkIfShouldTypeSelect(javaFieldName)
+    ){
+        return   """
+        <el-form-item label="$columnCommentShow">
+                    <el-select v-model="form.${javaFieldName}" style="width: 35%">
+                        <el-option
+                            v-for="item in ${javaFieldName}Options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                    <span class="add-admin__detail">{{ detail }}</span>
+                </el-form-item>
+                
+                 <el-select v-model="selectedValue" filterable 
+                 :remote-method="handleSearch" :loading="loading" :remote="true">
+      <el-option v-for="option in options" :key="option.value"
+       :label="option.label" :value="option.value" />
+    </el-select>
+    """.trimIndent()
+    }
+
+
+    if(
+            checkIfShouldTypeTime(javaFieldName)
+    ){
+        return  """
+           <el-form-item
+                label="$columnCommentShow"
+                class="search-filter__item"
+                v-if="date"
+            >
+                <el-date-picker
+                    v-model="form.$javaFieldName"
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :disabledDate="disabledDate"
+                    size="small"
+                >
+                </el-date-picker>
+            </el-form-item>
+        """.trimIndent()
+    }
+
+    if(
+            checkIfShouldTextAreaType(javaFieldName)
+    ){
+        return  """
+            <el-form-item prop="$javaFieldName" label="$columnCommentShow">
+                    <el-input
+                        type="textarea"
+                        v-model="form.$javaFieldName"
+                        placeholder="输入其他内容"
+                        maxlength="254"
+                        rows="5"
+                        show-word-limit
+                    >
+                        <template #prefix>
+                            <i class="el-icon-lock form__icon"></i>
+                        </template>
+                    </el-input>
+                </el-form-item>
+        """.trimIndent()
+    }
+
+    if(
+            checkIfShouldTypePassword(javaFieldName)
+    )
+    {
+
+//        label="密码"
+        return   """
+                <el-form-item prop="$javaFieldName" >
+                $columnCommentShow
+                    <el-input
+                        v-model="form.$javaFieldName"
+                        style="width: 200px"
+                        placeholder="请输入密码(长度4-20的数字或字母或下划线)"
+                        show-password
+                    >
+                        <template #prefix>
+                            <i class="el-icon-lock form__icon"></i>
+                        </template>
+                    </el-input>
+                </el-form-item>
+            """.trimIndent()
+    }
+
+//    columnInfo.isDateType
+//    if (columnInfo.isNumberType) {
+//        return   """
+//                <el-form-item prop="$javaFieldName" label="密码">
+//                    <el-input
+//                        v-model="form.$javaFieldName"
+//                        placeholder="请输入密码(长度4-20的数字或字母或下划线)"
+//                        show-password
+//                    >
+//                        <template #prefix>
+//                            <i class="el-icon-lock form__icon"></i>
+//                        </template>
+//                    </el-input>
+//                </el-form-item>
+//            """.trimIndent()
+//    }
+//    if(
+//            checkIfShouldTypePassword(javaFieldName)
+//    )
+
+    if (columnInfo.isNumberType){
+       return """
+          <el-form-item label="${columnCommentShow} 数字范围">
+        <el-input-number
+            v-model="form.${javaFieldName}Min"
+            :min="0"
+            :max="form.${javaFieldName}Max"
+            :step="1"
+            controls-position="right"
+            placeholder="${columnCommentShow}最小值"
+              size="small"
+          ></el-input-number>
+
+ ~
+          <el-input-number
+          size="small"
+            v-model="form.${javaFieldName}Max"
+            :min="form.${javaFieldName}Min"
+            :step="1"
+            controls-position="right"
+            placeholder="${columnCommentShow}最大值"
+          ></el-input-number>
+
+    </el-form-item>
+    """.trimIndent()
+    }
+
+//    v-model
+    val  v_model=if (columnInfo.isNumberType) {
+        """
+    v-model.number
+    """
+    } else {
+        "v-model"
+    }
+
+    val  el_input_conf_type=if (columnInfo.isNumberType) {
+        """
+          v-number-range="{ min: 0, max: 20 }"
+          type="number"
+          
+    """
+    } else {
+        """
+    """
+    }
+    val  rules=if (haveRules) {
+        """
+    :rules="rules.$javaFieldName"
+    """
+    } else {
+        ""
+    }
+//    v-number-range="{ min: 0, max: 20 }"
+
+
+    return   """
+       
+        <el-form-item
+            prop="$javaFieldName"
+            $rules
+            class="check-in__item"
+        >
+         $columnCommentShow
+         <el-input
+          placeholder="请输入$columnCommentShow"
+            :maxlength="10"
+            size="small"
+            clearable
+            style="width: 200px"
+            $v_model="form.$javaFieldName"
+            $el_input_conf_type
+        ></el-input>
+                      
+                    </el-form-item>
+        """.trimIndent()
+
 }
 fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
     val javaFieldName = columnInfo.javaFieldName
@@ -236,7 +480,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
                     </el-upload>
                     <el-dialog v-model="dialogVisible">
                         <div style="text-align: center">
-                            <img :src="upload.img" style="width: 100%" />
+                            <img :src="form.$javaFieldName" style="width: 100%" />
                         </div>
                     </el-dialog>
                     <p class="hotel-intro__tip">只能上传一张图片</p>
@@ -412,6 +656,18 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 //           gen_form_item_vue3(columnInfo)
         gen_form_item_vue3_wrap_col(columnInfo)
 
+
+    }
+    println("formItems")
+    println(formItems)
+    return formItems.joinToString("\n")
+}
+
+fun gen_form_item_rows_search(columnInfos: List<ColumnInfo>): String {
+
+    val formItems = columnInfos.map { columnInfo ->
+//           gen_form_item_vue3(columnInfo)
+        gen_form_item_vue3_wrap_col_search(columnInfo)
 
     }
     println("formItems")

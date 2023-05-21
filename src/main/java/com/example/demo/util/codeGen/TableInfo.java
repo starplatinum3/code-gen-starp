@@ -1211,6 +1211,7 @@ public class TableInfo {
             if (MysqlDataType.isNumberType(column_type)) {
                  compareType="eq";
             }
+//            columnInfo
             String row = ".{compareType}(\n" +
                     "                            !StringUtils.isNullOrEmpty(#实体名#.get#java字段名开头大写#()),\n" +
                     "                            #类名#::get#java字段名开头大写#,\n" +
@@ -1554,7 +1555,10 @@ public class TableInfo {
         String jsonDefaultNull = genJsonDefaultNull();
 //        String iViewColumnsRows = genIViewColumnsRows();
         String elmCols = genElmCols();
-        String formItemRows = ElmGenKt.gen_form_item_rows(columnInfos);
+//        String formItemRows = ElmGenKt.gen_form_item_rows(columnInfos);
+
+        String formItemRows = ElmGenKt.gen_form_item_rows_search(columnInfos);
+
         String elmFormItems = genElmFormItems();
         String elmQueryInputs = genElmQueryInputs();
         String elTableColumnRows = ElmGenKt.genElTableColumnRows(columnInfos);
@@ -2523,14 +2527,17 @@ public class TableInfo {
     }
 
     public String genMybatisPlusController(String 包名) throws Exception {
-        String code = FileUtil.readResourceFileData("genCodeTemplate/mybatisPlus/MybatisPlusController.java");
+        String code = FileUtil.readResourceFileData(
+                "genCodeTemplate/mybatisPlus/MybatisPlusController.java");
         String jpaEntityFields = genJpaEntityFields();
         String fromMapRows = genFromMapRows();
         String jsonDefaultNull = genJsonDefaultNull();
         String MybatisPlusSelectPageEqualRows = genMybatisPlusSelectPageEqualRows();
         String now = DateUtilSt.getNow();
 //        String MybatisPlusSelectPage = genMybatisPlusSelectPage();
-        String MybatisPlusSelectPageLikeRows = genMybatisPlusSelectPageLikeRows();
+//        String MybatisPlusSelectPageLikeRows = genMybatisPlusSelectPageLikeRows();
+        String MybatisPlusSelectPageLikeRows =
+                CodeGenKt.genMybatisPlusSelectPageLikeRows(columnInfos, entityName, className);
         code = code
 //                .replace("#formInputs#", iViewFormInputs)
 //                .replace("#类名#", 类名)
