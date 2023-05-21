@@ -56,8 +56,8 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin
 //@CrossOrigin(allowCredentials = "true")
 @RestController
-@RequestMapping("/#实体名#")
-//@RequestMapping("/api/#实体名#")
+//@RequestMapping("/#实体名#")
+@RequestMapping("/api/#实体名#")
 public class #类名#ControllerMbp {
 
 //    @Autowired

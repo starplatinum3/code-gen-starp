@@ -1,13 +1,12 @@
 package #包名#.entity;
 
 import java.math.BigDecimal;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModel;
+//import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import java.util.Map;
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
@@ -17,6 +16,9 @@ import java.util.Map;
 //import    #包名#.util.Convert;
 import    top.starp.util.Convert;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.IdType;
 
 
 /**
@@ -24,26 +26,22 @@ import    top.starp.util.Convert;
  * @author starp
  * @date #date#
  */
-@Entity
 @Builder
 @AllArgsConstructor
 @Data
-@ApiModel("#tableName#")
+//@ApiModel("#tableName#")
 //@Table(name="#tableName#")
 //@TableName("#tableName#")
-@Table(name="#tablePreffix##tableName#")
 @TableName("#tablePreffix##tableName#")
 public class #类名# implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @ApiModelProperty("id")
-//    @TableId(type = IdType.AUTO)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
-    #jpaEntityFields#
+        {myBatisPlusEntityFields}
 
 public  static  class Names{
     public  static String  id="id";

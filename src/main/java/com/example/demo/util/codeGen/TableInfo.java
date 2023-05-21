@@ -15,6 +15,7 @@ import lombok.Data;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
+import top.starp.util.CodeGenKt;
 import top.starp.util.ElmGenKt;
 import top.starp.util.RoomMockData;
 import top.starp.util.k;
@@ -33,7 +34,8 @@ import java.util.stream.Collectors;
 public class TableInfo {
 
     Table table;
-    public    static final String tablePreffix = "t_";
+//    public    static final String tablePreffix = "t_";
+    public    static final String tablePreffix = "";
     /**
      * 下划线
      */
@@ -1591,6 +1593,58 @@ public class TableInfo {
         return code;
     }
 
+    public String genElementUpdateVue3() throws Exception {
+//        ElementUpdateVue3.vue
+//        D:\proj\springBoot\code-gen-starp\src\main\resources\genCodeTemplate\elmPlus
+        String code = FileUtil.readResourceFileData("genCodeTemplate/elmPlus/ElementUpdateVue3.vue");
+        String jsonDefaultNull = genJsonDefaultNull();
+        String elmCols = genElmCols();
+        String tableComment = table.getTableCommentShow();
+
+        String form_item_rows_add = ElmGenKt.gen_form_item_rows_add(columnInfos);
+        System.out.println("form_item_rows_add enKt.gen_form_item_rows_add(");
+        System.out.println(form_item_rows_add);
+        String formItemRows = ElmGenKt.gen_form_item_rows(columnInfos);
+        String elmFormItems = genElmFormItems();
+        String elmQueryInputs = genElmQueryInputs();
+        String elTableColumnRows = ElmGenKt.genElTableColumnRows(columnInfos);
+//        genElTableColumnRows()
+//        genElementTableMybatisPlus()
+        String jsonMock = genJsonMock(columnInfos);
+//        String elTableColumnRows = genElTableColumnRows();
+        String elmQueryInputsSelectedRow = genElmQueryInputs("selectedRow");
+        code = code
+//                .replace("#formInputs#", iViewFormInputs)
+                .replace("#类名#", 类名)
+                .replace("#实体名#", 实体名)
+//                .replace("#实体名#", 实体名)
+                .replace("#elmFormItems#", elmFormItems)
+                .replace("#elmCols#", elmCols)
+//                .replace("#jsonDefaultNull#", jsonDefaultNull)
+                .replace("#elmQueryInputs#", elmQueryInputs)
+                .replace("#elmFormItemsSelectedRow#", elmQueryInputsSelectedRow)
+                .replace("{formItemRows}", formItemRows)
+                .replace("{jsonMock}", jsonMock)
+                .replace("{entityName}", entityName)
+                .replace("{className}", className)
+                .replace("{elTableColumnRows}", elTableColumnRows)
+                .replace("{jsonDefaultNull}", jsonDefaultNull)
+                .replace("{form_item_rows_add}", form_item_rows_add)
+                .replace("{tableName}", tableName)
+                .replace("{tableComment}", tableComment)
+//                .replace("#jsonDefaultNull#", jsonDefaultNull)
+//                .replace("#iViewColumnsRows#", iViewColumnsRows)
+        ;
+
+//        Update
+//        Modify
+        java.nio.file.Path dictDataPath = Paths.get(pathFileString,
+                "elementUi", "ElementTableVue3",entityName,"Modify"+ className + ".vue");
+        FileUtil.writeCode(dictDataPath, code);
+
+        return code;
+    }
+
     public String genElementFormVue3() throws Exception {
 //        ElementTableVue3.vue
 //        D:\proj\springBoot\code-gen-starp\src\main\resources\genCodeTemplate\elmPlus
@@ -2353,7 +2407,48 @@ public class TableInfo {
         return code;
     }
 
+    public String genEntityMybp(String packageName) throws Exception {
+//        genMyBatisPlusEntityFields
+//        CodeGenKt.genMyBatisPlusEntityFields()
+//        columnInfos
+        String myBatisPlusEntityFields = CodeGenKt.genMyBatisPlusEntityFields(columnInfos, false);
+//        D:\proj\springBoot\code-gen-starp\src\main\resources\genCodeTemplate\mybatisPlus\Entity.java
+        String code = FileUtil.readResourceFileData(
+                "genCodeTemplate/mybatisPlus/Entity.java");
+        String jpaEntityFields = genJpaEntityFields();
+        String fromMapRows = genFromMapRows();
+        final String namesRows = genNamesRows();
+        String now = DateUtilSt.getNow();
+//        entityName
+//        tablePreffix
+        final String toEsEntityRows = genToEsEntityRows();
+        code = code
+//                .replace("#formInputs#", iViewFormInputs)
+//                .replace("#类名#", 类名)
+                .replace("#实体名#", 实体名)
+                .replace("#包名#", packageName)
+                .replace("#类名#", 类名)
+                .replace("#jpaEntityFields#", jpaEntityFields)
+                .replace("{myBatisPlusEntityFields}", myBatisPlusEntityFields)
+                .replace("#fromMapRows#", fromMapRows)
+                .replace("#tableName#", tableName)
+                .replace("#date#", now)
+//                .replace("#date#", now)
+                .replace("#tablePreffix#", tablePreffix)
+                .replace("{NamesRows}", namesRows)
+                .replace("{toEsEntityRows}", toEsEntityRows)
+        ;
+//        C:\codeGen\hotel\20230520-154925\MybatisPlus
+        java.nio.file.Path dictDataPath = Paths.get(pathFileString,
+                "MybatisPlus", "entity", 类名 + ".java");
+        FileUtil.writeCode(dictDataPath, code);
+
+        return code;
+    }
+
     public String genEntity(String packageName) throws Exception {
+//        genMyBatisPlusEntityFields
+
         String code = FileUtil.readResourceFileData(
                 "genCodeTemplate/jpa/JpaEntity.java");
         String jpaEntityFields = genJpaEntityFields();

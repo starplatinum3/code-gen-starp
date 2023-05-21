@@ -281,12 +281,16 @@ const rules = reactive({
         };
 
         const toModify = (order) => {
+        let id=item.id
+            let oid=  item.oid
             router.push({
                 name: 'Modify{className}',
-                query: { oid: order.oid },
+                query: { id, oid},
                 params: { state: 0 },
             });
         };
+
+
 
         const upload = reactive({
                     img: '',

@@ -4,11 +4,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 //import #包名#.entity.#类名#;
-import #包名#.domain.#类名#;
+
 //import #包名#.mapper.#类名#Mapper;
-import #包名#.repository.#类名#Mapper;
+
 //import com.starp.exam.repository.ComponentMapper;
-import #包名#.service.#类名#Service;
+
+//import #包名#.service.#类名#Service;
+//import #包名#.repository.#类名#Mapper;
+//import #包名#.domain.#类名#;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

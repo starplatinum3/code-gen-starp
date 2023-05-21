@@ -215,6 +215,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
 //    图片 是不用搜索的 吧  但是 上传是要的
     val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
 //        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
+//    upload
     if(containsUrlIgnoreCase){
         return """
             <el-form-item>

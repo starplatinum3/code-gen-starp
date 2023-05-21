@@ -47,7 +47,7 @@ import { addRoomRequest } from '@/utils/roomRequest';
 // import { uploadImgRequest } from '@/utils/roomRequest';
 import { uploadImgRequest } from '@/utils/roomRequest';
 // import { uploadImgRequest } from 'src/utils/roomRequest';
-
+import { useRouter, useRoute } from 'vue-router';
 // import HttpUtil from '../../../utils/HttpUtil';
 // import HttpUtil from 'src/utils/HttpUtil';
 import StatusSelect from '@/components/StatusSelect.vue';
@@ -55,7 +55,7 @@ import ElmStatusSelect from '@/components/ElmStatusSelect.vue';
 import HttpUtil from '@/utils/HttpUtil';
 import k from '@/utils/Tables';
 //import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+
 import UiUtil from '@/utils/UiUtil';
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\ElmStatusSelect.vue
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\StatusSelect.vue
@@ -68,16 +68,23 @@ export default {
         ElPagination,
     },
     setup() {
-
-          let  tableName=k.{entityName}
-
+        let  tableName=k.{entityName}
      const router = useRouter();
     const route = useRoute();
 
-        const queryId = route.query.id;
+
         const currentPage = ref(1);
     const pageSize = 10;
     const total = ref(0);
+       const form = reactive({jsonDefaultNull});
+          const queryId = route.query.id;
+ form.id=queryId
+
+HttpUtil.selectPage(tableName,{}, 1, 1, ).then(res => {
+            console.log('res');
+            console.log(res);
+            form.value=res
+        });
 
     const handlePageChange = (newPage) => {
       // 处理分页变更事件
@@ -89,7 +96,7 @@ export default {
 
         const formElem = ref(null);
         
-        const form = reactive({jsonDefaultNull});
+
 
 
         console.log("form");
@@ -152,7 +159,7 @@ export default {
                     search: [],
                 });
 
-                    UiUtil.list(tableName,tableData,{})
+            //        UiUtil.list(tableName,tableData,{})
         const roomTypeOptions = [
             {
                     text: '大床间',
