@@ -76,11 +76,7 @@ fun genMybatisPlusSelectPageLikeRows(columnInfos:List<ColumnInfo>
                            $className::get${javaFieldNameStartsWithUppercase}Min,
                             $entityName.get${javaFieldNameStartsWithUppercase}Min()
                      )
-                     .$compareType(
-                            !StringUtils.isNullOrEmpty($entityName.get$javaFieldNameStartsWithUppercase()),
-                           $className::get$javaFieldNameStartsWithUppercase,
-                            $entityName.get$javaFieldNameStartsWithUppercase()
-                     )
+                  
                          """
         }
         //            columnInfo

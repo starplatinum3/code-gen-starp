@@ -15,10 +15,7 @@ import lombok.Data;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
-import top.starp.util.CodeGenKt;
-import top.starp.util.ElmGenKt;
-import top.starp.util.RoomMockData;
-import top.starp.util.k;
+import top.starp.util.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -2527,6 +2524,7 @@ public class TableInfo {
     }
 
     public String genMybatisPlusController(String 包名) throws Exception {
+        ControllerUtil
         String code = FileUtil.readResourceFileData(
                 "genCodeTemplate/mybatisPlus/MybatisPlusController.java");
         String jpaEntityFields = genJpaEntityFields();
