@@ -268,7 +268,11 @@ fun checkIfShouldTypeSelect(javaFieldName: String): Boolean {
 }
 
 fun gen_form_item_vue3_wrap_col_search(columnInfo: ColumnInfo): String {
+
     val form_item_vue3 = gen_form_item_vue3_search(columnInfo)
+    if(columnInfo.isNumberType){
+return  form_item_vue3
+    }
     return """
         <el-col
                     :xs="{ span: 24 }"
@@ -449,8 +453,8 @@ fun gen_form_item_vue3_search(columnInfo: ColumnInfo): String {
     if (columnInfo.isNumberType) {
 //        label="${columnCommentShow} 数字范围"
         return """
-            ${columnCommentShow}范围
           <el-form-item >
+             ${columnCommentShow}范围
         <el-input-number
             v-model="form.${javaFieldName}Min"
             :min="0"
@@ -742,11 +746,29 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 
 fun gen_form_item_rows_search(columnInfos: List<ColumnInfo>): String {
 
-    val formItems = columnInfos.map { columnInfo ->
-//           gen_form_item_vue3(columnInfo)
-        gen_form_item_vue3_wrap_col_search(columnInfo)
+//    val formItems = columnInfos.map { columnInfo ->
+////           gen_form_item_vue3(columnInfo)
+//        gen_form_item_vue3_wrap_col_search(columnInfo)
+//
+//    }
+//    val formItems= listOf();
+    val formItems = mutableListOf<String>()
 
+    for (columnInfo in columnInfos) {
+      val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
+        if(!isNumberOrDate){
+          val row=  gen_form_item_vue3_wrap_col_search(columnInfo)
+            formItems.add(row)
+        }
     }
+    for (columnInfo in columnInfos) {
+//        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
+        if(columnInfo.isNumberType){
+            val row=  gen_form_item_vue3_wrap_col_search(columnInfo)
+            formItems.add(row)
+        }
+    }
+
     println("formItems")
     println(formItems)
     return formItems.joinToString("\n")
