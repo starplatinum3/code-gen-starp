@@ -270,8 +270,9 @@ fun checkIfShouldTypeSelect(javaFieldName: String): Boolean {
 fun gen_form_item_vue3_wrap_col_search(columnInfo: ColumnInfo): String {
 
     val form_item_vue3 = gen_form_item_vue3_search(columnInfo)
-    if(columnInfo.isNumberType){
-return  form_item_vue3
+    if (columnInfo.isNumberType
+            || columnInfo.isDateType) {
+        return form_item_vue3
     }
     return """
         <el-col
@@ -744,6 +745,34 @@ fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
     return formItems.joinToString("\n")
 }
 
+fun rangeSelectCodeGen(columnInfo:ColumnInfo,formItems: MutableList<String>
+                       ,twoColSet:MutableSet<String>) {
+    val row = gen_form_item_vue3_wrap_col_search(columnInfo)
+//            twoColSet.
+//            if(row.)
+    if (
+            twoColSet.size == 2
+    ) {
+        var twoColCode = ""
+        for (s in twoColSet) {
+            twoColCode + s + "\n"
+        }
+        val code= """
+                 <el-row
+      type="flex"
+                justify="center"
+                style="flex-wrap: wrap; flex-direction: row"
+            >
+            $twoColCode
+            </el-row>
+            """.trimIndent()
+        formItems.add(code)
+
+        twoColSet.clear()
+    } else {
+        twoColSet.add(row)
+    }
+}
 fun gen_form_item_rows_search(columnInfos: List<ColumnInfo>): String {
 
 //    val formItems = columnInfos.map { columnInfo ->
@@ -754,21 +783,88 @@ fun gen_form_item_rows_search(columnInfos: List<ColumnInfo>): String {
 //    val formItems= listOf();
     val formItems = mutableListOf<String>()
 
+    var code: String = "";
     for (columnInfo in columnInfos) {
-      val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
-        if(!isNumberOrDate){
-          val row=  gen_form_item_vue3_wrap_col_search(columnInfo)
-            formItems.add(row)
-        }
-    }
-    for (columnInfo in columnInfos) {
-//        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
-        if(columnInfo.isNumberType){
-            val row=  gen_form_item_vue3_wrap_col_search(columnInfo)
+        val isNumberOrDate = columnInfo.isNumberType || columnInfo.isDateType
+        if (!isNumberOrDate) {
+            val row = gen_form_item_vue3_wrap_col_search(columnInfo)
+//            code += row + "\n"
+//            formItems
             formItems.add(row)
         }
     }
 
+    val twoColSet = mutableSetOf<String>()
+
+    //    val twoColSet= setOf<String>()
+//    twoColSet.se
+
+    val dateOrNumberList = columnInfos.filter { columnInfo ->
+        columnInfo.isDateType || columnInfo.isNumberType }.toList();
+    var idx=0
+
+    for (columnInfo in dateOrNumberList) {
+//        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
+//        if (columnInfo.isNumberType) {
+//            rangeSelectCodeGen(columnInfo, formItems, twoColSet)
+//            idx++
+//        }
+        rangeSelectCodeGen(columnInfo, formItems, twoColSet)
+        idx++
+    }
+    if(idx%2==1){
+//        多余一个
+        val last = dateOrNumberList.last()
+        val row = gen_form_item_vue3_wrap_col_search(last)
+        formItems.add(row)
+    }
+
+
+
+    for (columnInfo in columnInfos) {
+//        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
+        if (columnInfo.isNumberType) {
+            rangeSelectCodeGen(columnInfo,formItems,twoColSet)
+            idx++
+//            val row = gen_form_item_vue3_wrap_col_search(columnInfo)
+////            twoColSet.
+////            if(row.)
+//            if (
+//                    twoColSet.size == 2
+//            ) {
+//                var twoColCode = ""
+//                for (s in twoColSet) {
+//                    twoColCode + s + "\n"
+//                }
+//                """
+//                 <el-row
+//      type="flex"
+//                justify="center"
+//                style="flex-wrap: wrap; flex-direction: row"
+//            >
+//            $twoColCode
+//            </el-row>
+//            """.trimIndent()
+//
+//                twoColSet.clear()
+//            } else {
+//                twoColSet.add(row)
+//            }
+
+
+//            formItems.add(row)
+        }
+    }
+
+    for (columnInfo in columnInfos) {
+//        两个一组的
+//        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
+        if (columnInfo.isDateType) {
+            rangeSelectCodeGen(columnInfo,formItems,twoColSet)
+//            val row = gen_form_item_vue3_wrap_col_search(columnInfo)
+//            formItems.add(row)
+        }
+    }
     println("formItems")
     println(formItems)
     return formItems.joinToString("\n")
