@@ -19,6 +19,7 @@
         </el-row>
 
                 <el-button type="primary" @click="search">查询</el-button>
+        <el-button    type="primary"     @click="addOne()"  > 新增 </el-button>
 
         <div class="reserved-order__table">
             <el-table :data="list" :default-sort="defaultSort" stripe border>
@@ -91,7 +92,7 @@ import socketIOTool from '@/utils/socketIOTool';
 import HttpUtil from '@/utils/HttpUtil';
 import k from '@/utils/Tables';
 import UiUtil from '@/utils/UiUtil';
-import { ElPagination } from 'element-plus';
+import { ElPagination，ElInputNumber} from 'element-plus';
 
 
 // function getOrdersRequest(state) {
@@ -108,6 +109,7 @@ export default {
     components: {
         SearchFilter,
         ElPagination,
+         ElInputNumber,
     },
     setup() {
 const tableName=k.{entityName}
@@ -298,13 +300,10 @@ const rules = reactive({
                 });
 
 
-        const addOne = (item) => {
-                    let id = item.id;
-                    let oid = item.oid;
+        const addOne = () => {
                     router.push({
                         name: 'Add{className}',
-                        query: { oid, id },
-                        params: { uid: item.uid },
+
                     });
                 };
         
@@ -371,7 +370,7 @@ search()
             toModifyOrder,
             toModify,
             toCheckIn,
-            deleteOder,
+
               rules,
                 form,
                 addOne,

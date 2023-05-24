@@ -83,6 +83,14 @@ public class TableInfo {
                     String java字段名 = columnInfo.getJava字段名();
                     String row = "         \"#java字段名#\":null "
                             .replace("#java字段名#", java字段名);
+                    if (columnInfo.isNumberType()
+                    ||columnInfo.isDateType()) {
+                        row = ("         \"#java字段名#\":null," +
+                                " \"#java字段名#Max\":null," +
+                                " \"#java字段名#Min\":null ")
+                                .replace("#java字段名#", java字段名);
+                    }
+
                     return row;
                 }).collect(Collectors.toList());
         return "{  " +
@@ -2524,7 +2532,7 @@ public class TableInfo {
     }
 
     public String genMybatisPlusController(String 包名) throws Exception {
-        ControllerUtil
+//        ControllerUtil
         String code = FileUtil.readResourceFileData(
                 "genCodeTemplate/mybatisPlus/MybatisPlusController.java");
         String jpaEntityFields = genJpaEntityFields();

@@ -37,25 +37,42 @@ import com.example.demo.util.codeGen.ColumnInfo
 //public
 val haveRules = false
 
-fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
-    val res = StringBuilder()
-    for (columnInfo in columnInfos) {
-//        val java字段名 = columnInfo.java字段名
-        val commentShow = columnInfo.columnCommentShow
-        val column_name = columnInfo.columN_NAME
+fun genElTableColumnRow(columnInfo: ColumnInfo): String? {
+    val commentShow = columnInfo.columnCommentShow
+    val column_name = columnInfo.columN_NAME
 //        val java字段类型 = columnInfo.获取java字段类型()
-        val javaFieldName = columnInfo.javaFieldName
-        // Name todo
-       val checkIfShouldTypeFormmaterYes= checkIfShouldTypeFormmater(javaFieldName)
-       val formatter= if(checkIfShouldTypeFormmaterYes){
-            """
+    val javaFieldName = columnInfo.javaFieldName
+    // Name todo
+
+    if (checkIfShouldTypeUrl(javaFieldName)) {
+        return """
+                <el-table-column
+                    label="$commentShow"
+                    sortable
+                    align="center"
+                    prop="$javaFieldName"
+                >
+                    <template v-slot="{ row }">
+                        <el-image
+                            :src="row.$javaFieldName"
+                            fit="cover"
+                            style="width: 50px; height: 50px"
+                        ></el-image>
+                    </template>
+                </el-table-column>
+            """.trimIndent()
+    }
+    val checkIfShouldTypeFormmaterYes = checkIfShouldTypeFormmater(javaFieldName)
+    val formatter = if (checkIfShouldTypeFormmaterYes) {
+        """
                 :formatter="${javaFieldName}Formatter"
             """.trimIndent()
-        }else{
-            ""
-       }
-        if ("id" != column_name) {
-            val row =  """
+    } else {
+        ""
+    }
+
+    if ("id" != column_name) {
+        return """
                 <el-table-column label="$commentShow" 
                     sortable
                     $formatter
@@ -63,13 +80,64 @@ fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
                 </el-table-column>
                 
             """.trimIndent()
+    }
+    return ""
+}
+
+fun genElTableColumnRows(columnInfos: List<ColumnInfo>): String? {
+    val res = StringBuilder()
+    for (columnInfo in columnInfos) {
+        val row = genElTableColumnRow(columnInfo)
+////        val java字段名 = columnInfo.java字段名
+//        val commentShow = columnInfo.columnCommentShow
+//            val column_name = columnInfo.columN_NAME
+////        val java字段类型 = columnInfo.获取java字段类型()
+//            val javaFieldName = columnInfo.javaFieldName
+//            // Name todo
+//
+//            {
+//                """
+//                <el-table-column
+//                    label="房型照片的 URL"
+//                    sortable
+//                    align="center"
+//                    prop="photoUrl"
+//                >
+//                    <template v-slot="{ row }">
+//                        <el-image
+//                            :src="row.photoUrl"
+//                            fit="cover"
+//                            style="width: 50px; height: 50px"
+//                        ></el-image>
+//                    </template>
+//                </el-table-column>
+//            """.trimIndent()
+//            }
+//            val checkIfShouldTypeFormmaterYes= checkIfShouldTypeFormmater(javaFieldName)
+//            val formatter= if(checkIfShouldTypeFormmaterYes){
+//                """
+//                :formatter="${javaFieldName}Formatter"
+//            """.trimIndent()
+//            }else{
+//                ""
+//            }
+//
+//            if ("id" != column_name) {
+//                val row =  """
+//                <el-table-column label="$commentShow"
+//                    sortable
+//                    $formatter
+//                    align="center" prop="$javaFieldName" >
+//                </el-table-column>
+//
+//            """.trimIndent()
 //            var row = "<el-table-column label=\"{commentShow}\" align=\"center\" prop=\"{javaFieldName}\" />"
 //            row = row
 //                    .replace("{commentShow}", commentShow)
 //                    .replace("{javaFieldName}", javaFieldName)
-            res.append(row)
-        }
+        res.append(row)
     }
+
     return res.toString()
 }
 
@@ -137,15 +205,15 @@ fun genElTableColumnRows(columnInfos :List<ColumnInfo>): String? {
 //    """.trimIndent()
 //}
 //Level
-fun  checkIfShouldTypeFormmater(javaFieldName:String): Boolean {
-    return checkIfShouldType(javaFieldName,listOf("level","sex","status","type","time","date"));
+fun checkIfShouldTypeFormmater(javaFieldName: String): Boolean {
+    return checkIfShouldType(javaFieldName, listOf("level", "sex", "status", "type", "time", "date"));
 }
 
-fun  checkIfShouldTypeTime(javaFieldName:String): Boolean {
-    return checkIfShouldType(javaFieldName,listOf("date","time"));
+fun checkIfShouldTypeTime(javaFieldName: String): Boolean {
+    return checkIfShouldType(javaFieldName, listOf("date", "time"));
 }
 
-fun  checkIfShouldUploadType(javaFieldName:String): Boolean {
+fun checkIfShouldUploadType(javaFieldName: String): Boolean {
 //    val shouldUploadTypeList= listOf<String>("url","pic")
 //    for ( type in shouldUploadTypeList){
 //        val should=
@@ -156,25 +224,31 @@ fun  checkIfShouldUploadType(javaFieldName:String): Boolean {
 //    }
 //    return false
 
-    val shouldUploadTypeList= listOf<String>("url","pic")
-    return checkIfShouldType(javaFieldName,shouldUploadTypeList)
+    val shouldUploadTypeList = listOf<String>("url", "pic")
+    return checkIfShouldType(javaFieldName, shouldUploadTypeList)
 }
 
-fun  checkIfShouldType(javaFieldName:String,shouldUploadTypeList: List<String>): Boolean {
+fun checkIfShouldTypeUrl(javaFieldName: String): Boolean {
+    val shouldUploadTypeList = listOf("url")
+    return checkIfShouldType(javaFieldName, shouldUploadTypeList)
+}
+
+fun checkIfShouldType(javaFieldName: String, shouldUploadTypeList: List<String>): Boolean {
 //    val shouldUploadTypeList= listOf<String>("url","pic")
-    for ( type in shouldUploadTypeList){
-        val should=
+    for (type in shouldUploadTypeList) {
+        val should =
                 StringUtils.containsIgnoreCase(javaFieldName, type)
-        if(should){
+        if (should) {
             return true
         }
     }
     return false
 }
-fun  checkIfShouldTextAreaType(javaFieldName:String): Boolean {
+
+fun checkIfShouldTextAreaType(javaFieldName: String): Boolean {
 //    val shouldUploadTypeList= listOf<String>("url","pic")
 //   return checkIfShouldType(javaFieldName,shouldUploadTypeList)
-    return checkIfShouldType(javaFieldName,listOf("intro","extra"))
+    return checkIfShouldType(javaFieldName, listOf("intro", "extra"))
 //    for ( type in shouldUploadTypeList){
 //        val should=
 //                StringUtils.containsIgnoreCase(javaFieldName, type)
@@ -184,16 +258,17 @@ fun  checkIfShouldTextAreaType(javaFieldName:String): Boolean {
 //    }
 //    return false
 }
-fun  checkIfShouldTypePassword   (javaFieldName:String): Boolean {
-    return checkIfShouldType(javaFieldName,listOf("password","pass"))
+
+fun checkIfShouldTypePassword(javaFieldName: String): Boolean {
+    return checkIfShouldType(javaFieldName, listOf("password", "pass"))
 }
 
-fun  checkIfShouldTypeSelect  (javaFieldName:String): Boolean {
-    return checkIfShouldType(javaFieldName,listOf("status"))
+fun checkIfShouldTypeSelect(javaFieldName: String): Boolean {
+    return checkIfShouldType(javaFieldName, listOf("status"))
 }
 
-fun gen_form_item_vue3_wrap_col_search(columnInfo :ColumnInfo): String {
-    val form_item_vue3= gen_form_item_vue3_search(columnInfo)
+fun gen_form_item_vue3_wrap_col_search(columnInfo: ColumnInfo): String {
+    val form_item_vue3 = gen_form_item_vue3_search(columnInfo)
     return """
         <el-col
                     :xs="{ span: 24 }"
@@ -206,9 +281,10 @@ fun gen_form_item_vue3_wrap_col_search(columnInfo :ColumnInfo): String {
                 </el-col>
     """.trimIndent()
 }
-fun gen_form_item_vue3_wrap_col(columnInfo :ColumnInfo): String {
-   val form_item_vue3= gen_form_item_vue3(columnInfo)
-   return """
+
+fun gen_form_item_vue3_wrap_col(columnInfo: ColumnInfo): String {
+    val form_item_vue3 = gen_form_item_vue3(columnInfo)
+    return """
         <el-col
                     :xs="{ span: 24 }"
                     :sm="{ span: 12 }"
@@ -222,18 +298,17 @@ fun gen_form_item_vue3_wrap_col(columnInfo :ColumnInfo): String {
 }
 
 
-
-fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
+fun gen_form_item_vue3_search(columnInfo: ColumnInfo): String {
     val javaFieldName = columnInfo.javaFieldName
 //        columnInfo.datA_TYPE
 //        javaFieldName.contais("url")
 
     val columnCommentShow = columnInfo.columnCommentShow
 //    图片 是不用搜索的 吧  但是 上传是要的
-    val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
+    val containsUrlIgnoreCase = checkIfShouldUploadType(javaFieldName)
 //        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
 //    upload
-    if(containsUrlIgnoreCase){
+    if (containsUrlIgnoreCase) {
         return """
             <el-form-item>
             $columnCommentShow
@@ -261,10 +336,10 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
         """.trimIndent()
     }
 
-    if(
+    if (
             checkIfShouldTypeSelect(javaFieldName)
-    ){
-        return   """
+    ) {
+        return """
         <el-form-item label="$columnCommentShow">
                     <el-select v-model="form.${javaFieldName}" style="width: 35%">
                         <el-option
@@ -286,10 +361,10 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
     }
 
 
-    if(
+    if (
             checkIfShouldTypeTime(javaFieldName)
-    ){
-        return  """
+    ) {
+        return """
            <el-form-item
                 label="$columnCommentShow"
                 class="search-filter__item"
@@ -308,10 +383,10 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
         """.trimIndent()
     }
 
-    if(
+    if (
             checkIfShouldTextAreaType(javaFieldName)
-    ){
-        return  """
+    ) {
+        return """
             <el-form-item prop="$javaFieldName" label="$columnCommentShow">
                     <el-input
                         type="textarea"
@@ -329,13 +404,12 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
         """.trimIndent()
     }
 
-    if(
+    if (
             checkIfShouldTypePassword(javaFieldName)
-    )
-    {
+    ) {
 
 //        label="密码"
-        return   """
+        return """
                 <el-form-item prop="$javaFieldName" >
                 $columnCommentShow
                     <el-input
@@ -372,9 +446,11 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
 //            checkIfShouldTypePassword(javaFieldName)
 //    )
 
-    if (columnInfo.isNumberType){
-       return """
-          <el-form-item label="${columnCommentShow} 数字范围">
+    if (columnInfo.isNumberType) {
+//        label="${columnCommentShow} 数字范围"
+        return """
+            ${columnCommentShow}范围
+          <el-form-item >
         <el-input-number
             v-model="form.${javaFieldName}Min"
             :min="0"
@@ -400,7 +476,7 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
     }
 
 //    v-model
-    val  v_model=if (columnInfo.isNumberType) {
+    val v_model = if (columnInfo.isNumberType) {
         """
     v-model.number
     """
@@ -408,7 +484,7 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
         "v-model"
     }
 
-    val  el_input_conf_type=if (columnInfo.isNumberType) {
+    val el_input_conf_type = if (columnInfo.isNumberType) {
         """
           v-number-range="{ min: 0, max: 20 }"
           type="number"
@@ -418,7 +494,7 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
         """
     """
     }
-    val  rules=if (haveRules) {
+    val rules = if (haveRules) {
         """
     :rules="rules.$javaFieldName"
     """
@@ -428,7 +504,7 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
 //    v-number-range="{ min: 0, max: 20 }"
 
 
-    return   """
+    return """
        
         <el-form-item
             prop="$javaFieldName"
@@ -450,17 +526,18 @@ fun gen_form_item_vue3_search(columnInfo :ColumnInfo): String {
         """.trimIndent()
 
 }
-fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
+
+fun gen_form_item_vue3(columnInfo: ColumnInfo): String {
     val javaFieldName = columnInfo.javaFieldName
 //        columnInfo.datA_TYPE
 //        javaFieldName.contais("url")
 
     val columnCommentShow = columnInfo.columnCommentShow
 //    图片 是不用搜索的 吧  但是 上传是要的
-    val containsUrlIgnoreCase =   checkIfShouldUploadType(javaFieldName)
+    val containsUrlIgnoreCase = checkIfShouldUploadType(javaFieldName)
 //        val containsUrlIgnoreCase = StringUtils.containsIgnoreCase(javaFieldName, "url");
 //    upload
-    if(containsUrlIgnoreCase){
+    if (containsUrlIgnoreCase) {
         return """
             <el-form-item>
             $columnCommentShow
@@ -488,10 +565,10 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
         """.trimIndent()
     }
 
-    if(
+    if (
             checkIfShouldTypeSelect(javaFieldName)
-    ){
-        return   """
+    ) {
+        return """
         <el-form-item label="$columnCommentShow">
                     <el-select v-model="form.${javaFieldName}" style="width: 35%">
                         <el-option
@@ -513,10 +590,10 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
     }
 
 
-    if(
+    if (
             checkIfShouldTypeTime(javaFieldName)
-    ){
-        return  """
+    ) {
+        return """
            <el-form-item
                 label="$columnCommentShow"
                 class="search-filter__item"
@@ -535,10 +612,10 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
         """.trimIndent()
     }
 
-    if(
+    if (
             checkIfShouldTextAreaType(javaFieldName)
-    ){
-        return  """
+    ) {
+        return """
             <el-form-item prop="$javaFieldName" label="$columnCommentShow">
                     <el-input
                         type="textarea"
@@ -556,13 +633,12 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
         """.trimIndent()
     }
 
-    if(
+    if (
             checkIfShouldTypePassword(javaFieldName)
-    )
-    {
+    ) {
 
 //        label="密码"
-        return   """
+        return """
                 <el-form-item prop="$javaFieldName" >
                 $columnCommentShow
                     <el-input
@@ -601,7 +677,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
 
 
 //    v-model
-    val  v_model=if (columnInfo.isNumberType) {
+    val v_model = if (columnInfo.isNumberType) {
         """
     v-model.number
     """
@@ -609,7 +685,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
         "v-model"
     }
 
-    val  el_input_conf_type=if (columnInfo.isNumberType) {
+    val el_input_conf_type = if (columnInfo.isNumberType) {
         """
           v-number-range="{ min: 0, max: 20 }"
           type="number"
@@ -619,7 +695,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
         """
     """
     }
-    val  rules=if (haveRules) {
+    val rules = if (haveRules) {
         """
     :rules="rules.$javaFieldName"
     """
@@ -628,7 +704,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
     }
 //    v-number-range="{ min: 0, max: 20 }"
 
-    return   """
+    return """
        
         <el-form-item
             prop="$javaFieldName"
@@ -650,6 +726,7 @@ fun gen_form_item_vue3(columnInfo :ColumnInfo): String {
         """.trimIndent()
 
 }
+
 fun gen_form_item_rows(columnInfos: List<ColumnInfo>): String {
 
     val formItems = columnInfos.map { columnInfo ->
@@ -680,7 +757,7 @@ fun gen_form_item_rows_add(columnInfos: List<ColumnInfo>): String {
 
     val formItems = columnInfos.map { columnInfo ->
 //        这里不能 return 不然直接return 这第一个了 是函数return了
-    gen_form_item_vue3(columnInfo)
+        gen_form_item_vue3(columnInfo)
 //        val javaFieldName = columnInfo.javaFieldName
 //        val columnCommentShow = columnInfo.columnCommentShow
 //        """
