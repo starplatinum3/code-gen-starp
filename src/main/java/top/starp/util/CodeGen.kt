@@ -38,6 +38,20 @@ fun genMyBatisPlusEntityField(columnInfo: ColumnInfo, withSwagger: Boolean): Str
             """.trimIndent()
 }
 
+fun  genReactColumnsItem(columnInfo :ColumnInfo): String {
+    val javaFieldName=    columnInfo.javaFieldName
+    val columnCommentShow=     columnInfo.columnCommentShow
+    return       """
+    {
+      title: '$columnCommentShow',
+      dataIndex: '$javaFieldName',
+      width: 80,
+      render: (_, record, index) => <>{(pagination.current - 1) * pagination.pageSize + index + 1}</>,
+    },
+        
+    """.trimIndent()
+}
+
 fun genMybatisPlusSelectPageLikeRows(columnInfos:List<ColumnInfo>
                                      ,entityName:String
 

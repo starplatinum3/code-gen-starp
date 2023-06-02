@@ -32,3 +32,5 @@ mqtt:
 
 feishuAppSecret: ${feishuAppSecret:123456}
 feishuAppId: ${feishuAppId:123456}
+
+gaoDeMapKey: ${GAO_DE_MAP_KEY:123456}

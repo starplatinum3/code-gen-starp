@@ -55,7 +55,7 @@ import ElmStatusSelect from '@/components/ElmStatusSelect.vue';
 import HttpUtil from '@/utils/HttpUtil';
 import k from '@/utils/Tables';
 //import { ref } from 'vue';
-
+import Util from '@/utils/util';
 import UiUtil from '@/utils/UiUtil';
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\ElmStatusSelect.vue
 // D:\proj\makeBook\hotel\hotel-management-origin\src\components\StatusSelect.vue
@@ -67,12 +67,13 @@ export default {
         StatusSelect,
         ElPagination,
     },
+    directives:Util.directives,
     setup() {
         let  tableName=k.{entityName}
      const router = useRouter();
     const route = useRoute();
 
-
+{genForeignTableEntityCode}
         const currentPage = ref(1);
     const pageSize = 10;
     const total = ref(0);

@@ -15,6 +15,39 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
+
+    public static void main(String[] args) {
+//        String originalString = "Hello world, hello Universe";
+
+//        String searchString = "hello";
+
+//        String replacement = "Hi";
+        String originalString = "roomId world, roomID Universe";
+        String searchString = "id";
+        String replacement = "";
+
+        // 使用正则表达式 "(?i)" 来实现不区分大小写
+        String result = originalString.replaceAll("(?i)" + searchString, replacement);
+        System.out.println(result);
+    }
+//void d(){
+//    "id".equalsIgnoreCase()
+////    equalsIgnoreCase kotlin
+//}
+    public  static  String replaceIgnoreCase(String originalString
+            ,  String searchString , String replacement ){
+
+
+//        String originalString = "roomId world, roomID Universe";
+//        String searchString = "id";
+//        String replacement = "";
+
+        // 使用正则表达式 "(?i)" 来实现不区分大小写
+        String result = originalString.replaceAll("(?i)" + searchString, replacement);
+//        System.out.println(result);
+        return result;
+    }
+
     public static String generateRandomString() {
         return   generateRandomString(6);
     }
@@ -858,7 +891,7 @@ public class StringUtils {
     public  static boolean isNone(String string){
         return  string==null || string.equals("");
     }
-    public static void main(String[] args) {
+    public static void maintest(String[] args) {
         test6();
     }
 

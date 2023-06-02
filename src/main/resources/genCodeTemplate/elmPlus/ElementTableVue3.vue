@@ -57,9 +57,8 @@
                                     </el-button>
                                 </template>
                             </el-popconfirm>
-
-                            
                         </div>
+                        {toWhereButton}
                     </template>
                 </el-table-column>
             </el-table>
@@ -92,7 +91,7 @@ import socketIOTool from '@/utils/socketIOTool';
 import HttpUtil from '@/utils/HttpUtil';
 import k from '@/utils/Tables';
 import UiUtil from '@/utils/UiUtil';
-import { ElPagination，ElInputNumber} from 'element-plus';
+import { ElPagination,ElInputNumber} from 'element-plus';
 
 
 // function getOrdersRequest(state) {
@@ -282,7 +281,7 @@ const rules = reactive({
             });
         };
 
-        const toModify = (order) => {
+        const toModify = (item) => {
         let id=item.id
             let oid=  item.oid
             router.push({
@@ -292,6 +291,7 @@ const rules = reactive({
             });
         };
 
+{genToTableFuncCode}
 
 
         const upload = reactive({
@@ -379,6 +379,7 @@ search()
                             verifyFileType,
                             uploadImg,
                               upload,
+                              {genToTableFuncExportCode}
         };
     },
 };

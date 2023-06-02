@@ -118,6 +118,89 @@ public class AllController {
 //                .build();
     }
 
+//    @Value("")
+    @Value("${gaoDeMapKey}")
+    String gaoDeMapKey;
+    @ApiOperation(value = "gaoDeMapWakling", notes = "gaoDeMapWakling")
+    @RequestMapping(value = "/gaoDeMapWakling", method = RequestMethod.POST)
+    public Object gaoDeMapWakling() {
+        String origin="104.07,30.67";//出发点经纬度
+        String destination="104.46,29.23";//目的地经纬度
+//        120.149343,30.335056
+//        String key="2ace948ef129************b0774750";//高德用户key
+//        String key="2ace948ef129************b0774750";//高德用户key
+        MapNavUtil mapResult=new MapNavUtil(origin, destination, gaoDeMapKey);
+//        System.out.println(mapResult.getResults().toString());
+//        System.out.println(mapResult.getResults().toString());
+//        System.out.println("mapResult.walking()");
+//        System.out.println(mapResult.walking());
+//        MapNavResults walkingRes = mapResult.walking();
+        JSONObject walkingRes = mapResult.walkingReq();
+//        walkingReq
+
+        log.info("walkingRes {}",walkingRes);
+        Document document = new Document();
+        document.put("origin",origin);
+        document.put("destination",destination);
+        document.put("walkingRes",walkingRes);
+//        gao_de_map
+//        mongoTemplate.
+//        MongoUtil.in
+        Document insert = mongoTemplate.insert(document, k.gao_de_map);
+        return ReturnT.success(insert);
+    }
+
+    @ApiOperation(value = "walking", notes = "walking")
+    @RequestMapping(value = "/walking", method = RequestMethod.POST)
+    public Object walking( @RequestBody  GeoReq geoReq) {
+//        String origin="104.07,30.67";//出发点经纬度
+//        String destination="104.46,29.23";//目的地经纬度
+//        120.149343,30.335056
+//        String key="2ace948ef129************b0774750";//高德用户key
+//        String key="2ace948ef129************b0774750";//高德用户key
+//        MapNavUtil mapResult=new MapNavUtil(origin, destination, gaoDeMapKey);
+//        System.out.println(mapResult.getResults().toString());
+//        System.out.println(mapResult.getResults().toString());
+//        System.out.println("mapResult.walking()");
+//        System.out.println(mapResult.walking());
+//        MapNavResults walkingRes = mapResult.walking();
+//        JSONObject walkingRes = mapResult.walkingReq();
+
+        JSONObject walkingRes = MapNavUtil.walking(geoReq, gaoDeMapKey);
+//        walkingReq
+
+        log.info("walkingRes {}",walkingRes);
+        Document document = new Document();
+//        document.put("origin",origin);
+//        document.put("destination",destination);
+        document.put("walkingRes",walkingRes);
+        document.put("geoReq",geoReq);
+        document.put("date",new Date());
+//        gao_de_map
+//        mongoTemplate.
+//        MongoUtil.in
+        Document insert = mongoTemplate.insert(document, k.gao_de_map);
+        return ReturnT.success(insert);
+    }
+
+    @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
+    @RequestMapping(value = "/geocode_geo", method = RequestMethod.POST)
+    public Object  geocode_geo(@RequestBody GeoReq geoReq){
+        JSONObject geocode_geo = MapNavUtil.geocode_geo(geoReq, gaoDeMapKey);
+        log.info("geocode_geo {}",geocode_geo);
+        Document document = new Document();
+        document.put("geoReq",geoReq);
+        document.put("geocode_geo",geocode_geo);
+        Date date = new Date();
+        document.put("date",date);
+//        gao_de_map
+//        mongoTemplate.
+//        MongoUtil.in
+        Document insert = mongoTemplate.insert(document, k.geocode_geo);
+
+        return ReturnT.success(insert);
+    }
+
     @ApiOperation(value = "clientFeiShu", notes = "clientFeiShu")
     @RequestMapping(value = "/clientFeiShu", method = RequestMethod.POST)
     public Object clientFeiShu() {

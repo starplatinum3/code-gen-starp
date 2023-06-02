@@ -37,7 +37,7 @@ import com.example.demo.util.codeGen.ColumnInfo
 //public
 val haveRules = false
 
-fun genElTableColumnRow(columnInfo: ColumnInfo): String? {
+fun genElTableColumnRow(columnInfo: ColumnInfo): String {
     val commentShow = columnInfo.columnCommentShow
     val column_name = columnInfo.columN_NAME
 //        val java字段类型 = columnInfo.获取java字段类型()
@@ -82,6 +82,35 @@ fun genElTableColumnRow(columnInfo: ColumnInfo): String? {
             """.trimIndent()
     }
     return ""
+}
+
+
+//fun genByFunc(columnInfos: List<ColumnInfo>,function: Function<out String>): String{
+//    val res = StringBuilder()
+//    for (columnInfo in columnInfos) {
+////        val row = genToTableButton(columnInfo)
+//        val row =   function(columnInfo)
+//        res.append(row)
+//    }
+//    return res.toString()
+//}
+fun genByFunc(columnInfos: List<ColumnInfo>, function: (ColumnInfo) -> String): String {
+    val res = StringBuilder()
+    for (columnInfo in columnInfos) {
+        val row = function(columnInfo)
+        res.append(row)
+    }
+    return res.toString()
+}
+
+
+fun genElTableToTableButton(columnInfos: List<ColumnInfo>): String{
+    val res = StringBuilder()
+    for (columnInfo in columnInfos) {
+        val row = genToTableButton(columnInfo)
+        res.append(row)
+    }
+    return res.toString()
 }
 
 fun genElTableColumnRows(columnInfos: List<ColumnInfo>): String? {
@@ -755,7 +784,7 @@ fun rangeSelectCodeGen(columnInfo:ColumnInfo,formItems: MutableList<String>
     ) {
         var twoColCode = ""
         for (s in twoColSet) {
-            twoColCode + s + "\n"
+            twoColCode += s + "\n"
         }
         val code= """
                  <el-row
@@ -773,6 +802,180 @@ fun rangeSelectCodeGen(columnInfo:ColumnInfo,formItems: MutableList<String>
         twoColSet.add(row)
     }
 }
+
+fun  mapToWholeName(inputString:String): String? {
+//   val map:HashMap<String,String> = mutableMapOf()
+//    val map:HashMap<String,String> =
+//   val map= mutableMapOf<String,String>()
+//    map.put("u","User")
+//    map.put("o","Order")
+//
+//    if ("u".equals(toWhere, ignoreCase = true)) {
+//        toWhere="User"
+//    }else if("o".equals(toWhere, ignoreCase = true)){
+//
+//    }
+
+    val map = mapOf(
+            "u" to "User",
+            "o" to "Order",
+            "r" to "Room",
+    )
+
+//    val inputString = "KEY1"
+
+    val matchingValue = map.values.find { it.equals(inputString, ignoreCase = true) }
+
+    return matchingValue
+//    println(matchingValue)
+}
+
+
+
+//fun  genToTableFunc(columnInfo :ColumnInfo): String {
+//    if ("id".equals(columnInfo.javaFieldName, ignoreCase = true)) {
+//        return ""
+//    }
+////   val forignTableList= mutableListOf<String>()
+//
+//    if (StringUtils.containsIgnoreCase(columnInfo.javaFieldName,"id")) {
+//
+//        val replaceIgnoreCase = StringUtils.replaceIgnoreCase(
+//                columnInfo.javaFieldName, "id", "")
+////        room
+////        roomId
+//        val entity=replaceIgnoreCase
+//        val toWhereShortWord=  StringUtils.upperCaseFirst(replaceIgnoreCase)
+////        if ("u".equals(toWhere, ignoreCase = true)) {
+////            toWhere="User"
+////        }else if("o".equals(toWhere, ignoreCase = true)){
+////
+////        }
+//        val toWhere=  mapToWholeName(toWhereShortWord)
+////        if(toWhere.equals())
+////        columnInfo.columnCommentShow
+//        val javaFieldName=    columnInfo.javaFieldName
+//        return       """
+//         const user = reactive({});
+//    """.trimIndent()
+//    }
+//    return  ""
+//
+//}
+
+
+fun  genToTableFunc(columnInfo :ColumnInfo): String {
+    if ("id".equals(columnInfo.javaFieldName, ignoreCase = true)) {
+        return ""
+    }
+
+    if (StringUtils.containsIgnoreCase(columnInfo.javaFieldName,"id")) {
+
+        val replaceIgnoreCase = StringUtils.replaceIgnoreCase(
+                columnInfo.javaFieldName, "id", "")
+//        room
+//        roomId
+        val entity=replaceIgnoreCase
+        val toWhereShortWord=  StringUtils.upperCaseFirst(replaceIgnoreCase)
+//        if ("u".equals(toWhere, ignoreCase = true)) {
+//            toWhere="User"
+//        }else if("o".equals(toWhere, ignoreCase = true)){
+//
+//        }
+        val toWhere=  mapToWholeName(toWhereShortWord)
+//        if(toWhere.equals())
+//        columnInfo.columnCommentShow
+    val javaFieldName=    columnInfo.javaFieldName
+        return       """
+        const to${toWhere} = (item) => {
+            let ${columnInfo.javaFieldName} = item.${columnInfo.javaFieldName};
+            router.push({
+                name: 'Modify${toWhere}',
+                query: { oid: item.oid, number ,$javaFieldName },
+                params: { state: 1 },
+            });
+        };
+        
+    """.trimIndent()
+    }
+    return  ""
+
+
+}
+
+
+fun  genForeignTableEntity(columnInfo :ColumnInfo): String {
+    val javaFieldName=    columnInfo.javaFieldName
+    return       """
+        const $javaFieldName = reactive({});
+        
+    """.trimIndent()
+}
+
+fun  genForeignTableUiSelectOne(columnInfo :ColumnInfo): String {
+    val javaFieldName=    columnInfo.javaFieldName
+//    uid
+    return       """
+        const $javaFieldName = reactive({});
+        UiUtil.selectOne(k.$javaFieldName, form,$javaFieldName)
+    """.trimIndent()
+}
+
+
+
+fun  genToTableFuncExport(columnInfo :ColumnInfo): String {
+    if ("id".equals(columnInfo.javaFieldName, ignoreCase = true)) {
+        return ""
+    }
+
+    if (StringUtils.containsIgnoreCase(columnInfo.javaFieldName,"id")) {
+
+        val replaceIgnoreCase = StringUtils.replaceIgnoreCase(
+                columnInfo.javaFieldName, "id", "")
+//        room
+//        roomId
+        val entity=replaceIgnoreCase
+//        val toWhere=  StringUtils.upperCaseFirst(replaceIgnoreCase)
+        val toWhereShortWord=  StringUtils.upperCaseFirst(replaceIgnoreCase)
+        val toWhere=  mapToWholeName(toWhereShortWord)
+//        columnInfo.columnCommentShow
+        val javaFieldName=    columnInfo.javaFieldName
+        return       """
+        to${toWhere} ,
+        
+    """.trimIndent()
+    }
+    return  ""
+}
+
+fun  genToTableButton(columnInfo :ColumnInfo): String {
+//    StringUtils.
+//    columnInfo.javaFieldName.
+//    StringUtils.equ
+//    "id".equalsIgnoreCase
+
+    if ("id".equals(columnInfo.javaFieldName, ignoreCase = true)) {
+        return ""
+    }
+    if (StringUtils.containsIgnoreCase(columnInfo.javaFieldName,"id")) {
+//        equalsIgnoreCase
+        val replaceIgnoreCase = StringUtils.replaceIgnoreCase(
+                columnInfo.javaFieldName, "id", "")
+//        roomId
+      val toWhere=  StringUtils.upperCaseFirst(replaceIgnoreCase)
+//        columnInfo.columnCommentShow
+     return   """
+            <el-button
+                         size="mini"
+                                @click="to${toWhere}(scope.row)"
+                            >
+                                查看${columnInfo.columnCommentShow}
+                            </el-button>
+        """.trimIndent()
+    }
+    return  ""
+}
+
 fun gen_form_item_rows_search(columnInfos: List<ColumnInfo>): String {
 
 //    val formItems = columnInfos.map { columnInfo ->
@@ -788,6 +991,8 @@ fun gen_form_item_rows_search(columnInfos: List<ColumnInfo>): String {
         val isNumberOrDate = columnInfo.isNumberType || columnInfo.isDateType
         if (!isNumberOrDate) {
             val row = gen_form_item_vue3_wrap_col_search(columnInfo)
+//            columnInfo.javaFieldName.contains
+
 //            code += row + "\n"
 //            formItems
             formItems.add(row)
@@ -821,50 +1026,50 @@ fun gen_form_item_rows_search(columnInfos: List<ColumnInfo>): String {
 
 
 
-    for (columnInfo in columnInfos) {
-//        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
-        if (columnInfo.isNumberType) {
-            rangeSelectCodeGen(columnInfo,formItems,twoColSet)
-            idx++
-//            val row = gen_form_item_vue3_wrap_col_search(columnInfo)
-////            twoColSet.
-////            if(row.)
-//            if (
-//                    twoColSet.size == 2
-//            ) {
-//                var twoColCode = ""
-//                for (s in twoColSet) {
-//                    twoColCode + s + "\n"
-//                }
-//                """
-//                 <el-row
-//      type="flex"
-//                justify="center"
-//                style="flex-wrap: wrap; flex-direction: row"
-//            >
-//            $twoColCode
-//            </el-row>
-//            """.trimIndent()
+//    for (columnInfo in columnInfos) {
+////        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
+//        if (columnInfo.isNumberType) {
+//            rangeSelectCodeGen(columnInfo,formItems,twoColSet)
+//            idx++
+////            val row = gen_form_item_vue3_wrap_col_search(columnInfo)
+//////            twoColSet.
+//////            if(row.)
+////            if (
+////                    twoColSet.size == 2
+////            ) {
+////                var twoColCode = ""
+////                for (s in twoColSet) {
+////                    twoColCode + s + "\n"
+////                }
+////                """
+////                 <el-row
+////      type="flex"
+////                justify="center"
+////                style="flex-wrap: wrap; flex-direction: row"
+////            >
+////            $twoColCode
+////            </el-row>
+////            """.trimIndent()
+////
+////                twoColSet.clear()
+////            } else {
+////                twoColSet.add(row)
+////            }
 //
-//                twoColSet.clear()
-//            } else {
-//                twoColSet.add(row)
-//            }
-
-
-//            formItems.add(row)
-        }
-    }
-
-    for (columnInfo in columnInfos) {
-//        两个一组的
-//        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
-        if (columnInfo.isDateType) {
-            rangeSelectCodeGen(columnInfo,formItems,twoColSet)
-//            val row = gen_form_item_vue3_wrap_col_search(columnInfo)
-//            formItems.add(row)
-        }
-    }
+//
+////            formItems.add(row)
+//        }
+//    }
+//
+//    for (columnInfo in columnInfos) {
+////        两个一组的
+////        val isNumberOrDate=  columnInfo.isNumberType|| columnInfo.isDateType
+//        if (columnInfo.isDateType) {
+//            rangeSelectCodeGen(columnInfo,formItems,twoColSet)
+////            val row = gen_form_item_vue3_wrap_col_search(columnInfo)
+////            formItems.add(row)
+//        }
+//    }
     println("formItems")
     println(formItems)
     return formItems.joinToString("\n")

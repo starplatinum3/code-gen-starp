@@ -10,9 +10,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 //import com.gm.wj.entity.ColumnInfo;
 //import com.gm.wj.util.StrUtil;
+import kotlin.jvm.functions.Function1;
 import lombok.Data;
 //import top.starp.util.MockGenerator;
 
+import lombok.val;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import top.starp.util.*;
@@ -20,10 +22,7 @@ import top.starp.util.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -31,8 +30,8 @@ import java.util.stream.Collectors;
 public class TableInfo {
 
     Table table;
-//    public    static final String tablePreffix = "t_";
-    public    static final String tablePreffix = "";
+    //    public    static final String tablePreffix = "t_";
+    public static final String tablePreffix = "";
     /**
      * 下划线
      */
@@ -73,7 +72,7 @@ public class TableInfo {
 //        实体名 = StringUtils.lowerCaseFirst(类名);
     }
 
-    
+
     String genJsonDefaultNull() {
         if (columnInfos == null) {
             return "{ }";
@@ -84,7 +83,7 @@ public class TableInfo {
                     String row = "         \"#java字段名#\":null "
                             .replace("#java字段名#", java字段名);
                     if (columnInfo.isNumberType()
-                    ||columnInfo.isDateType()) {
+                            || columnInfo.isDateType()) {
                         row = ("         \"#java字段名#\":null," +
                                 " \"#java字段名#Max\":null," +
                                 " \"#java字段名#Min\":null ")
@@ -107,7 +106,7 @@ public class TableInfo {
     private static final List<String> NAMES = Arrays.asList("Alice", "Bob", "Charlie", "David", "Eva");
     private static final List<String> STATES = Arrays.asList("waiting", "running", "stopped");
 
-//     需要一个genJsonMock 函数 ，根据不同的字段 生成不同的默认值，比如是名字 就随机名字，
+    //     需要一个genJsonMock 函数 ，根据不同的字段 生成不同的默认值，比如是名字 就随机名字，
 //     是时间就随机时间，是数字就随机数字。数字如果是年龄 要考虑年龄段，状态要给几个状态，比如等待中、运行中之类的
     public static String genJsonMock(List<ColumnInfo> columnInfos) {
         // MockGenerator.genMock(tablePreffix)
@@ -121,17 +120,16 @@ public class TableInfo {
 
         for (ColumnInfo columnInfo : columnInfos) {
             String javaFieldName = columnInfo.getJavaFieldName();
-        //     String type = columnInfo.getType();
-            String type =   columnInfo.getDATA_TYPE();
+            //     String type = columnInfo.getType();
+            String type = columnInfo.getDATA_TYPE();
 //            String randomString = top.starp.util.StringUtils.generateRandomString();
-        //     "VARCHAR"
-        //      if (type.equalsIgnoreCase("string"))
+            //     "VARCHAR"
+            //      if (type.equalsIgnoreCase("string"))
 //            "typeName":"","area":null,"bedType":"","layout":"","amenities":null,"price":null,"photoUrl":null
             if (type.equalsIgnoreCase("VARCHAR")) {
                 if ("name".equalsIgnoreCase(javaFieldName)) {
                     rootNode.put(javaFieldName, NAMES.get(rand.nextInt(NAMES.size())));
-                }
-               else if ("typeName".equalsIgnoreCase(javaFieldName)) {
+                } else if ("typeName".equalsIgnoreCase(javaFieldName)) {
 //                    String randomTypeName = RoomMockData.getRandomTypeName();
                     rootNode.put(javaFieldName, RoomMockData.getRandomTypeName());
                 }
@@ -139,10 +137,9 @@ public class TableInfo {
 //                javaFieldName
 //                containsIgnoreCase
 
-                else if (  top.starp.util.StringUtils.containsIgnoreCase(javaFieldName,"BED")) {
+                else if (top.starp.util.StringUtils.containsIgnoreCase(javaFieldName, "BED")) {
                     rootNode.put(javaFieldName, RoomMockData.getRandomBedType());
-                }
-                else if (  top.starp.util.StringUtils.containsIgnoreCase(javaFieldName,"LAYOUT")) {
+                } else if (top.starp.util.StringUtils.containsIgnoreCase(javaFieldName, "LAYOUT")) {
                     rootNode.put(javaFieldName, RoomMockData.getRandomLayout());
                 }
 //                else if (  top.starp.util.StringUtils.containsIgnoreCase(javaFieldName,"AMENITIE")) {
@@ -599,6 +596,7 @@ public class TableInfo {
 //        }
         return columnNamesStr;
     }
+
     public String genInsertDataStr() {
 
 //        StringBuilder res= new StringBuilder();
@@ -613,7 +611,7 @@ public class TableInfo {
 //            }
 //        if(mockData)
 //            return "'" + mockData + "'";
-            return "#{"+ column_name+"}";
+            return "#{" + column_name + "}";
 //            return columnName;
         }).collect(Collectors.toList());
         final String columnNamesStr = String.join(",", columnNames);
@@ -638,6 +636,7 @@ public class TableInfo {
 //        }
         return columnNamesStr;
     }
+
     public String genInsertIntoFields() {
 
 //        StringBuilder res= new StringBuilder();
@@ -963,6 +962,7 @@ public class TableInfo {
                 "        ></el-input>\n";
         System.out.println(row);
     }
+
     public String genElFormItemRows() {
         StringBuilder res = new StringBuilder();
         for (ColumnInfo columnInfo : columnInfos) {
@@ -1097,7 +1097,7 @@ public class TableInfo {
 
     public String genColumnsDicMap(String export) throws Exception {
 
-        String prefix =export+ " const #实体名#Columns = [ \n ".replace("#实体名#", 实体名);
+        String prefix = export + " const #实体名#Columns = [ \n ".replace("#实体名#", 实体名);
         StringBuilder res = new StringBuilder(prefix);
         for (ColumnInfo columnInfo : columnInfos) {
             String java字段名 = columnInfo.getJava字段名();
@@ -1118,7 +1118,7 @@ public class TableInfo {
 
     public String genColumnsDicMapUnderScore(String export) throws Exception {
 
-        String prefix =export+ " const #实体名#ColumnsUnderScore = [ \n "
+        String prefix = export + " const #实体名#ColumnsUnderScore = [ \n "
                 .replace("#实体名#", 实体名);
         StringBuilder res = new StringBuilder(prefix);
         for (ColumnInfo columnInfo : columnInfos) {
@@ -1140,38 +1140,37 @@ public class TableInfo {
         return res.toString();
 
     }
+
     public String genTableNameExcelColsMapRow() throws Exception {
 
-        String tableNameExcelColsMapRowTpl="'{entityName}':{entityName}Columns,";
-        String tableNameExcelColsMapRow=
+        String tableNameExcelColsMapRowTpl = "'{entityName}':{entityName}Columns,";
+        String tableNameExcelColsMapRow =
                 tableNameExcelColsMapRowTpl
-                        .replace("{tableName}",tableName)
-                        .replace("{entityName}",entityName)
-                ;
-        return  tableNameExcelColsMapRow;
+                        .replace("{tableName}", tableName)
+                        .replace("{entityName}", entityName);
+        return tableNameExcelColsMapRow;
     }
 
     public String genTableNameExcelColsMapRowUnderScore() throws Exception {
-        String tableNameExcelColsMapRowTpl="'{entityName}':{entityName}ColumnsUnderScore,";
-        String tableNameExcelColsMapRow=
+        String tableNameExcelColsMapRowTpl = "'{entityName}':{entityName}ColumnsUnderScore,";
+        String tableNameExcelColsMapRow =
                 tableNameExcelColsMapRowTpl
-                        .replace("{tableName}",tableName)
+                        .replace("{tableName}", tableName)
 //                        .replace("{tableName}",tableName)
-                        .replace("{entityName}",entityName)
-                ;
-        return  tableNameExcelColsMapRow;
+                        .replace("{entityName}", entityName);
+        return tableNameExcelColsMapRow;
 
     }
+
     public String genTableNameOriginExcelColsMapRowUnderScore() throws Exception {
 //        tableNameOrigin
-        String tableNameExcelColsMapRowTpl="'{tableNameOrigin}':{entityName}ColumnsUnderScore,";
-        String tableNameExcelColsMapRow=
+        String tableNameExcelColsMapRowTpl = "'{tableNameOrigin}':{entityName}ColumnsUnderScore,";
+        String tableNameExcelColsMapRow =
                 tableNameExcelColsMapRowTpl
-                        .replace("{tableNameOrigin}",tableNameOrigin)
+                        .replace("{tableNameOrigin}", tableNameOrigin)
 //                        .replace("{tableName}",tableName)
-                        .replace("{entityName}",entityName)
-                ;
-        return  tableNameExcelColsMapRow;
+                        .replace("{entityName}", entityName);
+        return tableNameExcelColsMapRow;
 
     }
 
@@ -1212,9 +1211,9 @@ public class TableInfo {
             String commentShow = columnInfo.getColumnCommentShow();
 
             String column_type = columnInfo.getCOLUMN_TYPE();
-            String compareType="like";
+            String compareType = "like";
             if (MysqlDataType.isNumberType(column_type)) {
-                 compareType="eq";
+                compareType = "eq";
             }
 //            columnInfo
             String row = ".{compareType}(\n" +
@@ -1552,6 +1551,39 @@ public class TableInfo {
         return code;
     }
 
+  public static List<ColumnInfo>    getForeignCols(List<ColumnInfo> columnInfos) {
+//        List<String> toWhereList = new ArrayList<>();
+        List<ColumnInfo> foreignCols = new ArrayList<>();
+        for (ColumnInfo columnInfo : columnInfos) {
+//            columnInfo
+            if ("id".equalsIgnoreCase(columnInfo.javaFieldName)) {
+                continue;
+            }
+
+            if (top.starp.util.StringUtils.containsIgnoreCase(columnInfo.javaFieldName, "id")) {
+                continue;
+            }
+
+            String replaceIgnoreCase = top.starp.util.StringUtils
+                    .replaceIgnoreCase(columnInfo.javaFieldName, "id", "");
+//                String replaceIgnoreCase = StringUtils.replaceIgnoreCase(
+//                        columnInfo.javaFieldName, "id", "")
+            String entity = replaceIgnoreCase;
+            String toWhereShortWord = StringUtils.upperCaseFirst(replaceIgnoreCase);
+            String toWhere = ElmGenKt.mapToWholeName(toWhereShortWord);
+//                String javaFieldName=    columnInfo.javaFieldName
+//            toWhereList.add(toWhere);
+            foreignCols.add(columnInfo);
+        }
+        return  foreignCols;
+//        if ("id".equals(columnInfo.javaFieldName, ignoreCase = true)) {
+//            return ""
+//        }
+    }
+
+
+
+
     public String genElementTableVue3() throws Exception {
 //        ElementTableVue3.vue
 //        D:\proj\springBoot\code-gen-starp\src\main\resources\genCodeTemplate\elmPlus
@@ -1564,10 +1596,24 @@ public class TableInfo {
 
         String formItemRows = ElmGenKt.gen_form_item_rows_search(columnInfos);
 
+//        {toWhereButton}
         String elmFormItems = genElmFormItems();
         String elmQueryInputs = genElmQueryInputs();
         String elTableColumnRows = ElmGenKt.genElTableColumnRows(columnInfos);
+//        ElmGenKt.genByFunc(columnInfos,ElmGenKt.genToTableButton(columnInfo);)
+
+        String toWhereButton = ElmGenKt.genByFunc(columnInfos, ElmGenKt::genToTableButton);
+        String genToTableFuncCode = ElmGenKt.genByFunc(columnInfos, ElmGenKt::genToTableFunc);
+
+        String genToTableFuncExportCode = ElmGenKt.genByFunc(columnInfos, ElmGenKt::genToTableFuncExport);
+
+
+        List<ColumnInfo> foreignCols = getForeignCols(columnInfos);
+        String genForeignTableEntityCode = ElmGenKt.genByFunc(foreignCols, ElmGenKt::genForeignTableEntity);
+
 //        genElTableColumnRows()
+
+//        ElmGenKt.genToTableButton(co);
 //        genElementTableMybatisPlus()
         String jsonMock = genJsonMock(columnInfos);
 //        String elTableColumnRows = genElTableColumnRows();
@@ -1588,6 +1634,11 @@ public class TableInfo {
                 .replace("{className}", className)
                 .replace("{elTableColumnRows}", elTableColumnRows)
                 .replace("{jsonDefaultNull}", jsonDefaultNull)
+                .replace("{toWhereButton}", toWhereButton)
+                .replace("{genToTableFuncCode}", genToTableFuncCode)
+                .replace("{genToTableFuncExportCode}", genToTableFuncExportCode)
+                .replace("{genForeignTableEntityCode}", genForeignTableEntityCode)
+//        {toWhereButton}
 //                .replace("#jsonDefaultNull#", jsonDefaultNull)
 //                .replace("#iViewColumnsRows#", iViewColumnsRows)
         ;
@@ -1648,7 +1699,7 @@ public class TableInfo {
 //        Update
 //        Modify
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,
-                "elementUi", "ElementTableVue3",entityName,"Modify"+ className + ".vue");
+                "elementUi", "ElementTableVue3", entityName, "Modify" + className + ".vue");
         FileUtil.writeCode(dictDataPath, code);
 
         return code;
@@ -1711,11 +1762,12 @@ public class TableInfo {
 //        java.nio.file.Path dictDataPath = Paths.get(pathFileString,
 //                "elementUi", "ElementTableVue3",entityName,"form","Add"+ className + ".vue");
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,
-                "elementUi", "ElementTableVue3",entityName,"Add"+ className + ".vue");
+                "elementUi", "ElementTableVue3", entityName, "Add" + className + ".vue");
         FileUtil.writeCode(dictDataPath, code);
 
         return code;
     }
+
     public String genReactRuoyiDrawerFormRows() {
         StringBuilder res = new StringBuilder();
         for (ColumnInfo columnInfo : columnInfos) {
@@ -2256,7 +2308,8 @@ public class TableInfo {
 
         return code;
     }
-    public String genMybatisXmlSqls() throws Exception{
+
+    public String genMybatisXmlSqls() throws Exception {
 //        String code = "insert into `#tableName#` (#InsertIntoFields#) values (#mockDataStr#);";
         String code = "insert into `#tableName#` (#InsertIntoFields#) values (#insertDataStr#);";
 
@@ -2292,11 +2345,12 @@ public class TableInfo {
 //                "jpa","entity", 类名+".java");
         // TODOok: 2022/8/18 ruoyi
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,
-                "sqlXml",className+".sql");
-        FileUtil.writeCode(dictDataPath,code);
+                "sqlXml", className + ".sql");
+        FileUtil.writeCode(dictDataPath, code);
 
         return code;
     }
+
     public String genOneInsertInto() {
         String code = "insert into `#tableName#` (#InsertIntoFields#) values (#mockDataStr#);";
 
@@ -2937,6 +2991,7 @@ public class TableInfo {
     public static void main(String[] args) {
         mainInptStr(args);
     }
+
     public static void mainGen(String[] args) throws Exception {
         TableInfo tableInfo = new TableInfo();
 //        tableInfo.se
