@@ -5,6 +5,7 @@ package top.starp.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 高德地图导航工具类
@@ -13,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
  * @文件名 MapNavUtil.java
  * @类名 MapNavUtil
  */
+@Slf4j
 public class MapNavUtil {
     private String startCoordinate;
     private String endCoordinate;
@@ -69,6 +71,7 @@ public class MapNavUtil {
                 .replace("{destination}", geoReq.getDestination())
                 .replace("{key}",applicationKey)
                 ;
+        log.info("walking url {}",walking);
 //        String address = geoReq.getAddress();
 //        String url= "https://restapi.amap.com/v3/geocode/geo?address={address}&key={key}"
 //                .replace("{address}",address).replace("{key}",applicationKey);
@@ -80,9 +83,14 @@ public class MapNavUtil {
     public static JSONObject geocode_geo(GeoReq geoReq,String applicationKey){
 //        String address,
         String address = geoReq.getAddress();
-        String url= "https://restapi.amap.com/v3/geocode/geo?address={address}&key={key}"
-                .replace("{address}",address).replace("{key}",applicationKey);
+        String city = geoReq.getCity();
+        String url= "https://restapi.amap.com/v3/geocode/geo?address={address}&key={key}&city={city}"
+                .replace("{address}",address)
+                .replace("{key}",applicationKey)
+                .replace("{city}",city)
+                ;
 
+        log.info("geocode_geo url {}",url);
         JSONObject jsonObject = HttpRequest.get(url);
         return jsonObject;
     }

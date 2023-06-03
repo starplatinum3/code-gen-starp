@@ -37,10 +37,7 @@ import org.bson.Document;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.ExposedFields;
@@ -48,6 +45,7 @@ import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.web.JsonPath;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
@@ -186,19 +184,148 @@ public class AllController {
     @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
     @RequestMapping(value = "/geocode_geo", method = RequestMethod.POST)
     public Object  geocode_geo(@RequestBody GeoReq geoReq){
+        String address = geoReq.getAddress();
+        String city = geoReq.getCity();
+        String force = geoReq.getForce();
+//        force.
+        if (k.trueKey.equals(force)) {
+            Document insert = reqSave(geoReq);
+            return ReturnT.success(insert);
+        }
+//        mongoTemplate.query()
+//        MongoUtil.mongoJoin()
+
+//        gao_de_map
+//        mongoTemplate.
+//        MongoUtil.in
+        String geocode_geo_col_name = k.geocode_geo;
+        Map<String,Object>eq=new HashMap<>();
+        eq.put(k.address,address);
+//        eq.put(k.city,city);
+        eq.put(k.geoReq+"."+k.city,city);
+//        new HashMap<>();
+        MongoReq build = MongoReq.builder().equalMap(eq)
+                .collectionName(geocode_geo_col_name)
+//                .pageNumber()
+                .build();
+//        Page<Document> documents = MongoUtil.pageDocuments(build, mongoTemplate);
+//        MongoUtil.findList()
+//        List<Map> maps = MongoUtil.find(build, mongoTemplate);
+        List<Document> eqAddress = MongoUtil.findDocuments(build, mongoTemplate);
+//        log.info("eqAddress {}",eqAddress);
+        if(eqAddress.size()>0){
+//            eqAddress.get
+//            ListUtil.haveLike()
+//            最新的
+            Document document1 = ListUtil.getLastElement(eqAddress);
+//            Document document1 = eqAddress.get(0);
+//            有了 不要用api
+//            Data.geocode_geo
+//            Data.geocode_geo.geocodes[0].location
+//            document1.gepa
+//               bson Document get by path 像是这样的      Data.geocode_geo.geocodes[0].location
+
+            // 通过路径获取值
+//            Object value = document1.get("Data.geocode_geo.geocodes.0.location");
+//            Object value = document1.get("geocode_geo.geocodes.0.location");
+
+//            Cannot cast org.bson.Document to com.alibaba.fastjson.JSONObject
+//            Object value = document1.get("geocode_geo", Document.class)
+//                    .getList("geocodes", Document.class)
+//                    .get(0).get("location");
+
+//            Object geocode_geo = document1.get("geocode_geo");
+//            geocodes
+            Document geocode_geo = document1.get("geocode_geo", Document.class);
+            List<Document> geocodes = geocode_geo.getList("geocodes", Document.class);
+            Document geocode0 = geocodes.get(0);
+            Object value = geocode0.get("location");
+            String formatted_address = geocode0.getString("formatted_address");
+//            Object value = document1.get("geocode_geo", JSONObject.class)
+//                    .getJSONArray("geocodes")
+//                    .getJSONObject(0).get("location");
+//            List categories = JsonPath.from(json).get("store.book.category");
+//
+//            JsonPath.
+
+// 如果您知道路径下的值是特定类型的，您可以进行适当的类型转换
+            if (value instanceof String) {
+                String location = (String) value;
+                log.info("location {}",location);
+//                城院
+                String   loc城院 ="120.155627,30.328467";
+              String loc杭州浙大网新智慧立方=  "120.120432,30.337285";
+//                GeoReq.builder().origin(location).destination()
+                JSONObject walkingZUCC = MapNavUtil.walking(
+                        GeoReq.builder().origin(location).destination(loc城院).build(),
+                        gaoDeMapKey
+                );
+
+//                route
+//paths
+//                JSONObject route = walkingZUCC.getJSONObject("route");
+////                paths
+//                JSONArray paths = route.getJSONArray("paths");
+//                JSONObject path0 = paths.getJSONObject(0);
+//                Integer duration = path0.getInteger("duration");
+
+
+//                秒数 抓话
+//                duration/60 分钟
+                JSONObject walking智慧 = MapNavUtil.walking(
+                        GeoReq.builder().origin(location).destination(loc杭州浙大网新智慧立方).build(),
+                        gaoDeMapKey
+                );
+                WalkTwo build1 = WalkTwo.builder()
+                        .walkingZUCC(walkingZUCC).walking智慧(walking智慧)
+                        .geocode_geo(geocode_geo)
+                        .formatted_address(formatted_address).location(location).build();
+
+
+                build1.minuteSet();
+//                new Doc
+
+                WalkTwo insert = mongoTemplate.insert(build1, k.WalkTwo);
+                log.info("insert WalkTwo zucc {}",insert);
+                // 进一步处理字符串类型的location值
+                // ...
+            } else if (value instanceof Double) {
+                Double location = (Double) value;
+                // 进一步处理Double类型的location值
+                // ...
+            }
+
+            return ReturnT.success(document1);
+        }
+        Document insert = reqSave(geoReq);
+//        JSONObject geocode_geo = MapNavUtil.geocode_geo(geoReq, gaoDeMapKey);
+//        log.info("geocode_geo {}",geocode_geo);
+//        Document document = new Document();
+//        document.put("geoReq",geoReq);
+//        document.put("geocode_geo",geocode_geo);
+//        document.put("address",address);
+//        Date date = new Date();
+//        document.put("date",date);
+
+//        maps.
+//        Document insert = mongoTemplate.insert(document, k.geocode_geo);
+
+        return ReturnT.success(insert);
+    }
+
+    Document reqSave(GeoReq geoReq){
+        String address = geoReq.getAddress();
         JSONObject geocode_geo = MapNavUtil.geocode_geo(geoReq, gaoDeMapKey);
         log.info("geocode_geo {}",geocode_geo);
         Document document = new Document();
         document.put("geoReq",geoReq);
         document.put("geocode_geo",geocode_geo);
+        document.put("address",address);
         Date date = new Date();
         document.put("date",date);
-//        gao_de_map
-//        mongoTemplate.
-//        MongoUtil.in
+//        maps.
         Document insert = mongoTemplate.insert(document, k.geocode_geo);
-
-        return ReturnT.success(insert);
+        return insert;
     }
 
     @ApiOperation(value = "clientFeiShu", notes = "clientFeiShu")

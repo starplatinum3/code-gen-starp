@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListUtil {
+
+    public static  <T> T getLastElement(List<T>list){
+        int lastIndex = list.size() - 1;
+//        String lastElement = list.get(lastIndex);
+      return   list.get(lastIndex);
+    }
+
     public static void main(String[] args) {
 //        ElmGenKt.v
 //        ElmGenKt.
