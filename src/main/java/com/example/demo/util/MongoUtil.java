@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.util.Assert;
+import top.starp.util.k;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +24,13 @@ import java.util.Map;
 
 public class MongoUtil {
 
+
+    public static  <T> T insert(T objectToSave, String collectionName, MongoTemplate mongoTemplate) {
+        return  mongoTemplate.insert(objectToSave,collectionName);
+    }
+    public  static <T> T save(T objectToSave, String collectionName, MongoTemplate mongoTemplate) {
+        return  mongoTemplate.insert(objectToSave,collectionName);
+    }
     public static List<Map> find(MongoReq mongoReq, MongoTemplate mongoTemplate, Query query){
 //        String collectionName = mongoReq.getCollectionName();
 //        if (collectionName==null) {

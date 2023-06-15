@@ -83,6 +83,7 @@ import com.lark.oapi.core.response.RawResponse;
 import com.lark.oapi.core.token.AccessTokenType;
 import com.lark.oapi.okhttp.OkHttpClient;
 import top.starp.util.*;
+import top.starp.util.HttpRequest;
 import top.starp.util.JsonUtil;
 
 import java.net.Proxy;
@@ -181,6 +182,67 @@ public class AllController {
         return ReturnT.success(insert);
     }
 
+    /**
+     *  * 搜索服务-关键字查询
+     *      * 56 已用 56%
+     *      * 100
+     *      *
+     * @param geoReq
+     * @return
+     */
+    @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
+    @RequestMapping(value = "/place_text", method = RequestMethod.POST)
+    public Object  place_text(@RequestBody GeoReq geoReq){
+//        geoReq.place_text()
+        geoReq.setApplicationKey(gaoDeMapKey);
+        JSONObject jsonObject = HttpRequest.get(geoReq.place_text());
+
+        geoReq.setApplicationKey("");
+        Resp build = Resp.builder().resp(jsonObject).geoReq(geoReq).build();
+
+//        geoReq.
+//        WalkTwo
+//        JSONObject insert = MongoUtil.insert(jsonObject, k.place_text, mongoTemplate);
+//        JSONObject insert = MongoUtil.insert(jsonObject, k.place_text_search, mongoTemplate);
+        Resp insert = MongoUtil.insert(build, k.place_text_search, mongoTemplate);
+
+        return ReturnT.success(insert);
+//        mongoTemplate.insert(jsonObject, k.WalkTwo);
+    }
+
+    @ApiOperation(value = "ColumnInfoInsert", notes = "ColumnInfoInsert")
+    @RequestMapping(value = "/ColumnInfoInsert", method = RequestMethod.POST)
+    public Object  ColumnInfoInsert(@RequestBody GeoReq geoReq){
+//        mongoTemplate
+        ColumnInfo build1 = ColumnInfo.builder()
+                .COLUMN_NAME(k.apiName)
+                .COLUMN_TYPE(k.string).build();
+
+        ColumnInfo insert = MongoUtil.insert(build1, k.column_info, mongoTemplate);
+        return insert;
+    }
+
+
+    /**
+
+     * 输入提示
+     * 50 已用 1%
+     * 5000
+     * @param geoReq
+     * @return
+     */
+    @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
+    @RequestMapping(value = "/assistant_input_tips", method = RequestMethod.POST)
+    public Object  assistant_input_tips(@RequestBody GeoReq geoReq){
+        geoReq.setApplicationKey(gaoDeMapKey);
+        JSONObject resp = HttpRequest.get(geoReq.assistant_input_tips());
+        geoReq.setApplicationKey("");
+        Resp build = Resp.builder().resp(resp).geoReq(geoReq).build();
+        Resp insert = MongoUtil.insert(build, k.assistant_input_tips, mongoTemplate);
+        return ReturnT.success(insert);
+    }
+//    assistant_input_tips
+
     @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
     @RequestMapping(value = "/geocode_geo", method = RequestMethod.POST)
     public Object  geocode_geo(@RequestBody GeoReq geoReq){
@@ -253,13 +315,18 @@ public class AllController {
                 String location = (String) value;
                 log.info("location {}",location);
 //                城院
-                String   loc城院 ="120.155627,30.328467";
+//                String   loc城院 ="120.155627,30.328467";
+                String   loc城院 ="120.155368,30.322805"; //南校区
               String loc杭州浙大网新智慧立方=  "120.120432,30.337285";
 //                GeoReq.builder().origin(location).destination()
+//                GeoReq geoReq1 = GeoReq.builder().origin(location).destination(loc城院).build();
+//                geoReq1.address=""
                 JSONObject walkingZUCC = MapNavUtil.walking(
                         GeoReq.builder().origin(location).destination(loc城院).build(),
                         gaoDeMapKey
                 );
+
+//                JSONObject jsonObject = HttpRequest.get(geoReq1.place_text());
 
 //                route
 //paths

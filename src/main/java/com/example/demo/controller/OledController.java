@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.Oled;
 import com.example.demo.entity.ReturnT;
 import com.example.demo.repository.OledRepository;
+import com.example.demo.util.MongoUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +12,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
@@ -41,12 +44,17 @@ public class OledController {
         return oledRepository.save(oled);
     }
 
+//    @Resource
+//    MongoTemplate mongoTemplate;
+
     /**
     * 删除
     */
     @PostMapping("/delete")
     @ApiOperation(value = "update", notes = "update")
     public Object delete(int id){
+//        MongoUtil
+//        MongoUtil.insert()
         Optional<Oled> oled=oledRepository.findById(id);
         if(oled.isPresent()){
             oledRepository.deleteById(id);

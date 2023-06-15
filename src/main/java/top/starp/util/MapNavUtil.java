@@ -62,6 +62,21 @@ public class MapNavUtil {
         return jsonObject;
     }
 
+//    public static JSONObject place_text(GeoReq geoReq,String applicationKey){
+//        String address = geoReq.getAddress();
+//        String url=
+//                "https://restapi.amap.com/v3/place/text?keywords={keywords}&city={city}&offset={offset}&page={page}&key={key}&extensions=all"
+//                        .replace("{address}",address)
+//                        .replace("{key}",applicationKey)
+//                        .replace("{keywords}",keywords)
+//                        .replace("{city}",city)
+//                ;
+//
+//
+//        JSONObject jsonObject = HttpRequest.get(url);
+//        return jsonObject;
+//    }
+
     public static JSONObject walking(GeoReq geoReq,String applicationKey){
 //        String address,
 //        "origin="+this.startCoordinate+"&destination="+this.endCoordinate+"&key="+this.applicationKey;
