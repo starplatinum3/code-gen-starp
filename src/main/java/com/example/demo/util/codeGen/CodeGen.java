@@ -511,7 +511,8 @@ public class CodeGen {
 
     static void genLinkedTableQueryTest() {
 //    List<String> tableNames= Arrays.asList("plan","time_slot","program");
-        List<String> tableNames = Arrays.asList("draw", "question");
+//        List<String> tableNames = Arrays.asList("draw", "question");
+        List<String> tableNames = Arrays.asList("com","dept", "emp");
 
         String linkedTableQuery = genLinkedTableQuery(tableNames);
         System.out.println(linkedTableQuery);

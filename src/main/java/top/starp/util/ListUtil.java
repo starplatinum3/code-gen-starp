@@ -1,5 +1,7 @@
 package top.starp.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +13,30 @@ public class ListUtil {
       return   list.get(lastIndex);
     }
 
-    public static void main(String[] args) {
+//    public static List<String> createAndInitializeList(String... elements) {
+//      return   createAndInitializeList(elements);
+//
+//    }
+
+    public  static <T> List<T> createAndInitializeList(T... elements) {
+
+        List<T> list = new ArrayList<>(Arrays.asList(elements));
+        return list;
+    }
+
+    public  static <T> List<T> createList(T... elements) {
+       return createAndInitializeList(elements);
+    }
+    public static void mainList(String[] args) {
+        List<String> myList = createAndInitializeList("Apple", "Banana", "Orange");
+        System.out.println(myList);
+    }
+
+
+
+
+
+public static void main(String[] args) {
 //        ElmGenKt.v
 //        ElmGenKt.
 //         String text=f" this is F-$String.class.getSimpleName() ";

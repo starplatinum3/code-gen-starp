@@ -80,6 +80,11 @@ fun genMybatisPlusSelectPageLikeRows(columnInfos:List<ColumnInfo>
         if (columnInfo.isNumberType
                 ||columnInfo.isDateType) {
              row = """
+                  .eq(
+                            !StringUtils.isNullOrEmpty($entityName.get${javaFieldNameStartsWithUppercase}()),
+                           $className::get${javaFieldNameStartsWithUppercase},
+                            $entityName.get${javaFieldNameStartsWithUppercase}()
+                     )
                     .le(
                             !StringUtils.isNullOrEmpty($entityName.get${javaFieldNameStartsWithUppercase}Max()),
                            $className::get${javaFieldNameStartsWithUppercase}Max,

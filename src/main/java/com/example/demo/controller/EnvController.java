@@ -1,9 +1,12 @@
-//package #包名#.controller;
-//package #包名#.iView.controller;
+package com.example.demo.controller;
+//package com.starp.exam.iView.controller;
 
-//import #包名#.entity.#类名#;
-//import #包名#.repository.#类名#Repository;
-//import #包名#.util.ReturnT;
+//import com.starp.exam.entity.Env;
+//import com.starp.exam.repository.EnvRepository;
+//import com.starp.exam.util.ReturnT;
+import com.example.demo.entity.Env;
+import com.example.demo.repository.EnvRepository;
+import top.starp.util.ReturnT;
 import top.starp.util.StringUtils;
 import top.starp.util.page.StarpPage;
 
@@ -24,27 +27,30 @@ import javax.persistence.criteria.Predicate;
 
 /**
  * @author mqp
- * @description #类名#
+ * @description Env
  * @date 2022-06-27
  */
 
 @Slf4j
-@Api(tags = "#实体名#")
+@Api(tags = "env")
 //@CrossOrigin
 @CrossOrigin(allowCredentials = "true")
 @RestController
-//@RequestMapping("/#实体名#")
-@RequestMapping("/api/#实体名#")
-public class #类名#Controller {
+//@RequestMapping("/env")
+@RequestMapping("/api/env")
+public class EnvController {
 
 @Autowired
-private #类名#Repository #实体名#Repository;
+private EnvRepository envRepository;
 
         /*
          新增或编辑
 
-         let  data= #jsonDefaultNull#
-         axios.post(Common.baseUrl + "/#实体名#/save",data).then((res) => {
+         let  data= {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
+         axios.post(Common.baseUrl + "/env/save",data).then((res) => {
          console.log("res");
          console.log(res);
          let  data= res.data.data
@@ -52,11 +58,14 @@ private #类名#Repository #实体名#Repository;
 
 	entitySave(){
 
-         let  data= #jsonDefaultNull#
+         let  data= {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
 
          this.$axios({
 				method: "post",
-				url: "/#实体名#/save",
+				url: "/env/save",
 				data: data,
 			}).then(res => {
 				this.datalist = res.data;
@@ -71,10 +80,11 @@ private #类名#Repository #实体名#Repository;
 
          */
 @PostMapping("/save")
-@ApiOperation(value = "save #实体名#", notes = "save #实体名#")
-public Object save(@RequestBody #类名# #实体名#) {
+@ApiOperation(value = "save env", notes = "save env")
+public Object save(@RequestBody Env env) {
         try {
-        return ReturnT.success(#实体名#Repository.save(#实体名#));
+//                envRepository.findAllById()
+        return ReturnT.success(envRepository.save(env));
         } catch (Exception e) {
         e.printStackTrace();
         return ReturnT.error("保存失败");
@@ -86,11 +96,14 @@ public Object save(@RequestBody #类名# #实体名#) {
 /*
 
  let  data=  [
-    #jsonDefaultNull#
+    {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
  ]
          this.$axios({
 				method: "post",
-				url: "/#实体名#/saveAll",
+				url: "/env/saveAll",
 				data: data,
 			}).then(res => {
 				this.datalist = res.data;
@@ -102,9 +115,12 @@ public Object save(@RequestBody #类名# #实体名#) {
 			})
 
  let  data=  [
-    #jsonDefaultNull#
+    {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
  ]
- axios.post(Common.baseUrl + "/#实体名#/saveAll",data).then(res => {
+ axios.post(Common.baseUrl + "/env/saveAll",data).then(res => {
  console.log("res");
  console.log(res);
  Toast('saveAll成功');
@@ -113,9 +129,9 @@ public Object save(@RequestBody #类名# #实体名#) {
  */
 @PostMapping("/saveAll")
 @ApiOperation(value = "saveAll", notes = "saveAll")
-public Object saveAll(@RequestBody List<#类名#> list){
+public Object saveAll(@RequestBody List<Env> list){
         try {
-        return ReturnT.success(#实体名#Repository.saveAll(list));
+        return ReturnT.success(envRepository.saveAll(list));
         } catch (Exception e) {
         e.printStackTrace();
         return ReturnT.error("保存失败");
@@ -127,7 +143,7 @@ public Object saveAll(@RequestBody List<#类名#> list){
         /*
        删除
          let  data= {}
-         axios.post(Common.baseUrl + "/#实体名#/delete?id="+id,data).then((res) => {
+         axios.post(Common.baseUrl + "/env/delete?id="+id,data).then((res) => {
          console.log("res");
          console.log(res);
          Toast('删除成功');
@@ -136,7 +152,7 @@ public Object saveAll(@RequestBody List<#类名#> list){
 
          this.$axios({
 				method: "post",
-				url: "/#实体名#/delete?id="+id,
+				url: "/env/delete?id="+id,
 				data: data,
 			}).then(res => {
 				this.datalist = res.data;
@@ -149,11 +165,11 @@ public Object saveAll(@RequestBody List<#类名#> list){
 
          */
 @PostMapping("/delete")
-@ApiOperation(value = "delete #实体名#", notes = "delete #实体名#")
+@ApiOperation(value = "delete env", notes = "delete env")
 public Object delete(int id) {
-        Optional<#类名#> #实体名# = #实体名#Repository.findById(id);
-        if (#实体名#.isPresent()) {
-        #实体名#Repository.deleteById(id);
+        Optional<Env> env = envRepository.findById(id);
+        if (env.isPresent()) {
+        envRepository.deleteById(id);
         return ReturnT.success("删除成功");
         } else {
         return ReturnT.error("没有找到该对象");
@@ -161,8 +177,11 @@ public Object delete(int id) {
         }
 
     /*
-     let  data= #jsonDefaultNull#
-     axios.post(Common.baseUrl + "/#实体名#/deleteBy",data).then((res) => {
+     let  data= {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
+     axios.post(Common.baseUrl + "/env/deleteBy",data).then((res) => {
      console.log("res");
      console.log(res);
      Toast('删除成功');
@@ -172,7 +191,7 @@ public Object delete(int id) {
 
       this.$axios({
 				method: "post",
-				url: "/#实体名#/deleteBy",
+				url: "/env/deleteBy",
 				data: data,
 			}).then(res => {
 				this.datalist = res.data;
@@ -186,10 +205,10 @@ public Object delete(int id) {
      */
 @PostMapping("/deleteBy")
 @ApiOperation(value = "deleteBy", notes = "deleteBy")
-public Object deleteBy(@RequestBody  #类名# #实体名#) {
+public Object deleteBy(@RequestBody  Env env) {
         try {
-        Integer id = #实体名#.getId();
-        #实体名#Repository.deleteById(id);
+        Integer id = env.getId();
+        envRepository.deleteById(id);
         return ReturnT.success("删除成功");
         } catch (Exception e) {
         e.printStackTrace();
@@ -202,7 +221,7 @@ public Object deleteBy(@RequestBody  #类名# #实体名#) {
    /*
 
 
-     axios.post(Common.baseUrl + "/#实体名#/find?id="+id,{}).then(res => {
+     axios.post(Common.baseUrl + "/env/find?id="+id,{}).then(res => {
      console.log("res");
      console.log(res);
     Toast('查找成功');
@@ -212,7 +231,7 @@ public Object deleteBy(@RequestBody  #类名# #实体名#) {
 
     this.$axios({
 				method: "post",
-				url: "/#实体名#/find?id="+id,
+				url: "/env/find?id="+id,
 				data: data,
 			}).then(res => {
 				this.datalist = res.data;
@@ -224,11 +243,11 @@ public Object deleteBy(@RequestBody  #类名# #实体名#) {
 			})
      */
 @PostMapping("/find")
-@ApiOperation(value = "find #实体名# by id", notes = "find #实体名# by id")
+@ApiOperation(value = "find env by id", notes = "find env by id")
 public Object find(int id) {
-        Optional<#类名#> #实体名# = #实体名#Repository.findById(id);
-        if (#实体名#.isPresent()) {
-        return ReturnT.success(#实体名#.get());
+        Optional<Env> env = envRepository.findById(id);
+        if (env.isPresent()) {
+        return ReturnT.success(env.get());
         } else {
         return ReturnT.error("没有找到该对象");
         }
@@ -236,17 +255,20 @@ public Object find(int id) {
 
 /**
  * 分页查询
- let  data= #jsonDefaultNull#
- axios.post(Common.baseUrl + "/#实体名#/list",data).then((res) => {
+ let  data= {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
+ axios.post(Common.baseUrl + "/env/list",data).then((res) => {
  console.log("res");
  console.log(res);
- let   #实体名#List=  res.data.data.content
+ let   envList=  res.data.data.content
  Toast('查找成功');
  });
 
  this.$axios({
  method: "post",
- url: "/#实体名#/list",
+ url: "/env/list",
  data: data,
  }).then(res => {
  this.datalist = res.data;
@@ -259,8 +281,8 @@ public Object find(int id) {
 
  */
 @PostMapping("/list")
-@ApiOperation(value = "list #实体名#", notes = "list #实体名#")
-public Object list(@RequestBody #类名# #实体名#,
+@ApiOperation(value = "list env", notes = "list env")
+public Object list(@RequestBody Env env,
 @RequestParam(required = false, defaultValue = "0") int pageNumber,
 @RequestParam(required = false, defaultValue = "10") int pageSize) {
 
@@ -269,11 +291,11 @@ public Object list(@RequestBody #类名# #实体名#,
         ExampleMatcher matcher = ExampleMatcher.matchingAll();
 
         //创建实例
-        Example<#类名#> example = Example.of(#实体名#, matcher);
+        Example<Env> example = Example.of(env, matcher);
         //分页构造
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        return ReturnT.success(#实体名#Repository.findAll(example, pageable));
+        return ReturnT.success(envRepository.findAll(example, pageable));
 
         } catch (Exception e) {
         e.printStackTrace();
@@ -287,17 +309,20 @@ public Object list(@RequestBody #类名# #实体名#,
 
 /**
  *
- let  data= [ #jsonDefaultNull#  ]
- axios.post(Common.baseUrl + "/#实体名#/findAllById",data).then((res) => {
+ let  data= [ {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }  ]
+ axios.post(Common.baseUrl + "/env/findAllById",data).then((res) => {
  console.log("res");
  console.log(res);
- let   #实体名#List=  res.data.data.content
+ let   envList=  res.data.data.content
  });
 
 
  this.$axios({
  method: "post",
- url: "/#实体名#/findAllById",
+ url: "/env/findAllById",
  data: data,
  }).then(res => {
  this.datalist = res.data;
@@ -316,8 +341,8 @@ public Object findAllById(@RequestBody List<Integer> ids,
 @RequestParam(required = false, defaultValue = "0") int pageNumber,
 @RequestParam(required = false, defaultValue = "10") int pageSize) {
         try {
-        List<#类名#> allById =#实体名#Repository.findAllById(ids);
-        StarpPage<#类名#> starpPage = new StarpPage<>(allById, pageNumber, pageSize);
+        List<Env> allById =envRepository.findAllById(ids);
+        StarpPage<Env> starpPage = new StarpPage<>(allById, pageNumber, pageSize);
         return ReturnT.success(starpPage);
         } catch (Exception e) {
         e.printStackTrace();
@@ -328,16 +353,19 @@ public Object findAllById(@RequestBody List<Integer> ids,
 
 /**
  *
- let  data= [ #jsonDefaultNull#  ]
- axios.post(Common.baseUrl + "/#实体名#/deleteInBatch",data).then((res) => {
+ let  data= [ {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }  ]
+ axios.post(Common.baseUrl + "/env/deleteInBatch",data).then((res) => {
  console.log("res");
  console.log(res);
- let   #实体名#List=  res.data.data.content
+ let   envList=  res.data.data.content
  });
 
  this.$axios({
  method: "post",
- url: "/#实体名#/deleteInBatch",
+ url: "/env/deleteInBatch",
  data: data,
  }).then(res => {
  this.datalist = res.data;
@@ -351,9 +379,9 @@ public Object findAllById(@RequestBody List<Integer> ids,
  */
 @PostMapping("/deleteInBatch")
 @ApiOperation(value = "deleteInBatch", notes = "deleteInBatch")
-public Object deleteInBatch(@RequestBody List<#类名#> entities) {
+public Object deleteInBatch(@RequestBody List<Env> entities) {
         try {
-        #实体名#Repository.deleteInBatch(entities);
+        envRepository.deleteInBatch(entities);
         return ReturnT.success("批量删除成功");
         } catch (Exception e) {
         e.printStackTrace();
@@ -363,17 +391,20 @@ public Object deleteInBatch(@RequestBody List<#类名#> entities) {
 
 /**
  * listLike
- let #实体名#List: any = ref([]);
- let  data= #jsonDefaultNull#
- axios.post(Common.baseUrl + "/#实体名#/listLike",data).then((res) => {
+ let envList: any = ref([]);
+ let  data= {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
+ axios.post(Common.baseUrl + "/env/listLike",data).then((res) => {
  console.log("res");
  console.log(res);
- #实体名#List.value = res.data.data.content     });
+ envList.value = res.data.data.content     });
 
 
  this.$axios({
  method: "post",
- url: "/#实体名#/listLike",
+ url: "/env/listLike",
  data: data,
  }).then(res => {
  this.datalist = res.data;
@@ -387,17 +418,23 @@ public Object deleteInBatch(@RequestBody List<#类名#> entities) {
  */
 @PostMapping("/listLike")
 @ApiOperation(value = "listLike", notes = "listLike")
-public Object listLike(@RequestBody #类名# #实体名#,
+public Object listLike(@RequestBody Env env,
 @RequestParam(required = false, defaultValue = "0") int pageNumber,
 @RequestParam(required = false, defaultValue = "10") int pageSize) {
 
         try {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<#类名#> page = #实体名#Repository.findAll((Specification<#类名#>)
+        Page<Env> page = envRepository.findAll((Specification<Env>)
         (root, criteriaQuery, criteriaBuilder) -> {
         List<Predicate> list = new ArrayList<Predicate>();
-        #jpaLikeRows#
+        if (!StringUtils.isNone(env.getId())) {
+            list.add(criteriaBuilder.equal(root.get("envName").as(String.class), env.getEnvName()));
+        }
+if (!StringUtils.isNone(env.getId())) {
+            list.add(criteriaBuilder.equal(root.get("id").as(String.class), env.getId()));
+        }
+
         Predicate[] p = new Predicate[list.size()];
         return criteriaBuilder.and(list.toArray(p));
         }, pageable);
@@ -411,21 +448,24 @@ public Object listLike(@RequestBody #类名# #实体名#,
         }
 
 //        @Resource
-//    #类名#Service #实体名#Service;
+//    EnvService envService;
 
     /*
 
      create
 
-     let  data= #jsonDefaultNull#
-     axios.post(Common.baseUrl + "/#实体名#/create",data).then((res) => {
+     let  data= {  
+         "envName":null ,
+         "id":null, "idMax":null, "idMin":null 
+                  }
+     axios.post(Common.baseUrl + "/env/create",data).then((res) => {
      console.log("res");
      console.log(res);
      });
 
      this.$axios({
      method: "post",
-     url:  "/#实体名#/create",
+     url:  "/env/create",
      data: data,
      }).then(res => {
      this.datalist = res.data;
@@ -439,8 +479,8 @@ public Object listLike(@RequestBody #类名# #实体名#,
      */
 //    @ApiOperation(value = "create", notes = "create")
 //    @RequestMapping(value = "", method = RequestMethod.POST)
-//    public Object create(@RequestBody #类名# #实体名#) {
-//        boolean save = #实体名#Service.save(#实体名#);
+//    public Object create(@RequestBody Env env) {
+//        boolean save = envService.save(env);
 //        return ReturnT.success(save);
 //    }
 

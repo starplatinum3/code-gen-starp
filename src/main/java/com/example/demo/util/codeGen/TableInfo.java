@@ -898,6 +898,9 @@ public class TableInfo {
         StringBuilder res = new StringBuilder();
         for (ColumnInfo columnInfo : columnInfos) {
             String java字段名 = columnInfo.getJava字段名();
+            if (java字段名.equals(k.id)) {
+                continue;
+            }
             String commentShow = columnInfo.getColumnCommentShow();
             String column_name = columnInfo.getCOLUMN_NAME();
             String java字段类型 = columnInfo.获取java字段类型();

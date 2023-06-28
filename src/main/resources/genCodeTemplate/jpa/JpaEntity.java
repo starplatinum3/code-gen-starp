@@ -45,10 +45,10 @@ public class #类名# implements Serializable {
 
     #jpaEntityFields#
 
-public  static  class Names{
-    public  static String  id="id";
-    {NamesRows}
-}
+//public  static  class Names{
+//    public  static String  id="id";
+//    {NamesRows}
+//}
 
 
     public #类名#() {
@@ -58,12 +58,12 @@ public  static  class Names{
             #fromMapRows#
     }
 
-public #类名#Es toEsEntity(){
-        #类名#Es #entityName#Es = new #类名#Es();
-        {toEsEntityRows}
-
-        return #entityName#Es;
-        }
+//   public #类名#Es toEsEntity(){
+//        #类名#Es #entityName#Es = new #类名#Es();
+//        {toEsEntityRows}
+//
+//        return #entityName#Es;
+//        }
 
     public static List<#类名#> fromMaps(List<Map<String, Object>> maps) {
             List<#类名#> list = new ArrayList<>();

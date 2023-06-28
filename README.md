@@ -7,6 +7,13 @@ https://www.zhihu.com/question/541875395/answer/2566050039
 secKillAdmin: vite ， sec kill admin vue3，ts - Gitee.com
 https://gitee.com/starplatinum111/sec-kill-admin/tree/main/
 
+
+| Country | Age | Name  | 
+| --- | --- |   ---    | 
+| USA | 25 | John  | 
+| Canada | 30 | Alice | 
+| Australia |  | Bob   | 
+
 mvn spring-boot:run
 DB_HOST=locahost;DB_PASSWORD=123;DB_USER=admin;DB_NAME=public
 
