@@ -15,6 +15,138 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
+    public static void printException(Exception ex){
+
+//        Throwable cause = ex.getCause();
+//        cause.toString()
+        String message = ex.getMessage();
+        Date date = new Date();
+
+        System.err.println("===========  {date} err =========".replace("{date}",date+""));
+//        System.out.println(date);
+//        TimeUtil.f
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        System.err.println("err message");
+        System.err.println(message);
+//        k.whereSql
+//
+
+        int idx=0;
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            String className = stackTraceElement.getClassName();
+//            com.gungnir.campus.impl.AskTrainServiceImpl
+            if(idx<=3){
+                System.err.println(stackTraceElement);
+            }else      if (className.contains("starp")
+                    ||className.contains("gungnir")) {
+                System.err.println(stackTraceElement);
+            }
+            idx++;
+        }
+
+
+//        StackTraceElement stackTraceElement= ex.getStackTrace()[0];
+//        String message = ex.getMessage();
+//        int lineNumber = stackTraceElement.getLineNumber();
+//        String fileName = stackTraceElement.getFileName();
+////        String methodName = stackTraceElement.getMethodName();
+////        String className = stackTraceElement.getClassName();
+//        String moduleName = stackTraceElement.getModuleName();
+////        stackTraceElement.toString()
+////        at
+////        String atFileNameLineNumber = "({fileName}:{lineNumber})"
+////                .replace("{lineNumber}", lineNumber + "")
+////                .replace("{fileName}", fileName + "");
+//
+//        System.err.println(stackTraceElement);
+
+
+
+//        System.err.println(atFileNameLineNumber  );
+//        System.err.println(atFileNameLineNumber  );
+//        System.err.println("Line="+stackTraceElement.getLineNumber());
+//        System.err.println("Method="+stackTraceElement.getMethodName());
+//        System.err.println("className "+stackTraceElement.getClassName());
+//        System.err.println("moduleName "+moduleName);
+        System.err.println("=========== err  up  =========");
+
+    }
+    public static String format(String format, Object... args) {
+//        format.
+        int idx=0;
+        for (Object arg : args) {
+
+            format= format.replace("{{idx}}".replace("{idx}",""+idx),""+arg);
+            idx++;
+        }
+        return  format;
+    }
+
+
+    public static void printMap(Map<?, ?> map) {
+//        printMap(map,20);
+//        一个line  100
+        printMap(map,100);
+    }
+
+    public static String getMapStr(Map<?, ?> map) {
+        String mapStr = getMapStr(map, 100);
+        return  mapStr;
+    }
+    public static String getMapStr(Map<?, ?> map, int maxLength) {
+        StringBuilder res= new StringBuilder();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            String key = entry.getKey().toString();
+//            if(entry==null){
+//                throw new FrontMonitorException("entyry null "+entry);
+//            }
+            Object entryValue = entry.getValue();
+            String value;
+            if(entryValue==null){
+                value ="null";
+//                throw new FrontMonitorException("entryValue null  entry  "+entry);
+            }else{
+                value =entryValue.toString();
+            }
+
+
+            if (value.length() > maxLength) {
+                value = value.substring(0, maxLength) + "...";
+            }
+            String row=key + ": " + value;
+            res.append(row).append("\n");
+//            System.out.println(key + ": " + value);
+        }
+        return res.toString();
+    }
+
+    public static void printMap(Map<?, ?> map, int maxLength) {
+        String mapStr = getMapStr(map, maxLength);
+        System.out.println(mapStr);
+
+//
+//        for (Map.Entry<?, ?> entry : map.entrySet()) {
+//            String key = entry.getKey().toString();
+////            if(entry==null){
+////                throw new FrontMonitorException("entyry null "+entry);
+////            }
+//            Object entryValue = entry.getValue();
+//            String value;
+//            if(entryValue==null){
+//                 value ="null";
+////                throw new FrontMonitorException("entryValue null  entry  "+entry);
+//            }else{
+//                 value =entryValue.toString();
+//            }
+//
+//
+//            if (value.length() > maxLength) {
+//                value = value.substring(0, maxLength) + "...";
+//            }
+//
+//            System.out.println(key + ": " + value);
+//        }
+    }
 
     public static void main(String[] args) {
 //        String originalString = "Hello world, hello Universe";

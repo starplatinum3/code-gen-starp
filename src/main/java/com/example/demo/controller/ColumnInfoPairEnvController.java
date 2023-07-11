@@ -127,15 +127,13 @@ public Object save(@RequestBody ColumnInfoPairEnv columnInfoPairEnv) {
         @PostMapping("/change")
         @ApiOperation(value = "change", notes = "change")
         public Object change(@RequestBody List<ColumnInfoPairEnv> list){
-                List<Integer> envIds = list.stream().map(o -> {
-                        Integer envId = o.getEnvId();
-                        return envId;
-//                        Integer columnInfoId = o.getColumnInfoId();
-                }).collect(Collectors.toList());
+                List<Integer> envIds = list.stream().map(ColumnInfoPairEnv::getEnvId).collect(Collectors.toList());
                 columnInfoPairEnvRepository.deleteAllByEnvIdIn(envIds);
                 List<ColumnInfoPairEnv> columnInfoPairEnvs = columnInfoPairEnvRepository.saveAll(list);
                 return ReturnT.success(columnInfoPairEnvs);
         }
+
+
 
         @Resource
         ColumnInfoRepository columnInfoRepository;

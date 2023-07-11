@@ -21,6 +21,7 @@ import top.starp.util.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -1373,7 +1374,7 @@ public class TableInfo {
     }
 
     public String genServiceImplMybatisPlus(String 包名) throws Exception {
-
+        String MybatisPlusSelectPageEqualRows = genMybatisPlusSelectPageEqualRows();
         String code = FileUtil.readResourceFileData(
                 "genCodeTemplate/mybatisPlus/serviceImpl.java");
         final String batchAddPartsSetRows = genBatchAddPartsSetRows();
@@ -1382,6 +1383,7 @@ public class TableInfo {
                 .replace("#实体名#", 实体名)
                 .replace("#包名#", 包名)
                 .replace("{batchAddPartsSetRows}", batchAddPartsSetRows)
+                .replace("{MybatisPlusSelectPageEqualRows}", MybatisPlusSelectPageEqualRows)
         ;
 //        iViewColumnsRows
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,
@@ -2512,7 +2514,50 @@ public class TableInfo {
         return code;
     }
 
+//    public String genEntity(String packageName) throws Exception {
+////        if (!tableName.contains("_pair_")) {
+////            return null;
+////        }
+////        k._pair_
+//        String changeCode = CodeGenKt.changeCodeGen(tableName);
+////        genMyBatisPlusEntityFields
+//
+//        String code = FileUtil.readResourceFileData(
+//                "genCodeTemplate/jpa/JpaEntity.java");
+//        String jpaEntityFields = genJpaEntityFields();
+//        String fromMapRows = genFromMapRows();
+//        final String namesRows = genNamesRows();
+//        String now = DateUtilSt.getNow();
+////        entityName
+////        tablePreffix
+//        final String toEsEntityRows = genToEsEntityRows();
+//        code = code
+////                .replace("#formInputs#", iViewFormInputs)
+////                .replace("#类名#", 类名)
+//                .replace("#实体名#", 实体名)
+//                .replace("#包名#", packageName)
+//                .replace("#类名#", 类名)
+//                .replace("#jpaEntityFields#", jpaEntityFields)
+//                .replace("#fromMapRows#", fromMapRows)
+//                .replace("#tableName#", tableName)
+//                .replace("#date#", now)
+////                .replace("#date#", now)
+//                .replace("#tablePreffix#", tablePreffix)
+//                .replace("{NamesRows}", namesRows)
+//                .replace("{toEsEntityRows}", toEsEntityRows)
+//                .replace("{changeCode}", changeCode)
+//
+//
+//        ;
+//        Path outPath = Paths.get(pathFileString,
+//                "jpa", "entity", 类名 + ".java");
+//        FileUtil.writeCode(outPath, codeGened);
+//
+//        return code;
+//    }
+
     public String genEntity(String packageName) throws Exception {
+//        tableName
 //        genMyBatisPlusEntityFields
 
         String code = FileUtil.readResourceFileData(
@@ -2590,6 +2635,12 @@ public class TableInfo {
 
     public String genMybatisPlusController(String 包名) throws Exception {
 //        ControllerUtil
+//        if (!tableName.contains("_pair_")) {
+//            return null;
+//        }
+//        k._pair_
+        String changeCode = CodeGenKt.changeCodeGen(tableName);
+//        String codeGened = CodeGenKt.changeCodeGen(tableName);
         String code = FileUtil.readResourceFileData(
                 "genCodeTemplate/mybatisPlus/MybatisPlusController.java");
         String jpaEntityFields = genJpaEntityFields();
@@ -2616,6 +2667,7 @@ public class TableInfo {
 //                .replace("#MybatisPlusSelectPage#", MybatisPlusSelectPage)
                 .replace("#MybatisPlusSelectPageLikeRows#", MybatisPlusSelectPageLikeRows)
                 .replace("#returnType#", CodeGen.returnType)
+                .replace("{changeCode}",changeCode)
 
         ;
         java.nio.file.Path dictDataPath = Paths.get(pathFileString,

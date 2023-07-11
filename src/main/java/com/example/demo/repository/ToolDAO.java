@@ -6,6 +6,7 @@ import ch.qos.logback.classic.db.names.TableName;
 import com.example.demo.entity.Acc;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import top.starp.util.SqlsKt;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public static void main(String[] args) {
     String columns="select * from information_schema.columns\n" +
             "   where table_schema= ? and table_name = ? ";
     System.out.println(columns);
+//    SqlsKt.getSelectTableCols()
 }
     @Query(value = "SELECT \n" +
             "\n" +
@@ -50,6 +52,9 @@ public static void main(String[] args) {
             "\n" +
             "AND table_type = ? ",nativeQuery = true)
     List<Map<String, Object>> selectTableNames(String table_schema, String table_type);
+
+
+
 //mybatis 返回 类型
     @Query(value = "SELECT \n" +
             "\n" +

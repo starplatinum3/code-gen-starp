@@ -115,6 +115,7 @@ public class #类名#ControllerMbp {
         }
 
 
+        {changeCode}
 
 
     /*

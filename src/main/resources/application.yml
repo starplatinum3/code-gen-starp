@@ -30,7 +30,9 @@ mqtt:
   username: 1
   password: 1
 
-feishuAppSecret: ${feishuAppSecret:123456}
-feishuAppId: ${feishuAppId:123456}
+#feishuAppSecret: ${feishuAppSecret:123456}
+feishuAppSecret: ${FEISHU_APP_SECRET:123456}
+#feishuAppId: ${feishuAppId:123456}
+feishuAppId: ${FEISHU_APP_ID:123456}
 
 gaoDeMapKey: ${GAO_DE_MAP_KEY:123456}

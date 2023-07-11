@@ -3,6 +3,60 @@ package top.starp.util
 import com.example.demo.common.MysqlDataType
 import com.example.demo.util.codeGen.ColumnInfo
 
+fun changeCodeGen(  tableName:String="columnInfo_pair_env"): String {
+
+      if (!tableName.contains(k._pair_)) {
+            return "";
+        }
+//    val parent="columnInfo"
+//    val son="env"
+
+
+   val parts= tableName.split( k._pair_)
+    val parent=  parts[0]
+    val son=  parts[1]
+//    changeCodeGen(parent,son)
+
+   return """
+        
+        ${changeCodeGen(parent,son)}
+        
+         ${changeCodeGen(son,parent)}
+         
+    """.trimIndent()
+//    val Parent=StringUtils.toPascalCase(parent)
+//    val Son=StringUtils.toPascalCase(son)
+//  return  """
+//  @PostMapping("/change")
+//        @ApiOperation(value = "change", notes = "change")
+//        public Object change(@RequestBody List<${Parent}Pair${Son}> list){
+//                List<Integer> ${son}Ids = list.stream().map({Parent}Pair${Son}::get${Son}Id).collect(Collectors.toList());
+//                ${parent}Pair${Son}Repository.deleteAllBy${Son}IdIn(${son}Ids);
+//                List<${Parent}Pair${Son}> ${parent}Pair${Son}s = ${parent}Pair${Son}Repository.saveAll(list);
+//                return ReturnT.success(${parent}Pair${Son}s);
+//        }
+//    """.trimIndent()
+}
+
+
+fun changeCodeGen(     parent:String,
+                     son:String): String {
+
+    val Parent=StringUtils.toPascalCase(parent)
+    val Son=StringUtils.toPascalCase(son)
+    return  """
+  @PostMapping("/change")
+        @ApiOperation(value = "change", notes = "change")
+        public Object change(@RequestBody List<${Parent}Pair${Son}> list){
+                List<Integer> ${son}Ids = list.stream().map({Parent}Pair${Son}::get${Son}Id).collect(Collectors.toList());  
+                ${parent}Pair${Son}Repository.deleteAllBy${Son}IdIn(${son}Ids);
+                List<${Parent}Pair${Son}> ${parent}Pair${Son}s = ${parent}Pair${Son}Repository.saveAll(list);
+                return ReturnT.success(${parent}Pair${Son}s);
+        }
+    """.trimIndent()
+}
+
+
 fun genMyBatisPlusEntityField(columnInfo: ColumnInfo, withSwagger: Boolean): String {
     val java字段名 = columnInfo.java字段名
     val commentShow = columnInfo.columnCommentShow
@@ -65,7 +119,7 @@ fun genMybatisPlusSelectPageLikeRows(columnInfos:List<ColumnInfo>
         val column_type = columnInfo.columN_TYPE
       val javaFieldNameStartsWithUppercase=  columnInfo.javaFieldNameStartsWithUppercase
 //        columnInfo.nam
-        var compareType = "like"
+        var compareType =  k.like
         if (MysqlDataType.isNumberType(column_type)) {
             compareType = "eq"
         }

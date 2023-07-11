@@ -24,6 +24,7 @@ public class ListFileSample {
 //			.tenantAccessToken("")
 //			.build());
 
+
 		// 处理服务端错误
 		if(!resp.success()) {
 			System.out.println(String.format("code:%s,msg:%s,reqId:%s", resp.getCode(), resp.getMsg(), resp.getRequestId()));

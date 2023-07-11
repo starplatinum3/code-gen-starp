@@ -3,10 +3,12 @@ package com.example.demo.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.Acc;
-import com.example.demo.entity.ReturnT;
+import com.example.demo.entity.AskTypeReq;
+//import com.example.demo.entity.ReturnT;
 import com.example.demo.repository.AccRepository;
 import com.example.demo.repository.ToolDAO;
 import com.example.demo.util.*;
+//import com.example.demo.util.MongoReq;
 import com.example.demo.util.StringUtils;
 import com.example.demo.util.codeGen.CodeGen;
 import com.example.demo.util.codeGen.ColumnInfo;
@@ -25,6 +27,7 @@ import com.lark.oapi.service.docx.v1.model.CreateDocumentReqBody;
 import com.lark.oapi.service.docx.v1.model.CreateDocumentResp;
 import com.lark.oapi.service.drive.v1.model.*;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.UpdateResult;
 import com.sangupta.har.HarUtils;
 import com.sangupta.har.model.Har;
 import com.sangupta.har.model.HarEntry;
@@ -85,6 +88,7 @@ import com.lark.oapi.okhttp.OkHttpClient;
 import top.starp.util.*;
 import top.starp.util.HttpRequest;
 import top.starp.util.JsonUtil;
+import top.starp.util.MongoUtil;
 
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
@@ -152,6 +156,7 @@ public class AllController {
     @ApiOperation(value = "walking", notes = "walking")
     @RequestMapping(value = "/walking", method = RequestMethod.POST)
     public Object walking( @RequestBody  GeoReq geoReq) {
+//        WalkTwoGet()
 //        String origin="104.07,30.67";//出发点经纬度
 //        String destination="104.46,29.23";//目的地经纬度
 //        120.149343,30.335056
@@ -213,6 +218,7 @@ public class AllController {
     @ApiOperation(value = "ColumnInfoInsert", notes = "ColumnInfoInsert")
     @RequestMapping(value = "/ColumnInfoInsert", method = RequestMethod.POST)
     public Object  ColumnInfoInsert(@RequestBody GeoReq geoReq){
+//        WalkTwoGet()
 //        mongoTemplate
         ColumnInfo build1 = ColumnInfo.builder()
                 .COLUMN_NAME(k.apiName)
@@ -243,9 +249,157 @@ public class AllController {
     }
 //    assistant_input_tips
 
+    @ApiOperation(value = "WalkTwoGet", notes = "geocode_geo")
+    @RequestMapping(value = "/WalkTwoGet", method = RequestMethod.POST)
+    public Object  WalkTwoGet(@RequestBody GeoReq geoReq){
+        MongoReq mongoReq = new MongoReq();
+        mongoReq.setCollectionName(k.WalkTwo);
+//        mongoReq.set
+        List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate);
+        return  maps;
+    }
+
+    @ApiOperation(value = "approve_list", notes = "geocode_geo")
+    @RequestMapping(value = "/approve_list", method = RequestMethod.POST)
+    public Object  approve_list(@RequestBody MongoReq mongoReq){
+//        MongoReq mongoReq = new MongoReq();
+
+//        mongoReq.setCollectionName(k.approve_list);
+        mongoReq.setCollectionName(k.large_file_log);
+//        mongoReq.setOps(Op.desc(k.id));
+
+
+//        mongoReq.ops(Op.desc(k.id));
+//        mongoReq.ops(Op.desc(k.file_size));
+        mongoReq.sortBys(Op.desc(k.file_size));
+
+
+//        mongoReq.set
+        return  MongoUtil.findDocuments(mongoReq,mongoTemplate);
+//        return MongoUtil.pageDocuments(mongoReq,mongoTemplate);
+//        List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate);
+//        return  maps;
+    }
+
+    @ApiOperation(value = "large_file_log", notes = "geocode_geo")
+    @RequestMapping(value = "/large_file_log", method = RequestMethod.POST)
+    public Object  large_file_log(@RequestBody MongoReq mongoReq){
+//        MongoReq mongoReq = new MongoReq();
+
+//        mongoReq.setCollectionName(k.approve_list);
+        mongoReq.setCollectionName(k.large_file_log);
+//        mongoReq.setOps(Op.desc(k.id));
+
+//        mongoReq.ops(Op.desc(k.id));
+//        mongoReq.ops(Op.desc(k.file_size));
+//        mongoReq.sortBys(Op.desc(k.file_size));
+        mongoReq.sortBys(
+                Op.desc(k.orderBy)
+                ,Op.asc(k.file_size)
+            );
+
+//        mongoReq.set
+        return  MongoUtil.findDocuments(mongoReq,mongoTemplate);
+//        return MongoUtil.pageDocuments(mongoReq,mongoTemplate);
+//        List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate);
+//        return  maps;
+    }
+
+    @ApiOperation(value = "AskTypeReq", notes = "geocode_geo")
+    @RequestMapping(value = "/AskTypeReq", method = RequestMethod.POST)
+    public Object  AskTypeReq(@RequestBody AskTypeReq askTypeReq){
+
+        String askType = askTypeReq.getAskType();
+
+//        MongoReq mongoReq = new MongoReq();
+//
+////        mongoReq.setCollectionName(k.approve_list);
+//        mongoReq.setCollectionName(k.askTrain);
+////        mongoReq.setOps(Op.desc(k.id));
+//
+////        mongoReq.ops(Op.desc(k.id));
+////        mongoReq.ops(Op.desc(k.file_size));
+////        mongoReq.sortBys(Op.desc(k.file_size));
+//        mongoReq.sortBys(
+//                Op.desc(k.orderBy)
+//                ,Op.asc(k.file_size)
+//        );
+//        AskTypeReq
+        return  ReturnT.success(
+                typeShowGet(askType)
+        );
+//        return
+//        mongoReq.set
+//        return  MongoUtil.findDocuments(mongoReq,mongoTemplate);
+//        return MongoUtil.pageDocuments(mongoReq,mongoTemplate);
+//        List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate);
+//        return  maps;
+    }
+
+    String  typeShowGet(String  askType) {
+//        askTrain.getAskText();
+        MongoReq mongoReq1 = new MongoReq();
+        mongoReq1.ops(Op.equals(k.category,askType));
+        mongoReq1.setCollectionName(k.askTrain);
+//        mongoReq1.setPageSize(1);
+        mongoReq1.setPageSize(20);
+//        mongoReq1.setPageNumber(1);
+//        mongoReq1.setPageNumber(0);
+        mongoReq1.setPageNumber(MongoReq.FIRST);
+        mongoReq1.sortBys(Op.desc(k.orderBy)
+                ,Op.desc(k._id));
+        List<Document> documents = MongoUtil.findDocuments(mongoReq1, mongoTemplate);
+        if(documents==null||documents.size()==0){
+//            问题的 显示名字
+            return null;
+        }
+        Document document = documents.get(0);
+        String typeShow = document.getString(k.typeShow);
+        return typeShow;
+
+    }
+
+
+    @ApiOperation(value = "insert_data", notes = "geocode_geo")
+    @RequestMapping(value = "/insert_data", method = RequestMethod.POST)
+    public Object  insert_data(@RequestBody MongoReq mongoReq){
+
+        MongoReq insert1 = MongoUtil.insert(mongoReq, mongoReq.getCollectionName(), mongoTemplate);
+        return ReturnT.success(insert1);
+    }
+
+    @ApiOperation(value = "pageDocuments", notes = "geocode_geo")
+    @RequestMapping(value = "/pageDocuments", method = RequestMethod.POST)
+    public Object  pageDocuments(@RequestBody MongoReq mongoReq){
+//        MongoUtil.update
+//        MongoTemplate update java
+//        mongoTemplate.updateMulti()
+
+//        MongoUtil.pageDocuments()
+        Page<Document> page = MongoUtil.page(mongoReq, mongoTemplate, Document.class);
+        return ReturnT.success(page);
+    }
+//    D:\proj\brain\admin-antd-react\src\pages\ApiUrlMapTable
+
+    @ApiOperation(value = "update", notes = "geocode_geo")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Object  update(@RequestBody MongoReq mongoReq){
+        UpdateResult update = MongoUtil.update(mongoReq, mongoTemplate, Document.class);
+        return ReturnT.success(update);
+    }
+
+
+//    @ApiOperation(value = "insert_data", notes = "geocode_geo")
+//    @RequestMapping(value = "/insert_data", method = RequestMethod.POST)
+//    public Object  insert_data(@RequestBody MongoReq mongoReq){
+//        MongoReq insert1 = MongoUtil.insert(mongoReq, mongoReq.getCollectionName(), mongoTemplate);
+//        return ReturnT.success(insert1);
+//    }
+
     @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
     @RequestMapping(value = "/geocode_geo", method = RequestMethod.POST)
     public Object  geocode_geo(@RequestBody GeoReq geoReq){
+
         String address = geoReq.getAddress();
         String city = geoReq.getCity();
         String force = geoReq.getForce();
@@ -260,6 +414,7 @@ public class AllController {
 //        gao_de_map
 //        mongoTemplate.
 //        MongoUtil.in
+//  MongoUtil.find()
         String geocode_geo_col_name = k.geocode_geo;
         Map<String,Object>eq=new HashMap<>();
         eq.put(k.address,address);
@@ -549,7 +704,8 @@ public class AllController {
 //			.tenantAccessToken("")
 //			.build());
 
-        // 处理服务端错误
+//        AskTypeReq()
+    // 处理服务端错误
         if (!resp.success()) {
             System.out.println(String.format("code:%s,msg:%s,reqId:%s",
                     resp.getCode(), resp.getMsg(), resp.getRequestId()));

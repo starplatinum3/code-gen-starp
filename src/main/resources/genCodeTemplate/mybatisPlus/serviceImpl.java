@@ -58,4 +58,41 @@ public List<#类名#> batchAdd(MultipartFile file) {
         return #实体名#s;
 
         }
+
+
+
+public Object selectPage(#类名#Vo #实体名#Vo,
+        Integer pageNumber,
+        Integer pageSize) {
+        try {
+
+        Page<#类名#> pageTool = new Page<>(pageNumber, pageSize);
+        LambdaQueryWrapper<#类名#> like = Wrappers.lambdaQuery();
+//            log.info("#实体名# {}",#实体名#);
+        if (#实体名#Vo == null) {
+        Document document = new Document();
+        document.put(k.msg, "#实体名# null");
+        document.put(k.#实体名#, #实体名#Vo);
+        document.put(k.pageNumber, pageNumber);
+        document.put(k.pageSize, pageSize);
+        logAndThrow(document);
+        return document;
+        }
+        like
+
+        {MybatisPlusSelectPageLikeRows}
+
+        ;
+
+        IPage<#类名#> page = #实体名#Service.page(pageTool, like);
+        return page;
+//            return ReturnT.success(page);
+        } catch (Exception e) {
+        e.printStackTrace();
+        log.info("error {}", e.getMessage());
+        return e.getMessage();
+//            return  ReturnT.error(e.getMessage());
+        }
+        }
+
 }
