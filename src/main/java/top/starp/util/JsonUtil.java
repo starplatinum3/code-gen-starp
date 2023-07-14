@@ -3,19 +3,57 @@ package top.starp.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.util.StrUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsonschema.JsonSchema;
+import org.springframework.lang.Nullable;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_ENUMS_USING_TO_STRING;
 
 public class JsonUtil {
 
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    public static String toJsonString(JsonNode jsonNode) throws IOException {
+        return objectMapper.writeValueAsString(jsonNode);
+    }
+
+    public static String toJsonString(Object jsonNode) throws IOException {
+        return objectMapper.writeValueAsString(jsonNode);
+    }
+
+//    public static String toJsonString(Object object) {
+//
+//        JSONObject jsonObject = new JSONObject(object);
+//
+//        String jsonString = jsonObject.toString();
+//        System.out.println(jsonString);
+//
+//        return jsonString;
+//    }
+
+    public  static   JSONObject filePathToJsonObj(String filePath) throws FileNotFoundException {
+        String logData = FileUtil.readAll(filePath);
+        JSONObject jsonObject = JsonUtil.stringToJson(logData);
+        return  jsonObject;
+    }
+
+    public  static   Map filePathToMap(String filePath) throws FileNotFoundException {
+        String logData = FileUtil.readAll(filePath);
+        Map map = JsonUtil.stringToMap(logData);
+//        JSONObject jsonObject = JsonUtil.stringToJson(logData);
+        return  map;
+    }
 
     public static String getString(JSONObject extraInfo,String key){
         if(extraInfo==null){
@@ -107,7 +145,91 @@ public class JsonUtil {
 //        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schema);
 //    }
 
-    public static void main(String[] args) throws IOException {
+//    ObjectMapper str to json
+
+    public static <T> T fromJSON(@Nullable String json, Class<T> valueType) {
+        if (json == null) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(json, valueType);
+        } catch (IOException e) {
+//            throw wrapException(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static  Map stringToMap(@Nullable String json) {
+        if (json == null) {
+            return null;
+        }
+        try {
+            Map map = objectMapper.readValue(json, Map.class);
+            return map;
+        } catch (IOException e) {
+//            throw wrapException(e);
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static String objToJsonStr(@Nullable Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+//            throw new UncheckedJsonProcessingException(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        Map<String ,Object>map=new HashMap<>();
+        map.put(k.data,"dada");
+        map.put("dauidai","31231");
+//        {"field":"da","op":"equals","value":"31","mongoVal":"31","criteria":{"key":"da","criteriaObject":{"da":"31"}}}
+
+//        ne
+        Op da = Op.eq("da", "31");
+//        String s = objToJsonStr(da);
+        String s = objToJsonStr(map);
+        System.out.println(s);
+//        {"data":"dada","dauidai":"31231"}
+        Map map1 = stringToMap(s);
+//        System.out.println(ma);
+//        log.print("map1");
+        log.info("map1");
+        log.info(map1);
+//        log.info(map1);
+
+        /**
+         * {"data":"dada","dauidai":"31231"}
+         * Time: 2023_07_11_19_07_24    map1
+         * Time: 2023_07_11_19_07_24    data: dada
+         * dauidai: 31231
+         */
+    }
+    public static String toJSON(@Nullable Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+//            throw new UncheckedJsonProcessingException(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+
+//    d(String jsonString){
+//        YourClass yourObject = objectMapper.readValue(jsonString, YourClass.class);
+//
+//    }
+
+    public static void main2(String[] args) throws IOException {
 //        String jsonSchema = getJsonSchema(PatientInfo.class);
 //        System.out.println("jsonSchema");
 //        System.out.println(jsonSchema);

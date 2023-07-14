@@ -1,11 +1,104 @@
 package top.starp.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ListUtil {
+
+    public static Map<String, List<HashMap<String, Object>>>
+    groupByHashMap(List<HashMap<String, Object>> records, String groupByName) {
+        // 创建一个用于存储分组后记录的Map
+        Map<String, List<HashMap<String, Object>>> groupedRecords = new HashMap<>();
+
+        // 根据用户ID进行分组
+        for (HashMap<String, Object> record : records) {
+            String userId = (String) record.get(groupByName);
+
+            // 检查该用户ID是否已经存在于分组中
+            if (groupedRecords.containsKey(userId)) {
+                // 如果存在，将记录添加到现有分组中
+                groupedRecords.get(userId).add(record);
+            } else {
+                // 如果不存在，创建一个新的分组并将记录添加到其中
+                List<HashMap<String, Object>> newGroup = new ArrayList<>();
+                newGroup.add(record);
+                groupedRecords.put(userId, newGroup);
+            }
+        }
+        return groupedRecords;
+    }
+
+
+//    public static Map<String, List<Map<String, Object>>>
+//    groupBy(List<Map<String, Object>> records, String groupByName) {
+//        // 创建一个用于存储分组后记录的Map
+//        Map<String, List<Map<String, Object>>> groupedRecords = new HashMap<>();
+//
+//// 根据用户ID进行分组
+//        for (Map<String, Object> record : records) {
+//            String userId = (String) record.get(groupByName);
+//
+//            // 检查该用户ID是否已经存在于分组中
+//            if (groupedRecords.containsKey(userId)) {
+//                // 如果存在，将记录添加到现有分组中
+//                groupedRecords.get(userId).add(record);
+//            } else {
+//                // 如果不存在，创建一个新的分组并将记录添加到其中
+//                List<Map<String, Object>> newGroup = new ArrayList<>();
+//                newGroup.add(record);
+//                groupedRecords.put(userId, newGroup);
+//            }
+//        }
+//        return groupedRecords;
+//    }
+
+
+//    public static Map<String, List<Map<?, ?>>>
+//    groupBy(List<Map<?, ?>> records, String groupByName) {
+//        // 创建一个用于存储分组后记录的Map
+//        Map<String, List<Map<?, ?>>> groupedRecords = new HashMap<>();
+//
+//// 根据用户ID进行分组
+//        for (Map<?, ?> record : records) {
+//            String userId = (String) record.get(groupByName);
+//
+//            // 检查该用户ID是否已经存在于分组中
+//            if (groupedRecords.containsKey(userId)) {
+//                // 如果存在，将记录添加到现有分组中
+//                groupedRecords.get(userId).add(record);
+//            } else {
+//                // 如果不存在，创建一个新的分组并将记录添加到其中
+//                List<Map<?, ?>> newGroup = new ArrayList<>();
+//                newGroup.add(record);
+//                groupedRecords.put(userId, newGroup);
+//            }
+//        }
+//        return groupedRecords;
+//    }
+
+
+
+    public static Map<String, List<Map<?, ?>>>
+    groupBy(List<Map> records, String groupByName) {
+        // 创建一个用于存储分组后记录的Map
+        Map<String, List<Map<?, ?>>> groupedRecords = new HashMap<>();
+
+// 根据用户ID进行分组
+        for (Map<?, ?> record : records) {
+            String userId = (String) record.get(groupByName);
+
+            // 检查该用户ID是否已经存在于分组中
+            if (groupedRecords.containsKey(userId)) {
+                // 如果存在，将记录添加到现有分组中
+                groupedRecords.get(userId).add(record);
+            } else {
+                // 如果不存在，创建一个新的分组并将记录添加到其中
+                List<Map<?, ?>> newGroup = new ArrayList<>();
+                newGroup.add(record);
+                groupedRecords.put(userId, newGroup);
+            }
+        }
+        return groupedRecords;
+    }
 
     public static  <T> T getLastElement(List<T>list){
         int lastIndex = list.size() - 1;

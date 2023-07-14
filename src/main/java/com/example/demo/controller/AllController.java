@@ -9,6 +9,7 @@ import com.example.demo.repository.AccRepository;
 import com.example.demo.repository.ToolDAO;
 import com.example.demo.util.*;
 //import com.example.demo.util.MongoReq;
+import com.example.demo.util.FileUtil;
 import com.example.demo.util.StringUtils;
 import com.example.demo.util.codeGen.CodeGen;
 import com.example.demo.util.codeGen.ColumnInfo;
@@ -42,10 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.ExposedFields;
-import org.springframework.data.mongodb.core.aggregation.LookupOperation;
-import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.web.JsonPath;
@@ -376,11 +374,137 @@ public class AllController {
 //        mongoTemplate.updateMulti()
 
 //        MongoUtil.pageDocuments()
+
         Page<Document> page = MongoUtil.page(mongoReq, mongoTemplate, Document.class);
         return ReturnT.success(page);
     }
-//    D:\proj\brain\admin-antd-react\src\pages\ApiUrlMapTable
 
+    @ApiOperation(value = "findDistinct", notes = "geocode_geo")
+    @RequestMapping(value = "/findDistinct", method = RequestMethod.POST)
+    public Object  findDistinct(@RequestBody MongoReq mongoReq){
+//        List<Document> distinct = MongoUtil.findDistinct(mongoReq, mongoTemplate, Document.class);
+        List<String> distinct = MongoUtil.findDistinct(mongoReq, mongoTemplate, String.class);
+        return ReturnT.success(distinct);
+    }
+
+    @ApiOperation(value = "countField", notes = "geocode_geo")
+    @RequestMapping(value = "/countField", method = RequestMethod.POST)
+    public Object  countField(@RequestBody MongoReq mongoReq){
+//        List<Op> ops = mongoReq.getOps();
+//        for (Op op : ops) {
+//            String field = op.getField();
+//            String op1 = op.getOp();
+//            if (k.count.equals(op1)) {
+//                return field;
+//            }
+//        }
+
+//        String countField = mongoReq.getCountField();
+//        Long aLong = countField(countField);
+//        mongoReq.set
+        mongoReq.setPageSizeIfAbsent(9999999);
+//        String countField = mongoReq.getCountField();
+
+        List<Map> countList = MongoUtil.countField(mongoReq, mongoTemplate);
+
+
+
+
+
+
+
+
+//        List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate);
+////        Map<String, List<Map<?, ?>>> stringListMap = ListUtil.groupBy(maps, k.apiName);
+//        Map<String, List<Map<?, ?>>> stringListMap = ListUtil.groupBy(maps,countField);
+//
+//        List<Map>countList=new ArrayList<>();
+//        Map<String ,Integer>coutMap=new HashMap<>();
+//        for (Map.Entry<String, List<Map<?, ?>>> stringListEntry : stringListMap.entrySet()) {
+//            List<Map<?, ?>> value = stringListEntry.getValue();
+//            String key = stringListEntry.getKey();
+//            coutMap.put(key,value.size());
+//            int size = value.size();
+//
+//            Map map=new HashMap();
+//            map.put(k.field,key);
+//            map.put(k.count,size);
+//            countList.add(map);
+//        }
+//
+//
+
+
+
+
+//
+
+
+
+
+
+//
+////        List<Document> distinct = MongoUtil.findDistinct(mongoReq, mongoTemplate, Document.class);
+//        List<String> distinct = MongoUtil.findDistinct(mongoReq, mongoTemplate, String.class);
+//        return ReturnT.success(  countFieldDo(mongoReq));
+//        return ReturnT.success( stringListMap);
+//        return ReturnT.success( coutMap);
+        return ReturnT.success( countList);
+    }
+
+
+    @ApiOperation(value = "countFieldCntGreater2", notes = "geocode_geo")
+    @RequestMapping(value = "/countFieldCntGreater2", method = RequestMethod.POST)
+    public Object  countFieldCntGreater2(@RequestBody MongoReq mongoReq){
+        mongoReq.setPageSizeIfAbsent(9999999);
+
+        List<Map> countList = MongoUtil.countField(mongoReq, mongoTemplate);
+
+        for (Map map : countList) {
+//            Integer integer = (Integer) map.get(k.count);
+            Integer count = MapUtil.getInteger(map, k.count);
+            String field = MapUtil.getString(map, k.field);
+//            MapU
+            if(count>=2){
+                log.info("count>=2) field  "+field);
+            }
+        }
+        return ReturnT.success( countList);
+    }
+
+
+    private Class<?> getEntityType() {
+        // 返回您要查询的实体类类型
+        return Map.class;
+    }
+
+    public Map countFieldDo( MongoReq mongoReq) {
+//        MongoReq mongoReq=new MongoReq();
+        String countField = mongoReq.getCountField();
+        String collectionName = mongoReq.getCollectionName();
+        GroupOperation groupOperation = Aggregation.group(countField).count().as("count");
+        TypedAggregation<?> aggregation = Aggregation.newAggregation(getEntityType(), groupOperation);
+        AggregationResults<Map> aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, Map.class);
+//        aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, Map.class);
+//        CountResult result = aggregationResults.getUniqueMappedResult();
+        Map result = aggregationResults.getUniqueMappedResult();
+//        return result != null ?(Long)    result.get(k.count): 0;
+        return result;
+    }
+    public Long countField(String fieldName) {
+        MongoReq mongoReq=new MongoReq();
+        String collectionName = mongoReq.getCollectionName();
+        GroupOperation groupOperation = Aggregation.group(fieldName).count().as("count");
+        TypedAggregation<?> aggregation = Aggregation.newAggregation(getEntityType(), groupOperation);
+        AggregationResults<Map> aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, Map.class);
+//        aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, Map.class);
+//        CountResult result = aggregationResults.getUniqueMappedResult();
+        Map result = aggregationResults.getUniqueMappedResult();
+        return result != null ?(Long)    result.get(k.count): 0;
+    }
+
+    //    D:\proj\brain\admin-antd-react\src\pages\ApiUrlMapTable
+//    findDistinct
     @ApiOperation(value = "update", notes = "geocode_geo")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Object  update(@RequestBody MongoReq mongoReq){
@@ -1210,7 +1334,9 @@ public class AllController {
         }
         String tplPath = "D:\\proj\\springBoot\\code-gen-starp\\src\\main\\resources\\genCodeTemplate\\api\\postman_test.html";
 //        FileUtil.readResourceFileData()
-        String tpl = FileUtil.readAll(tplPath);
+
+//        String tpl = FileUtil.readAll(tplPath);
+        String tpl =        top.starp.util.FileUtil.readAll(tplPath);
         String code = tpl.replace("{postMethodRows}", postMethodRows.toString());
 //        Path fileName = new Path("1").getFileName();
 //        java  用 字符串 创建一个 Path

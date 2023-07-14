@@ -3,6 +3,16 @@ package top.starp.util;
 public class k {
 
     public  static  final  String nowTimeStr= "nowTimeStr";
+    public  static  final  String guiji= "guiji";
+    public  static  final  String gui_ji= "gui_ji";
+    public  static  final  String gui_ji_not_in_school= "gui_ji_not_in_school";
+    public  static  final  String brain= "brain";
+    public  static  final  String distinct= "distinct";
+    public  static  final  String map= "map";
+    public  static  final  String field= "field";
+    public  static  final  String count= "count";
+    public  static  final  String query= "query";
+    public  static  final  String distinctField= "distinctField";
     public  static  final  String file_size= "file_size";
     public  static  final  String typeShow= "typeShow";
     public  static  final  String large_file_log= "large_file_log";

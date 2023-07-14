@@ -15,6 +15,20 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
+    public  static  <T> void printList(List<T> list){
+        for (T elm : list) {
+//            if (elm instanceof Map) {
+//                Map map = (Map) elm;
+//                printMap(map);
+//            }
+
+//            System.out.print('"'+s+'" ');
+            String replace = "'{str}', ".replace("{str}", ""+elm);
+            System.out.print(replace);
+        }
+        System.out.println();
+    }
+
     public static void printException(Exception ex){
 
 //        Throwable cause = ex.getCause();
@@ -26,8 +40,8 @@ public class StringUtils {
 //        System.out.println(date);
 //        TimeUtil.f
         StackTraceElement[] stackTrace = ex.getStackTrace();
-        System.err.println("err message");
-        System.err.println(message);
+        System.err.println("err message:  "+message);
+//        System.err.println(message);
 //        k.whereSql
 //
 
@@ -68,7 +82,7 @@ public class StringUtils {
 //        System.err.println("Method="+stackTraceElement.getMethodName());
 //        System.err.println("className "+stackTraceElement.getClassName());
 //        System.err.println("moduleName "+moduleName);
-        System.err.println("=========== err  up  =========");
+//        System.err.println("=========== err  up  =========");
 
     }
     public static String format(String format, Object... args) {

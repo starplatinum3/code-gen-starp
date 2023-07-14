@@ -13,17 +13,17 @@ import java.util.Scanner;
 
 public class FileUtil {
 
-   public  static    String  readAll(String filepath) throws FileNotFoundException {
-//        String tpl= "D:\\proj\\springBoot\\code-gen-starp\\src\\main\\resources\\genCodeTemplate\\api\\postman_test.html";
-//        FileUtil.readResourceFileData()
-        Scanner scanner=new Scanner(new File(filepath));
-        StringBuilder out= new StringBuilder();
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            out.append(line).append("\n");
-        }
-         return out.toString();
-    }
+//   public  static    String  readAll(String filepath) throws FileNotFoundException {
+////        String tpl= "D:\\proj\\springBoot\\code-gen-starp\\src\\main\\resources\\genCodeTemplate\\api\\postman_test.html";
+////        FileUtil.readResourceFileData()
+//        Scanner scanner=new Scanner(new File(filepath));
+//        StringBuilder out= new StringBuilder();
+//        while (scanner.hasNextLine()) {
+//            String line = scanner.nextLine();
+//            out.append(line).append("\n");
+//        }
+//         return out.toString();
+//    }
     public static  InputStream  getResourceInputStream(String relativePath) throws IOException {
         ClassPathResource classPathResource = new ClassPathResource(relativePath);
         InputStream inputStream =classPathResource.getInputStream();
