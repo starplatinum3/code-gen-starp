@@ -1,5 +1,7 @@
 package top.starp.util;
 
+import com.google.common.collect.Lists;
+
 import java.util.*;
 
 public class ListUtil {
@@ -117,8 +119,10 @@ public class ListUtil {
         return list;
     }
 
+    @SafeVarargs
     public  static <T> List<T> createList(T... elements) {
-       return createAndInitializeList(elements);
+        return Lists.newArrayList(elements);
+//        return createAndInitializeList(elements);
     }
     public static void mainList(String[] args) {
         List<String> myList = createAndInitializeList("Apple", "Banana", "Orange");
@@ -148,18 +152,59 @@ public static void main(String[] args) {
     /**
      *
      * @param list
-     * @param likeWhat
+     * @param smallToken
      * @return
      */
-    public  static  boolean haveLike(List<String> list,String likeWhat){
+    public  static  boolean haveTag(List<String> list,String smallToken){
 //        $"{da}";
+//        smallToken
 //        hav
-        for (String s : list) {
-            if (s.contains(likeWhat)) {
+        for (String bigWord : list) {
+            if (bigWord.contains(smallToken)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public  static  boolean haveLike(List<String> list,String big){
+//        $"{da}";
+//        smallToken
+//        hav
+        for (String tag : list) {
+            if (big.contains(tag)) {
+                return true;
+            }
+//            if (bigWord.contains(smallToken)) {
+//                return true;
+//            }
+        }
+        return false;
+    }
+
+    public  static  String getTag(Collection<String> list,String big){
+        for (String tag : list) {
+            if (big.contains(tag)) {
+                return tag;
+            }
+        }
+        return null;
+    }
+    public  static  boolean haveLike(Collection<String> list,String big){
+        String tag1 = getTag(list, big);
+        return tag1!=null;
+//        $"{da}";
+//        smallToken
+//        hav
+//        for (String tag : list) {
+//            if (big.contains(tag)) {
+//                return true;
+//            }
+////            if (bigWord.contains(smallToken)) {
+////                return true;
+////            }
+//        }
+//        return false;
     }
 
     /**

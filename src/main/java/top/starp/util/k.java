@@ -2,7 +2,8 @@ package top.starp.util;
 
 public class k {
 
-    public  static  final  String nowTimeStr= "nowTimeStr";
+
+//    public  static  final  String nowTimeStr= "nowTimeStr";
     public  static  final  String guiji= "guiji";
     public  static  final  String gui_ji= "gui_ji";
     public  static  final  String gui_ji_not_in_school= "gui_ji_not_in_school";
@@ -14,10 +15,10 @@ public class k {
     public  static  final  String query= "query";
     public  static  final  String distinctField= "distinctField";
     public  static  final  String file_size= "file_size";
-    public  static  final  String typeShow= "typeShow";
+//    public  static  final  String typeShow= "typeShow";
     public  static  final  String large_file_log= "large_file_log";
-    public  static  final  String is= "is";
-    public  static  final  String sortBy= "sortBy";
+//    public  static  final  String is= "is";
+//    public  static  final  String sortBy= "sortBy";
 
     public  static  final  String deleted= "deleted";
     public  static  final  String orderBy= "orderBy";
@@ -200,6 +201,7 @@ public class k {
 //    public  static  final  String  page="page";
     public  static  final  String  extensions="extensions";
     public  static  final  String  key="key";
+    public  static  final  String  keyType="keyType";
 
 //    public  static  final  String nowTimeStr= "nowTimeStr";
     public  static  final  String string= "string";
@@ -256,6 +258,22 @@ public class k {
 //    public  static  final  String approveRemark= "approveRemark";
 //    public  static  final  String approveTime= "approveTime";
 
+    public  static  final  String nowTimeStr= "nowTimeStr";
+    public  static  final  String albaNumber= "albaNumber";
+    public  static  final  String zhNumber= "zhNumber";
+    public  static  final  String error= "error";
+    public  static  final  String str= "str";
+    public  static  final  String nature= "nature";
+    public  static  final  String word= "word";
+    public  static  final  String t= "t";
+    public  static  final  String is= "is";
+    public  static  final  String typeShow= "typeShow";
+    public  static  final  String sortBy= "sortBy";
+
+//    public  static  final  String deleted= "deleted";
+//    public  static  final  String orderBy= "orderBy";
+//    public  static  final  String ne= "ne";
+//    public  static  final  String in= "in";
 
 
 }

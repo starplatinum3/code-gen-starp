@@ -3,6 +3,7 @@ package com.time.nlp;
 import com.time.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.starp.util.TimeUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -190,17 +191,35 @@ public class TimeNormalizer implements Serializable {
         // TODO 处理大小写标点符号
     }
 
+//    d(String  timeToken){
+//        /**
+//         * 时间表达式单元构造方法
+//         * 该方法作为时间表达式单元的入口，将时间表达式字符串传入
+//         *
+//         * @param exp_time  时间表达式字符串
+//         * @param timeNormalizer
+//         * @param contextTp 上下文时间
+//         */
+//        if ("暑假".equals(timeToken)) {
+//            return new TimeUnit()
+//        }
+//    }
+
     /**
      * 有基准时间输入的时间表达式识别
      * <p>
      * 这是时间表达式识别的主方法， 通过已经构建的正则表达式对字符串进行识别，并按照预先定义的基准时间进行规范化
      * 将所有别识别并进行规范化的时间表达式进行返回， 时间表达式通过TimeUnit类进行定义
      *
-     * @param String 输入文本字符串
-     * @param String 输入基准时间
+     * @param target 输入文本字符串
+     * @param timebase 输入基准时间
      * @return TimeUnit[] 时间表达式类型数组
      */
-    private TimeUnit[] TimeEx(String tar, String timebase) {
+    private TimeUnit[] TimeEx(String target, String timebase) {
+//        TimeU
+//        TimeUnit 创建现在时间 java
+//        target
+//        TimeUtil.
         Matcher match;
         int startline = -1, endline = -1;
 
@@ -208,7 +227,7 @@ public class TimeNormalizer implements Serializable {
         int rpointer = 0;// 计数器，记录当前识别到哪一个字符串了
         TimeUnit[] Time_Result = null;
 
-        match = patterns.matcher(tar);
+        match = patterns.matcher(target);
         boolean startmark = true;
         while (match.find()) {
             startline = match.start();
@@ -235,8 +254,14 @@ public class TimeNormalizer implements Serializable {
         /**时间上下文： 前一个识别出来的时间会是下一个时间的上下文，用于处理：周六3点到5点这样的多个时间的识别，第二个5点应识别到是周六的。*/
         TimePoint contextTp = new TimePoint();
         for (int j = 0; j < rpointer; j++) {
-            Time_Result[j] = new TimeUnit(temp[j], this, contextTp);
-            contextTp = Time_Result[j]._tp;
+            /**
+             *
+             exp_time – 时间表达式字符串 timeNormalizer contextTp – 上下文时间
+             */
+//            7月 exp_time
+           String  exp_time=temp[j];
+            Time_Result[j] = new TimeUnit(exp_time, this, contextTp);
+            contextTp = Time_Result[j].timePoint;
         }
         /**过滤无法识别的字段*/
         Time_Result = filterTimeUnit(Time_Result);

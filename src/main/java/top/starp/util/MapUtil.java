@@ -58,6 +58,15 @@ public class MapUtil {
         return integer;
     }
 
+    public static Integer getInteger(Map map,Character  key){
+        Object val = map.get(key);
+        if(val instanceof  Integer){
+            return (Integer) val;
+        }
+        String string = getString(map, key);
+        Integer integer = Integer.valueOf(string);
+        return integer;
+    }
     public static Integer getInteger(Map map,String  key){
         String string = getString(map, key);
 //        int port = Integer.parseInt(string);
@@ -119,6 +128,32 @@ public class MapUtil {
 ////        String mapStr = StringUtils.getMapStr(logMap);
 ////        throw new RuntimeException(mapStr);
 //    }
+
+    public static String getString(Map map,Character  key){
+
+        Map<String ,Object> logMap=new HashMap<>();
+        logMap.put(k.msg,"String getString(Map map,Character key :   err");
+        logMap.put(k.map,map);
+        logMap.put(k.key,key);
+        logMap.put(k.keyType,"Character");
+        logMap.put(k.type,"no key");
+        String mapStr = StringUtils.getMapStr(logMap);
+
+//        key
+        if (!map.containsKey(key)) {
+            throw new RuntimeException(mapStr);
+//            throw new RuntimeException( logMap.toString());
+//            throw new RuntimeException(logMap);
+        }
+        Object val = map.get(key);
+        if(   val instanceof String){
+            return (String) map.get(key);
+        }
+
+//        log.error(logMap);
+        logMap.put(k.type,"no key");
+        throw new RuntimeException(StringUtils.getMapStr(logMap));
+    }
 
 
     public static String getString(Map map,String  key){

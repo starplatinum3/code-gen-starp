@@ -27,5 +27,5 @@ package com.time.nlp;
  */
 public class TimePoint
 {
-	int [] tunit={-1,-1,-1,-1,-1,-1};
+	int [] timeUnit ={-1,-1,-1,-1,-1,-1};
 }

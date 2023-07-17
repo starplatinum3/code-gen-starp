@@ -14,7 +14,14 @@ import java.util.regex.Pattern;
  * @date 2020/3/2 21:04
  */
 public class StringUtils {
+//    subString(String  Sentence,int beginIndex,int endIndex){
+//        String next = Sentence.substring( beginIndex,  endIndex);
+//    }
 
+   public static String  subString(String  Sentence,int beginIndex,int len){
+        String next = Sentence.substring( beginIndex,  len+beginIndex);
+        return  next;
+    }
     public  static  <T> void printList(List<T> list){
         for (T elm : list) {
 //            if (elm instanceof Map) {
