@@ -36,7 +36,8 @@ http://localhost:8889/all/genCode
 文档：结束打印所有簇信息.note
 链接：http://note.youdao.com/noteshare?id=0533bf1fa4d43e3deea091e6ec009b66&sub=30DA8F74CCB149C2860B8B27543ACE1F
 
-
+mvn springboot
+mvn spring-boot:run
 
 
 set 字段类型有哪些
