@@ -1,6 +1,6 @@
 package top.starp.util
 
 //fun  main
-fun main() {
-    println(1)
-}
+//fun main() {
+//    println(1)
+//}

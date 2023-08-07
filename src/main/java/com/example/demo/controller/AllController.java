@@ -1341,6 +1341,7 @@ public class AllController {
             }
             if (index == 0) {
                 String jsonStr = entry.response.content.text;
+//                HarUtil
                 JSONArray parseJsonGetRecords = HarUtilKt. parseJsonGetRecords(jsonStr);
                 if (parseJsonGetRecords != null) {
                     List<Document> jsonArrayToDocuments = JsonUtilKt. jsonArrayToDocuments(parseJsonGetRecords);
