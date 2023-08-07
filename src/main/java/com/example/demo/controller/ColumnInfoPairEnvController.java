@@ -40,7 +40,7 @@ import javax.persistence.criteria.Predicate;
 @Slf4j
 @Api(tags = "columnInfoPairEnv")
 //@CrossOrigin
-@CrossOrigin(allowCredentials = "true")
+//@CrossOrigin(allowCredentials = "true")
 @RestController
 //@RequestMapping("/columnInfoPairEnv")
 @RequestMapping("/api/columnInfoPairEnv")

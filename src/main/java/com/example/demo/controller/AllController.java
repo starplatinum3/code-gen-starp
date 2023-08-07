@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.Acc;
 import com.example.demo.entity.AskTypeReq;
 //import com.example.demo.entity.ReturnT;
+import com.example.demo.entity.neo4j.Course;
 import com.example.demo.repository.AccRepository;
+import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.ToolDAO;
+import com.example.demo.service.CourseService;
 import com.example.demo.util.*;
 //import com.example.demo.util.MongoReq;
 import com.example.demo.util.FileUtil;
@@ -35,6 +38,7 @@ import com.sangupta.har.model.HarEntry;
 import com.sun.xml.txw2.output.ResultFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.AbstractModel;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.bson.Document;
@@ -46,7 +50,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.data.web.JsonPath;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
@@ -63,6 +69,7 @@ import java.lang.annotation.Annotation;
 import java.net.Proxy;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -83,6 +90,7 @@ import com.lark.oapi.core.httpclient.OkHttpTransport;
 import com.lark.oapi.core.response.RawResponse;
 import com.lark.oapi.core.token.AccessTokenType;
 import com.lark.oapi.okhttp.OkHttpClient;
+import reactor.core.publisher.Flux;
 import top.starp.util.*;
 import top.starp.util.HttpRequest;
 import top.starp.util.JsonUtil;
@@ -101,13 +109,15 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Api(tags = "all")
 @Transactional
-@CrossOrigin
+//@CrossOrigin
 public class AllController {
     @Value("${feishuAppSecret}")
     String feishuAppSecret;
     @Value("${feishuAppId}")
     String feishuAppId;
 
+    @Resource
+    CourseService courseService;
     public static void main(String[] args) {
 //        Client client= Client.newBuilder(feishuAppId,feishuAppSecret)
 //                .marketplaceApp() // 设置 app 类型为商店应用
@@ -119,12 +129,54 @@ public class AllController {
 //                .build();
     }
 
+
+
+//    @SuppressWarnings("rawtypes")
+//    ddd(){
+//
+////        MongoUtil.findList(k.WalkTwo,mongoTemplate,)
+//        MongoReq mongoReq = MongoReq.builder().ops(
+//                        Op.list(
+//                                Op.eq("name", "1")
+//                        )
+//                )
+//                .collectionName(k.WalkTwo)
+//                .build();
+//
+////        MongoReq.MongoReqBuilder.aMongoReq().collectionName(k.WalkTwo).ops(
+////                Op.list(
+////                        Op.eq("name","1"),
+////                        Op.eq("name","1")
+////                )
+////        )
+////        MongoUtil.find(mongoReq,k.WalkTwo,mongoTemplate,WalkTwo.class);
+//
+//        List<Document> documents = MongoUtil.findDocuments(mongoReq, mongoTemplate, k.WalkTwo);
+//
+////        @SuppressWarnings({"unchecked"})
+////        @SuppressWarnings("rawtypes")
+//
+//
+////        @SuppressWarnings(k.rawtypes)
+////        List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate, k.WalkTwo);
+////
+////        for (Map map : maps) {
+////            System.out.println(map);
+////        }
+//
+//    }
+
+
 //    @Value("")
     @Value("${gaoDeMapKey}")
     String gaoDeMapKey;
     @ApiOperation(value = "gaoDeMapWakling", notes = "gaoDeMapWakling")
     @RequestMapping(value = "/gaoDeMapWakling", method = RequestMethod.POST)
     public Object gaoDeMapWakling() {
+
+//        WebSo
+
+
         String origin="104.07,30.67";//出发点经纬度
         String destination="104.46,29.23";//目的地经纬度
 //        120.149343,30.335056
@@ -171,6 +223,8 @@ public class AllController {
         JSONObject walkingRes = MapNavUtil.walking(geoReq, gaoDeMapKey);
 //        walkingReq
 
+//        MongoUtil.insert()
+
         log.info("walkingRes {}",walkingRes);
         Document document = new Document();
 //        document.put("origin",origin);
@@ -185,6 +239,111 @@ public class AllController {
         return ReturnT.success(insert);
     }
 
+    @ApiOperation(value = "saveCourse", notes = "walking")
+    @RequestMapping(value = "/saveCourse", method = RequestMethod.POST)
+   public   Object saveCourse(@RequestBody Course courseReq){
+        Course course = new Course();
+        course.setCourseName("java");
+        Course course1 = courseService.saveCourse(course);
+        return course1;
+    }
+
+    @Resource
+    CourseRepository courseRepository;
+    @ApiOperation(value = "findByCourseName", notes = "walking")
+    @RequestMapping(value = "/findByCourseName", method = RequestMethod.POST)
+    public   Object findByCourseName(@RequestBody Course courseReq){
+        String courseName = courseReq.getCourseName();
+//        Acc.builder().id(insert_data())
+        List<Course> byCourseName = courseRepository.findByCourseName(courseName);
+        return byCourseName;
+    }
+
+    @Resource
+    private Neo4jClient neo4jClient;
+
+//    d(){
+////        neo4jClient.
+////        neo4jClient.se
+//    }
+
+
+    /**
+     * 参数没用的
+     */
+//    public TrainResp trainDo() throws IOException, TyrfingServiceException {
+//
+//////    todo  之前是mysql    List<AskTrain> askTrains = askTrainService.list();
+//
+//        List<AskTrainMongoDO> askTrains = askTrainsGet();
+//        Map<String, List<String>> trainingDataSet = new HashMap<>();
+//
+//        for (AskTrainMongoDO train : askTrains) {
+//            if (train == null) {
+//                log.error("train==null){  train");
+//                throw new RuntimeException("rain==null){ ");
+//            }
+//            String askText = train.getAskText().trim();
+//            String category = train.getCategory().trim();
+//            DataUtil.putToTrainingDataSet(trainingDataSet, category, askText);
+//        }
+//
+//
+//        Map<String, String[]> convertValuesToStringArray = DataUtil.convertValuesToStringArray(trainingDataSet);
+//
+//
+//        IClassifier classifier = new NaiveBayesClassifier();
+//        classifier.train(convertValuesToStringArray);
+//
+//        AbstractModel model = classifier.getModel();
+//
+//        Map<String, String[]> testMap = DataUtil.getTestMap(askTrains, 0.3);
+//        log.info("testMap {}", testMap);
+//
+//
+//        FMeasure result = Evaluator.evaluate(classifier, testMap);
+//        log.info("测试集准确度：");
+//        log.info("res :{}", result);
+//        MongoTemplate mongoTemplate = getMongoTemplate();
+//
+//        String versionStr = StringUtils.generateRandomString();
+//        String nowTimeStr = TimeUtil.nowTimeStr();
+//        String modelDir = "/home/work/app/file/cls_model";
+//        File modelDirFile = new File(modelDir);
+//        if (!modelDirFile.exists()) {
+//            boolean mkdirs = modelDirFile.mkdirs();
+//        }
+//
+//        String modelPath = "{modelDir}/classification-model_${nowTimeStr}.ser"
+//                .replace("${nowTimeStr}", nowTimeStr)
+//                .replace("{modelDir}", modelDir);
+//        IOUtil.saveObjectTo(model, modelPath);
+//
+//        cn.hutool.json.JSONObject logData = new cn.hutool.json.JSONObject();
+//        logData.set("modelPath", modelPath);
+//        logData.set(k.versionStr, versionStr);
+//        logData.set("nowTimeStr", nowTimeStr);
+//        logData.set(k.date, new Date());
+//        mongoTemplate.insert(logData, k.train_log);
+//
+//        int trainDataSize = askTrains.size();
+//        TrainResp trainResp = new TrainResp();
+//        trainResp.setModelPath(modelPath);
+//        trainResp.setNowTimeStr(nowTimeStr);
+//        trainResp.setTestResult(result.toString());
+//        trainResp.setTrainDataSize(trainDataSize);
+//        trainResp.setTestData(testMap);
+//        trainResp.setTestData(testMap);
+//
+//        mongoTemplate.insert(trainResp, "train_resp");
+//
+//        return trainResp;
+//
+//    }
+
+
+
+
     /**
      *  * 搜索服务-关键字查询
      *      * 56 已用 56%
@@ -196,12 +355,17 @@ public class AllController {
     @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
     @RequestMapping(value = "/place_text", method = RequestMethod.POST)
     public Object  place_text(@RequestBody GeoReq geoReq){
+
+
 //        geoReq.place_text()
         geoReq.setApplicationKey(gaoDeMapKey);
         JSONObject jsonObject = HttpRequest.get(geoReq.place_text());
 
         geoReq.setApplicationKey("");
         Resp build = Resp.builder().resp(jsonObject).geoReq(geoReq).build();
+
+//        DataUtil
+
 
 //        geoReq.
 //        WalkTwo
@@ -376,12 +540,24 @@ public class AllController {
 //        MongoUtil.pageDocuments()
 
         Page<Document> page = MongoUtil.page(mongoReq, mongoTemplate, Document.class);
+        List<Document> content = page.getContent();
+        for (Document document : content) {
+            document.put(k.idStr,document.get(k._id).toString());
+        }
         return ReturnT.success(page);
+    }
+
+    @ApiOperation(value = "getCollectionNames", notes = "geocode_geo")
+    @RequestMapping(value = "/getCollectionNames", method = RequestMethod.POST)
+    public Object  getCollectionNames(@RequestBody MongoReq mongoReq){
+        Set<String> collectionNames = mongoTemplate.getCollectionNames();
+        return ReturnT.success(collectionNames);
     }
 
     @ApiOperation(value = "findDistinct", notes = "geocode_geo")
     @RequestMapping(value = "/findDistinct", method = RequestMethod.POST)
     public Object  findDistinct(@RequestBody MongoReq mongoReq){
+
 //        List<Document> distinct = MongoUtil.findDistinct(mongoReq, mongoTemplate, Document.class);
         List<String> distinct = MongoUtil.findDistinct(mongoReq, mongoTemplate, String.class);
         return ReturnT.success(distinct);
@@ -519,6 +695,12 @@ public class AllController {
 //        MongoReq insert1 = MongoUtil.insert(mongoReq, mongoReq.getCollectionName(), mongoTemplate);
 //        return ReturnT.success(insert1);
 //    }
+
+    @GetMapping(value = "/data", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> getData() {
+        return Flux.interval(Duration.ofSeconds(1))   // 每秒钟产生一个递增的长整型数值
+                .map(i -> "Data " + i);   // 将长整型数值转换为字符串
+    }
 
     @ApiOperation(value = "geocode_geo", notes = "geocode_geo")
     @RequestMapping(value = "/geocode_geo", method = RequestMethod.POST)

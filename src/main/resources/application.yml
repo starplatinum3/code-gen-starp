@@ -2,6 +2,13 @@
 # 应用服务 WEB 访问端口
 
 spring:
+  data:
+    neo4j:
+#      uri: bolt://${NEO4J_HOST:localhost}:${NEO4J_PORT:7688}
+      uri: bolt://${NEO4J_HOST:localhost}:${NEO4J_PORT:7687}
+      username: ${NEO4J_USERNAME:neo4j}
+      password: ${NEO4J_PWD:123456}
+
   profiles:
 #    active: test
 #    active: testiot

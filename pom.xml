@@ -2,13 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+<!--    <properties>-->
+<!--&lt;!&ndash;        <spring.boot.version>2.5.4</spring.boot.version>&ndash;&gt;-->
+<!--        <spring.boot.version>2.3.1.RELEASE</spring.boot.version>-->
+<!--    </properties>-->
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.1.RELEASE</version>
+<!--        <version>2.3.1.RELEASE</version>-->
+<!--        <version>2.3.1.RELEASE</version>-->
+        <version>2.7.4</version>
+<!--        <version>${spring.boot.version}</version>-->
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-<!--    repositories 没有用-->
+    <!--    repositories 没有用-->
     <repositories>
         <repository>
             <id>jitpack.io</id>
@@ -18,32 +27,40 @@
 
 
     <!--    <groupId>com.example</groupId>-->
-<!--    <artifactId>demo</artifactId>-->
-<!--    <version>0.0.1-SNAPSHOT</version>-->
-<!--    <name>test</name>-->
-<!--    <packaging>jar</packaging>-->
-<!--    <description>Demo project for Spring Boot</description>-->
-<!--    <properties>-->
-<!--        <java.version>1.8</java.version>-->
-<!--    </properties>-->
+    <!--    <artifactId>demo</artifactId>-->
+    <!--    <version>0.0.1-SNAPSHOT</version>-->
+    <!--    <name>test</name>-->
+    <!--    <packaging>jar</packaging>-->
+    <!--    <description>Demo project for Spring Boot</description>-->
+    <!--    <properties>-->
+    <!--        <java.version>1.8</java.version>-->
+    <!--    </properties>-->
 
     <groupId>com.zucc</groupId>
-<!--    <artifactId>eye</artifactId>-->
-<!--    <artifactId>mqp-iot-db</artifactId>-->
+    <!--    <artifactId>eye</artifactId>-->
+    <!--    <artifactId>mqp-iot-db</artifactId>-->
     <artifactId>codeGen</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>eye</name>
     <packaging>jar</packaging>
     <description>Demo project for Spring Boot</description>
     <properties>
+        <spring.boot.version>2.3.1.RELEASE</spring.boot.version>
         <java.version>1.8</java.version>
-<!--        <java.version>17</java.version>-->
+        <!--        <java.version>17</java.version>-->
     </properties>
-
 
 
     <dependencies>
 
+
+
+
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>kotlinpoet</artifactId>
+            <version>1.8.0</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
@@ -53,8 +70,89 @@
             <artifactId>jsoup</artifactId>
             <version>1.9.2</version>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.11</version>
+        </dependency>
 
 
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>org.eclipse.jdt.core</artifactId>
+            <version>3.26.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-symbol-solver-core</artifactId>
+            <version>3.25.4</version>
+        </dependency>
+
+
+<!--        <version>2.3.1.RELEASE</version>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-neo4j</artifactId>-->
+<!--&lt;!&ndash;            <version>2.7.4</version>&ndash;&gt;-->
+<!--            <version>${spring.boot.version}</version>-->
+<!--        </dependency>-->
+
+
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+<!--            <artifactId>spring-boot-starter-data-Neo4j</artifactId>-->
+            <artifactId>spring-boot-starter-data-neo4j</artifactId>
+<!--            <artifactId>spring-boot-starter-data-neo4j</artifactId>-->
+<!--            <version>2.7.4</version>-->
+        </dependency>
+
+<!--        implementation 'org.springframework.boot:spring-boot-starter-data-neo4j:2.7.4'-->
+
+
+<!--        &lt;!&ndash; Neo4j Java Driver &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.neo4j.driver</groupId>-->
+<!--            <artifactId>neo4j-java-driver</artifactId>-->
+<!--&lt;!&ndash;            <version>2.7.4</version> &lt;!&ndash; 使用最新的 Neo4j Java Driver 版本 &ndash;&gt;&ndash;&gt;-->
+<!--            <version>4.3.3</version> &lt;!&ndash; 使用最新的 Neo4j Java Driver 版本 &ndash;&gt;-->
+<!--        </dependency>-->
+
+
+
+
+<!--        implementation 'org.springframework.boot:spring-boot-starter-data-neo4j:2.7.4'-->
+
+
+
+        <dependency>
+
+            <groupId>com.qingxun</groupId>
+
+            <artifactId>java-sdk-api</artifactId>
+
+            <version>0.0.2</version>
+
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+
+
+        <!--        implementation 'cn.hutool:hutool-all:5.8.11'-->
 
 
         <!-- commons-lang -->
@@ -71,64 +169,62 @@
             <version>1.2.0</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.github.binarywang</groupId>-->
-<!--            <artifactId>weixin-java-pay</artifactId>-->
-<!--            <version>4.1.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.binarywang</groupId>-->
+        <!--            <artifactId>weixin-java-pay</artifactId>-->
+        <!--            <version>4.1.0</version>-->
+        <!--        </dependency>-->
 
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-compiler-plugin</artifactId>-->
-<!--            <version>3.2.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.maven.plugins</groupId>-->
+        <!--            <artifactId>maven-compiler-plugin</artifactId>-->
+        <!--            <version>3.2.0</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.github</groupId>-->
-<!--            <artifactId>weixin-pay-sdk</artifactId>-->
-<!--            <version>3.0.9</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.github</groupId>-->
+        <!--            <artifactId>weixin-pay-sdk</artifactId>-->
+        <!--            <version>3.0.9</version>-->
+        <!--        </dependency>-->
 
 
-<!--        <dependency>-->
-<!--            <groupId>org.jdom</groupId>-->
-<!--            <artifactId>jdom2</artifactId>-->
-<!--&lt;!&ndash;            <version>2.0.6</version>&ndash;&gt;-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jdom</groupId>-->
+        <!--            <artifactId>jdom2</artifactId>-->
+        <!--&lt;!&ndash;            <version>2.0.6</version>&ndash;&gt;-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.google.zxing</groupId>-->
-<!--            <artifactId>javase</artifactId>-->
-<!--            <version>3.4.1</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.google.zxing</groupId>-->
+        <!--            <artifactId>javase</artifactId>-->
+        <!--            <version>3.4.1</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-lang3</artifactId>-->
-<!--            <version>3.6</version>-->
-<!--        </dependency>-->
-
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.commons</groupId>-->
+        <!--            <artifactId>commons-lang3</artifactId>-->
+        <!--            <version>3.6</version>-->
+        <!--        </dependency>-->
 
 
         <!-- https://mvnrepository.com/artifact/org.jdom/jdom2 -->
-<!--        <dependency>-->
-<!--            <groupId>org.jdom</groupId>-->
-<!--            <artifactId>jdom2</artifactId>-->
-<!--            <version>2.0.6</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jdom</groupId>-->
+        <!--            <artifactId>jdom2</artifactId>-->
+        <!--            <version>2.0.6</version>-->
+        <!--        </dependency>-->
 
 
         <!--        ————————————————-->
-<!--        版权声明：本文为CSDN博主「wd0032」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。-->
-<!--        原文链接：https://blog.csdn.net/wd0032/article/details/79680215-->
+        <!--        版权声明：本文为CSDN博主「wd0032」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。-->
+        <!--        原文链接：https://blog.csdn.net/wd0032/article/details/79680215-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-
 
 
         <dependency>
@@ -144,53 +240,60 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+
+
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
-<!--            <version>1.5.0</version>-->
-<!--            <version>1.6.0</version>-->
-<!--            <version>1.6.21</version>-->
-<!--            <version>1.9.0</version>-->
+            <!--            <version>1.5.0</version>-->
+            <!--            <version>1.6.0</version>-->
+            <!--            <version>1.6.21</version>-->
+            <!--            <version>1.9.0</version>-->
             <version>1.8.0</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
-<!--        </dependency>-->
-<!--        https://gitee.com/whvse/JwtPermission/wikis/pages-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
+        <!--        </dependency>-->
+        <!--        https://gitee.com/whvse/JwtPermission/wikis/pages-->
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-test</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.security</groupId>-->
+        <!--            <artifactId>spring-security-test</artifactId>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
 
 
-<!--        <dependency>-->
-<!--            <groupId>com.alipay.sdk</groupId>-->
-<!--            <artifactId>alipay-sdk-java</artifactId>-->
-<!--            <version>3.3.4.ALL</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.httpcomponents</groupId>-->
-<!--            <artifactId>httpclient</artifactId>-->
-<!--            <version>4.5.5</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alipay.sdk</groupId>-->
+        <!--            <artifactId>alipay-sdk-java</artifactId>-->
+        <!--            <version>3.3.4.ALL</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.httpcomponents</groupId>-->
+        <!--            <artifactId>httpclient</artifactId>-->
+        <!--            <version>4.5.5</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-websocket</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.httpcomponents</groupId>-->
-<!--            <artifactId>httpmime</artifactId>-->
-<!--            <version>4.5</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>javax.servlet</groupId>-->
-<!--            <artifactId>javax.servlet-api</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-websocket</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.httpcomponents</groupId>-->
+        <!--            <artifactId>httpmime</artifactId>-->
+        <!--            <version>4.5</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>javax.servlet</groupId>-->
+        <!--            <artifactId>javax.servlet-api</artifactId>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -198,16 +301,16 @@
         </dependency>
 
 
-<!--        <dependency>-->
-<!--            <groupId>org.bouncycastle</groupId>-->
-<!--            <artifactId>bcprov-jdk15on</artifactId>-->
-<!--            <version>1.59</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.paho</groupId>-->
-<!--            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>-->
-<!--            <version>1.2.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.bouncycastle</groupId>-->
+        <!--            <artifactId>bcprov-jdk15on</artifactId>-->
+        <!--            <version>1.59</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.eclipse.paho</groupId>-->
+        <!--            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>-->
+        <!--            <version>1.2.0</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
@@ -217,20 +320,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-jdbc</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-jdbc</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <!-- https://www.KuMaPai.com/open/io.jsonwebtoken/jjwt -->
-<!--        <dependency>-->
-<!--            <groupId>com.auth0</groupId>-->
-<!--            <artifactId>java-jwt</artifactId>-->
-<!--            <version>3.5.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.auth0</groupId>-->
+        <!--            <artifactId>java-jwt</artifactId>-->
+        <!--            <version>3.5.0</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -293,28 +396,28 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.paho</groupId>-->
-<!--            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>-->
-<!--            <version>1.2.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.integration</groupId>-->
-<!--            <artifactId>spring-integration-mqtt</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-<!--            <artifactId>jackson-databind</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-<!--            <artifactId>jackson-core</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>commons-io</groupId>-->
-<!--            <artifactId>commons-io</artifactId>-->
-<!--            <version>2.4</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.eclipse.paho</groupId>-->
+        <!--            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>-->
+        <!--            <version>1.2.0</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.integration</groupId>-->
+        <!--            <artifactId>spring-integration-mqtt</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--            <artifactId>jackson-databind</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--            <artifactId>jackson-core</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>commons-io</groupId>-->
+        <!--            <artifactId>commons-io</artifactId>-->
+        <!--            <version>2.4</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -325,16 +428,16 @@
             <version>2.3</version>
             <scope>compile</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-web</artifactId>-->
-<!--            <version>5.4.1</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.security</groupId>-->
+        <!--            <artifactId>spring-security-web</artifactId>-->
+        <!--            <version>5.4.1</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-security</artifactId>-->
+        <!--        </dependency>-->
 
         <!-- mongodb -->
         <dependency>
@@ -403,15 +506,15 @@
                 </configuration>
             </plugin>
 
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <compilerArgs>-->
-<!--                        <arg>-Xplugin:ZrString</arg>-->
-<!--                    </compilerArgs>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <compilerArgs>-->
+            <!--                        <arg>-Xplugin:ZrString</arg>-->
+            <!--                    </compilerArgs>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
         </plugins>
 
 

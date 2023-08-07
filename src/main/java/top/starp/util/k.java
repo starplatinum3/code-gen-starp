@@ -5,6 +5,8 @@ public class k {
 
 //    public  static  final  String nowTimeStr= "nowTimeStr";
     public  static  final  String guiji= "guiji";
+    public  static  final  String unused= "unused";
+    public  static  final  String idStr= "idStr";
     public  static  final  String gui_ji= "gui_ji";
     public  static  final  String gui_ji_not_in_school= "gui_ji_not_in_school";
     public  static  final  String brain= "brain";
@@ -185,6 +187,7 @@ public class k {
     public  static  final  String  gao_de_map="gao_de_map";
     public  static  final  String  geocode_geo="geocode_geo";
     public  static  final  String  WalkTwo="WalkTwo";
+    public  static  final  String  rawtypes="rawtypes";
     public  static  final  String  place_text="place_text";
     public  static  final  String  place_text_search="place_text_search";
     public  static  final  String  assistant_input_tips="assistant_input_tips";

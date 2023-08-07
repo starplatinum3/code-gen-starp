@@ -29,7 +29,7 @@ import java.util.Optional;
 @Slf4j
 @Api(tags = "oled")
 @Transactional
-@CrossOrigin
+//@CrossOrigin
 public class OledController {
 
     @Autowired

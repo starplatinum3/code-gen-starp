@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.io.Serializable;
@@ -11,6 +13,7 @@ import javax.persistence.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.NoArgsConstructor;
+import top.starp.util.JsonUtil;
 
 /**
  * @description acc
@@ -61,6 +64,14 @@ public class Acc implements Serializable {
     @Column(name="create_time")
    Date createTime;
     public Acc() {
+//        String jsonString = JsonUtil.toJsonString(this);
+//        return jsonString;
+//        try {
+//            return JsonUtil.toJsonString(this);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
+
 
 }

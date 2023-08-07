@@ -3,6 +3,7 @@ package com.time.nlp;
 import com.time.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.starp.util.FileUtil;
 import top.starp.util.TimeUtil;
 
 import java.io.BufferedInputStream;
@@ -42,7 +43,8 @@ public class TimeNormalizer implements Serializable {
     private String target;
     private TimeUnit[] timeToken = new TimeUnit[0];
 
-    private boolean isPreferFuture = true;
+//    private boolean isPreferFuture = true;
+    private boolean isPreferFuture = false;
 
     public TimeNormalizer() {
         if (patterns == null) {
@@ -223,7 +225,8 @@ public class TimeNormalizer implements Serializable {
         Matcher match;
         int startline = -1, endline = -1;
 
-        String[] temp = new String[99];
+//        timeExpressionStrArr
+        String[] timeExpressionStrArr = new String[99];
         int rpointer = 0;// 计数器，记录当前识别到哪一个字符串了
         TimeUnit[] Time_Result = null;
 
@@ -234,14 +237,14 @@ public class TimeNormalizer implements Serializable {
             if (endline == startline) // 假如下一个识别到的时间字段和上一个是相连的 @author kexm
             {
                 rpointer--;
-                temp[rpointer] = temp[rpointer] + match.group();// 则把下一个识别到的时间字段加到上一个时间字段去
+                timeExpressionStrArr[rpointer] = timeExpressionStrArr[rpointer] + match.group();// 则把下一个识别到的时间字段加到上一个时间字段去
             } else {
                 if (!startmark) {
                     rpointer--;
                     rpointer++;
                 }
                 startmark = false;
-                temp[rpointer] = match.group();// 记录当前识别到的时间字段，并把startmark开关关闭。这个开关貌似没用？
+                timeExpressionStrArr[rpointer] = match.group();// 记录当前识别到的时间字段，并把startmark开关关闭。这个开关貌似没用？
             }
             endline = match.end();
             rpointer++;
@@ -259,8 +262,9 @@ public class TimeNormalizer implements Serializable {
              exp_time – 时间表达式字符串 timeNormalizer contextTp – 上下文时间
              */
 //            7月 exp_time
-           String  exp_time=temp[j];
-            Time_Result[j] = new TimeUnit(exp_time, this, contextTp);
+//            ExpressionTime
+           String  ExpressionTime=timeExpressionStrArr[j];
+            Time_Result[j] = new TimeUnit(ExpressionTime, this, contextTp);
             contextTp = Time_Result[j].timePoint;
         }
         /**过滤无法识别的字段*/
@@ -302,6 +306,10 @@ public class TimeNormalizer implements Serializable {
 
     private Pattern readModel(ObjectInputStream in) throws Exception {
         Pattern p = (Pattern) in.readObject();
+//        FileUtil.writeToFile(p.pattern(), "/file/model.txt");
+//        TimeUtil.nowTimeStr();
+//        FileUtil.writeToFile("/file/model.txt",p.pattern() );
+        FileUtil.   writeToFileWithTimeStr("/file/model.txt",p.pattern() );
 //        LOGGER.debug("model pattern:{}", p.pattern());
         return Pattern.compile(p.pattern());
     }

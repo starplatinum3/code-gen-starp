@@ -47,7 +47,9 @@ public class LogUtil {
             System.out.println("List length: " + list.size());
         }
     }
-
+    public static void info(Map map) {
+        log.info(map);
+    }
     public static void info(String str) {
         print(str, System.out);
 //        System.out.println();

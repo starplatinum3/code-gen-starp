@@ -227,6 +227,13 @@ public     MongoReq(){}
         return pageSize;
     }
 
+//    public Integer getPageNumberOrDefaultPageReq(){
+//        Integer pageNumberOrDefault = getPageNumberOrDefault();
+//        if(pageNumberOrDefault==0){
+//            return 0;
+//        }
+//        return  pageNumberOrDefault-1;
+//    }
     public Integer getPageNumberOrDefault(){
         Integer pageNumber = getPageNumber();
         if(pageNumber==null){
@@ -236,10 +243,19 @@ public     MongoReq(){}
     }
 
     public static final class MongoReqBuilder {
+        private Integer FIRST;
+        private String localDoc;
+        private String otherDoc;
+        private String localField;
+        private String foreignField;
+        private List<Op> ops;
+        private List<Op> sortBy;
+        private Integer deleted;
         private Map<String, Object> data;
         private String collectionName;
         private Map<String, Object> likeMap;
         private Map<String, Object> equalMap;
+        private Map<String, Object> notEqualMap;
         private Map<String, Object> updateMap;
         private Integer pageNumber;
         private Integer pageSize;
@@ -249,6 +265,46 @@ public     MongoReq(){}
 
         public static MongoReqBuilder aMongoReq() {
             return new MongoReqBuilder();
+        }
+
+        public MongoReqBuilder withFIRST(Integer FIRST) {
+            this.FIRST = FIRST;
+            return this;
+        }
+
+        public MongoReqBuilder withLocalDoc(String localDoc) {
+            this.localDoc = localDoc;
+            return this;
+        }
+
+        public MongoReqBuilder withOtherDoc(String otherDoc) {
+            this.otherDoc = otherDoc;
+            return this;
+        }
+
+        public MongoReqBuilder withLocalField(String localField) {
+            this.localField = localField;
+            return this;
+        }
+
+        public MongoReqBuilder withForeignField(String foreignField) {
+            this.foreignField = foreignField;
+            return this;
+        }
+
+        public MongoReqBuilder withOps(List<Op> ops) {
+            this.ops = ops;
+            return this;
+        }
+
+        public MongoReqBuilder withSortBy(List<Op> sortBy) {
+            this.sortBy = sortBy;
+            return this;
+        }
+
+        public MongoReqBuilder withDeleted(Integer deleted) {
+            this.deleted = deleted;
+            return this;
         }
 
         public MongoReqBuilder withData(Map<String, Object> data) {
@@ -271,6 +327,11 @@ public     MongoReq(){}
             return this;
         }
 
+        public MongoReqBuilder withNotEqualMap(Map<String, Object> notEqualMap) {
+            this.notEqualMap = notEqualMap;
+            return this;
+        }
+
         public MongoReqBuilder withUpdateMap(Map<String, Object> updateMap) {
             this.updateMap = updateMap;
             return this;
@@ -286,17 +347,29 @@ public     MongoReq(){}
             return this;
         }
 
+        public MongoReqBuilder but() {
+            return aMongoReq().withFIRST(FIRST).withLocalDoc(localDoc).withOtherDoc(otherDoc).withLocalField(localField).withForeignField(foreignField).withOps(ops).withSortBy(sortBy).withDeleted(deleted).withData(data).withCollectionName(collectionName).withLikeMap(likeMap).withEqualMap(equalMap).withNotEqualMap(notEqualMap).withUpdateMap(updateMap).withPageNumber(pageNumber).withPageSize(pageSize);
+        }
+
         public MongoReq build() {
             MongoReq mongoReq = new MongoReq();
+            mongoReq.setLocalDoc(localDoc);
+            mongoReq.setOtherDoc(otherDoc);
+            mongoReq.setLocalField(localField);
+            mongoReq.setForeignField(foreignField);
+            mongoReq.setOps(ops);
+            mongoReq.setSortBy(sortBy);
             mongoReq.setData(data);
             mongoReq.setCollectionName(collectionName);
             mongoReq.setLikeMap(likeMap);
             mongoReq.setEqualMap(equalMap);
+            mongoReq.setNotEqualMap(notEqualMap);
             mongoReq.setUpdateMap(updateMap);
             mongoReq.setPageNumber(pageNumber);
             mongoReq.setPageSize(pageSize);
+//            mongoReq.FIRST = this.FIRST;
+//            mongoReq.deleted = this.deleted;
             return mongoReq;
         }
     }
-
 }

@@ -27,7 +27,7 @@ import java.util.Optional;
 @Slf4j
 @Api(tags = "rgb")
 @Transactional
-@CrossOrigin
+//@CrossOrigin
 public class RgbController {
 
     @Autowired

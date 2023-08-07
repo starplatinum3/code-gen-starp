@@ -7,12 +7,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsonschema.JsonSchema;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.lang.Nullable;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +25,20 @@ import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_ENUMS_US
 
 public class JsonUtil {
 
+
+
+
+    public static Map<String, Object> toMap(String json) {
+        Type type = new TypeToken<Map<String, Object>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    public static Map<?, ?> toMapNoType(String json) {
+        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    private static final Gson gson = new Gson();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     public static String toJsonString(JsonNode jsonNode) throws IOException {
@@ -96,9 +113,9 @@ public class JsonUtil {
     public static String getJSONStringFromJavaBean(Class<? extends Object> clazz) {
         Field[] fields = clazz.getDeclaredFields();
         StringBuffer stb = new StringBuffer("{");
-        for (int i = 0; i < fields.length; i++) {
+        for (Field value : fields) {
             try {
-                Field field = fields[i];
+                Field field = value;
                 field.setAccessible(true);
                 String name = field.getName();
                 stb.append("\"").append(name).
@@ -113,8 +130,7 @@ public class JsonUtil {
     }
 
     public  static  String objectToString(Object object){
-        String json = JSONObject.toJSONString(object);
-        return json;
+        return JSONObject.toJSONString(object);
     }
 
     public  static  <T> T stringToObject(String json, Class<T> clazz) {
@@ -164,8 +180,7 @@ public class JsonUtil {
             return null;
         }
         try {
-            Map map = objectMapper.readValue(json, Map.class);
-            return map;
+            return objectMapper.readValue(json, Map.class);
         } catch (IOException e) {
 //            throw wrapException(e);
             throw new RuntimeException(e);

@@ -5,15 +5,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.time.enums.RangeTimeEnum;
+import top.starp.util.NumberInfo;
+import top.starp.util.StringUtils;
 import top.starp.util.TimeUtil;
+import top.starp.util.u;
 
 /**
  * <p>
@@ -82,7 +83,7 @@ public class TimeUnit {
 //       return sqlTimeStr;
    }
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
 //        把  两个 LocalDateTime  转化为mysql between
 //        Temporal localDateTime = toLocalDateTime(new TimeUnit());
 //        localDateTime.
@@ -210,7 +211,7 @@ public class TimeUnit {
             timePoint.timeUnit[1] = Integer.parseInt(match.group());
 
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(1);
+            preferFutureOrHistory(1);
         }
     }
 
@@ -238,7 +239,7 @@ public class TimeUnit {
                 timePoint.timeUnit[2] = Integer.parseInt(date);
 
                 /**处理倾向于未来时间的情况  @author kexm*/
-                preferFuture(1);
+                preferFutureOrHistory(1);
             }
         }
     }
@@ -256,7 +257,7 @@ public class TimeUnit {
             timePoint.timeUnit[2] = Integer.parseInt(match.group());
 
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(2);
+            preferFutureOrHistory(2);
         }
     }
 
@@ -272,7 +273,7 @@ public class TimeUnit {
             }
 
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
             timeType=dateTime;
         }
@@ -290,7 +291,7 @@ public class TimeUnit {
         if (match.find()) {
             timePoint.timeUnit[3] = Integer.parseInt(match.group());
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
             timeType=dateTime;
         }
@@ -312,7 +313,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“凌晨”这种情况的处理 @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.day_break.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
             timeType=dateTime;
         }
@@ -324,7 +325,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“早上/早晨/早间”这种情况的处理 @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.early_morning.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
             timeType=dateTime;
         }
@@ -338,7 +339,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“上午”这种情况的处理 @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.morning.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
             timeType=dateTime;
         }
@@ -352,7 +353,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“中午/午间”这种情况的处理 @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.noon.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
             timeType=dateTime;
         }
@@ -366,7 +367,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“下午|午后”这种情况的处理  @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.afternoon.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
 //            timeType="dateTime";
             timeType=dateTime;
@@ -384,7 +385,7 @@ public class TimeUnit {
                 timePoint.timeUnit[3] = RangeTimeEnum.night.getHourTime();
 
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
             timeType=dateTime;
         }
@@ -405,7 +406,7 @@ public class TimeUnit {
             if (!match.group().equals("")) {
                 timePoint.timeUnit[4] = Integer.parseInt(match.group());
                 /**处理倾向于未来时间的情况  @author kexm*/
-                preferFuture(4);
+                preferFutureOrHistory(4);
                 isAllDayTime = false;
                 timeType=dateTime;
             }
@@ -417,7 +418,7 @@ public class TimeUnit {
         if (match.find()) {
             timePoint.timeUnit[4] = 15;
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(4);
+            preferFutureOrHistory(4);
             isAllDayTime = false;
         }
 
@@ -427,7 +428,7 @@ public class TimeUnit {
         if (match.find()) {
             timePoint.timeUnit[4] = 30;
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(4);
+            preferFutureOrHistory(4);
             isAllDayTime = false;
         }
 
@@ -437,7 +438,7 @@ public class TimeUnit {
         if (match.find()) {
             timePoint.timeUnit[4] = 45;
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(4);
+            preferFutureOrHistory(4);
             isAllDayTime = false;
         }
     }
@@ -486,7 +487,7 @@ public class TimeUnit {
             timePoint.timeUnit[4] = Integer.parseInt(tmp_parser[1]);
             timePoint.timeUnit[5] = Integer.parseInt(tmp_parser[2]);
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
         } else {
             rule = "(?<!(周|星期))([0-2]?[0-9]):[0-5]?[0-9]";
@@ -499,7 +500,7 @@ public class TimeUnit {
                 timePoint.timeUnit[3] = Integer.parseInt(tmp_parser[0]);
                 timePoint.timeUnit[4] = Integer.parseInt(tmp_parser[1]);
                 /**处理倾向于未来时间的情况  @author kexm*/
-                preferFuture(3);
+                preferFutureOrHistory(3);
                 isAllDayTime = false;
             }
         }
@@ -517,7 +518,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“中午/午间”这种情况的处理 @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.noon.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
 
         }
@@ -531,7 +532,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“中午/午间”这种情况的处理 @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.afternoon.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
         }
 
@@ -546,7 +547,7 @@ public class TimeUnit {
             if (timePoint.timeUnit[3] == -1) /**增加对没有明确时间点，只写了“中午/午间”这种情况的处理 @author kexm*/
                 timePoint.timeUnit[3] = RangeTimeEnum.night.getHourTime();
             /**处理倾向于未来时间的情况  @author kexm*/
-            preferFuture(3);
+            preferFutureOrHistory(3);
             isAllDayTime = false;
 //            timeType=date;
             timeType=dateTime;
@@ -1021,6 +1022,327 @@ public class TimeUnit {
 
         time_full = timePoint.timeUnit.clone();
 //		time_origin = _tp_origin.tunit.clone(); comment by kexm
+//        Time_Expression
+//        3周前  regex 提取出时间的 3 java
+//        字符串 regex  3周前 提取出 3  java
+
+
+//         localDateTimes = TimeUtil.getByName(Time_Expression);
+//         if(localDateTimes.isEmpty()){
+//
+//         }
+//        Integer weekInt = getWeekInt(Time_Expression);
+
+
+        setUpLocalDateTimes();
+    }
+
+   void setUpLocalDateTimes(){
+//        for (LocalDateTime localDateTime : localDateTimes) {
+//
+//        }
+
+        localDateTimes = TimeUtil.getByName(Time_Expression);
+        if(!localDateTimes.isEmpty()){
+//            return localDateTimes;
+            return;
+        }
+        Integer weekInt = getWeekInt(Time_Expression);
+        if(weekInt!=null){
+            localDateTimes =   TimeUtil.minusWeekStart0(weekInt);
+//            localDateTimes = TimeUtil.getWeekAgo(weekInt);
+            return;
+        }
+
+
+//       List<NumberInfo> numberInfos = StringUtils.extractNumbers(Time_Expression);
+//       List<Integer> arabicNumbers = numberInfos.stream().map(o -> {
+//           int arabicNumber = o.getArabicNumber();
+//           return  arabicNumber;
+//       }).collect(Collectors.toList());
+//       setByNumber();
+
+       Integer daysInt = getDaysInt(Time_Expression);
+       if(daysInt!=null){
+           localDateTimes =   TimeUtil.minusDaysStart0(daysInt);
+           return;
+       }
+//       前三周
+
+       List<NumberInfo> numberInfos = StringUtils.extractNumbers(Time_Expression);
+       List<Integer> arabicNumbers = numberInfos.stream().map(o -> {
+           int arabicNumber = o.getArabicNumber();
+           return  arabicNumber;
+       }).collect(Collectors.toList());
+         if(arabicNumbers.size()>=1){
+              Integer number = arabicNumbers.get(0);
+              if(number<=-1){
+                  return;
+              }
+//             Time_Expression.
+//             StringUtils.ind
+             if (Time_Expression.indexOf("周")!= StringUtils.notFound) {
+                    localDateTimes =   TimeUtil.minusWeekStart0(number);
+                    return;
+             }
+              localDateTimes =   TimeUtil.minusDaysStart0(number);
+              return;
+         }
+   }
+
+    void setByNumber(){
+        List<NumberInfo> numberInfos = StringUtils.extractNumbers(Time_Expression);
+        List<Integer> arabicNumbers = numberInfos.stream().map(o -> {
+            int arabicNumber = o.getArabicNumber();
+            return  arabicNumber;
+        }).collect(Collectors.toList());
+
+    }
+    public static void main(String[] args) {
+        mainRegex(args);
+    }
+    static Integer getWeekInt(String inputString) {
+//        getWeekInt(inputString, "(\\d+)周前|前(\\d+)周|\\d+周前|\\d+周");
+//       return getWeekInt(inputString, "(\\d+)周前");
+//       while ()
+        for (String pattern : u.list("(\\d+)周前", "前(\\d+)周")) {
+            Integer weekInt = getWeekInt(inputString, pattern);
+            if(weekInt!=null){
+                return weekInt;
+            }
+        }
+        return null;
+//        for (;;){
+//            Integer weekInt = getWeekInt(inputString, "(\\d+)周前");
+//            if(weekInt!=null){
+//                return weekInt;
+//            }
+//        }
+    }
+      static Integer getWeekInt(String inputString,  String pattern){
+//        String inputString = "regex 3周前 提取出 3 java";
+
+        // 使用正则表达式来匹配"3周前"和数字"3"以及"java"
+//        String pattern = "(\\d+)周前.*?(\\d+).*?(java)";
+//        String pattern = "(\\d+)周前|前(\\d+)周|\\d+周前|\\d+周";
+//        String pattern = "(\\d+)周前|前(\\d+)周";
+//        String pattern = "(\\d+)周前";
+//        前三周 提取出 3 数字 java代码
+
+        // 创建Pattern对象
+        Pattern regexPattern = Pattern.compile(pattern);
+        // 创建Matcher对象
+        Matcher matcher = regexPattern.matcher(inputString);
+
+        // 进行匹配
+        if (matcher.find()) {
+            String group = matcher.group(1);
+            if(group==null){
+                return null;
+            }
+            // 提取出匹配的结果
+//            int weeksAgo = Integer.parseInt(matcher.group(1));
+            int weeksAgo = Integer.parseInt(group);
+//            int number = Integer.parseInt(matcher.group(2));
+//            String javaString = matcher.group(3);
+            return weeksAgo;
+
+            // 打印结果
+//            System.out.println(weeksAgo + "周前");
+//            System.out.println("数字: " + number);
+//            System.out.println("字符串: " + javaString);
+        } else {
+            System.out.println("未找到匹配的内容");
+        }
+        return null;
+    }
+
+    static Integer getDaysInt(String inputString){
+        String pattern = "(\\d+)天前";
+
+        // 创建Pattern对象
+        Pattern regexPattern = Pattern.compile(pattern);
+        // 创建Matcher对象
+        Matcher matcher = regexPattern.matcher(inputString);
+
+        // 进行匹配
+        if (matcher.find()) {
+            // 提取出匹配的结果
+            int weeksAgo = Integer.parseInt(matcher.group(1));
+            return weeksAgo;
+        } else {
+            System.out.println("未找到匹配的内容");
+        }
+        return null;
+    }
+    public static void mainRegex(String[] args) {
+        String inputString = "regex 3周前 提取出 3 java";
+
+        // 使用正则表达式来匹配"3周前"和数字"3"以及"java"
+//        String pattern = "(\\d+)周前.*?(\\d+).*?(java)";
+        String pattern = "(\\d+)周前";
+
+        // 创建Pattern对象
+        Pattern regexPattern = Pattern.compile(pattern);
+        // 创建Matcher对象
+        Matcher matcher = regexPattern.matcher(inputString);
+
+        // 进行匹配
+        if (matcher.find()) {
+            // 提取出匹配的结果
+            int weeksAgo = Integer.parseInt(matcher.group(1));
+//            int number = Integer.parseInt(matcher.group(2));
+//            String javaString = matcher.group(3);
+
+            // 打印结果
+            System.out.println(weeksAgo + "周前");
+//            System.out.println("数字: " + number);
+//            System.out.println("字符串: " + javaString);
+        } else {
+            System.out.println("未找到匹配的内容");
+        }
+    }
+
+    List<LocalDateTime> localDateTimes;
+
+    public String getTime_Expression() {
+        return Time_Expression;
+    }
+
+    public void setTime_Expression(String time_Expression) {
+        Time_Expression = time_Expression;
+    }
+
+    public String getTime_Norm() {
+        return Time_Norm;
+    }
+
+    public void setTime_Norm(String time_Norm) {
+        Time_Norm = time_Norm;
+    }
+
+    public int[] getTime_full() {
+        return time_full;
+    }
+
+    public void setTime_full(int[] time_full) {
+        this.time_full = time_full;
+    }
+
+    public int[] getTime_origin() {
+        return time_origin;
+    }
+
+    public void setTime_origin(int[] time_origin) {
+        this.time_origin = time_origin;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public Boolean getAllDayTime() {
+        return isAllDayTime;
+    }
+
+    public void setAllDayTime(Boolean allDayTime) {
+        isAllDayTime = allDayTime;
+    }
+
+    public String getTimeType() {
+        return timeType;
+    }
+
+    public void setTimeType(String timeType) {
+        this.timeType = timeType;
+    }
+
+    public static String getDateTime() {
+        return dateTime;
+    }
+
+    public static void setDateTime(String dateTime) {
+        TimeUnit.dateTime = dateTime;
+    }
+
+    public static String getDate() {
+        return date;
+    }
+
+    public static void setDate(String date) {
+        TimeUnit.date = date;
+    }
+
+    public boolean isFirstTimeSolveContext() {
+        return isFirstTimeSolveContext;
+    }
+
+    public void setFirstTimeSolveContext(boolean firstTimeSolveContext) {
+        isFirstTimeSolveContext = firstTimeSolveContext;
+    }
+
+    public TimeNormalizer getNormalizer() {
+        return normalizer;
+    }
+
+    public void setNormalizer(TimeNormalizer normalizer) {
+        this.normalizer = normalizer;
+    }
+
+    public TimePoint getTimePoint() {
+        return timePoint;
+    }
+
+    public void setTimePoint(TimePoint timePoint) {
+        this.timePoint = timePoint;
+    }
+
+    public TimePoint getTimePointOrigin() {
+        return timePointOrigin;
+    }
+
+    public void setTimePointOrigin(TimePoint timePointOrigin) {
+        this.timePointOrigin = timePointOrigin;
+    }
+
+    public List<LocalDateTime> getLocalDateTimes() {
+        return localDateTimes;
+    }
+
+    public void setLocalDateTimes(List<LocalDateTime> localDateTimes) {
+        this.localDateTimes = localDateTimes;
+    }
+
+    public static String getPreferFuture() {
+        return preferFuture;
+    }
+
+    public static void setPreferFuture(String preferFuture) {
+        TimeUnit.preferFuture = preferFuture;
+    }
+
+    public static String getPreferHistory() {
+        return preferHistory;
+    }
+
+    public static void setPreferHistory(String preferHistory) {
+        TimeUnit.preferHistory = preferHistory;
+    }
+
+    public static String getPreferFutureOrHistory() {
+        return preferFutureOrHistory;
+    }
+
+    public static void setPreferFutureOrHistory(String preferFutureOrHistory) {
+        TimeUnit.preferFutureOrHistory = preferFutureOrHistory;
+    }
+
+    public static Map<Integer, Integer> getTunitMap() {
+        return TUNIT_MAP;
+    }
+
+    public static void setTunitMap(Map<Integer, Integer> tunitMap) {
+        TUNIT_MAP = tunitMap;
     }
 
     public Boolean getIsAllDayTime() {
@@ -1087,14 +1409,53 @@ public class TimeUnit {
  static String  preferFutureOrHistory=preferHistory;
 //  String  preferFutureOrHistory=preferFuture;
 
-    /**
-     * 如果用户选项是倾向于未来时间，检查checkTimeIndex所指的时间是否是过去的时间，如果是的话，将大一级的时间设为当前时间的+1。
-     * <p>
-     * 如在晚上说“早上8点看书”，则识别为明天早上;
-     * 12月31日说“3号买菜”，则识别为明年1月的3号。
-     *
-     * @param checkTimeIndex _tp.tunit时间数组的下标
-     */
+
+//    private void preferFutureOrHistory(int checkTimeIndex) {
+//        /**1. 检查被检查的时间级别之前，是否没有更高级的已经确定的时间，如果有，则不进行处理.*/
+//        for (int i = 0; i < checkTimeIndex; i++) {
+//            if (timePoint.timeUnit[i] != -1) return;
+//        }
+//        /**2. 根据上下文补充时间*/
+//        checkContextTime(checkTimeIndex);
+//        /**3. 根据上下文补充时间后再次检查被检查的时间级别之前，是否没有更高级的已经确定的时间，如果有，则不进行倾向处理.*/
+//        for (int i = 0; i < checkTimeIndex; i++) {
+//            if (timePoint.timeUnit[i] != -1) return;
+//        }
+//        /**4. 确认用户选项*/
+//        if (!normalizer.isPreferFuture()) {
+//            return;
+//        }
+//        /**5. 获取当前时间，如果识别到的时间小于当前时间，则将其上的所有级别时间设置为当前时间，并且其上一级的时间步长+1*/
+//        Calendar calendar = Calendar.getInstance();
+//        if (this.normalizer.getTimeBase() != null) {
+//            String[] ini = this.normalizer.getTimeBase().split("-");
+//            calendar.set(Integer.valueOf(ini[0]).intValue()
+//                    , Integer.valueOf(ini[1]).intValue() - 1
+//                    , Integer.valueOf(ini[2]).intValue()
+//                    , Integer.valueOf(ini[3]).intValue()
+//                    , Integer.valueOf(ini[4]).intValue()
+//                    , Integer.valueOf(ini[5]).intValue());
+////            LOGGER.debug(DateUtil.formatDateDefault(c.getTime()));
+//        }
+//
+//        int curTime = calendar.get(TUNIT_MAP.get(checkTimeIndex));
+//        if (curTime < timePoint.timeUnit[checkTimeIndex]) {
+//            return;
+//        }
+//        //准备增加的时间单位是被检查的时间的上一级，将上一级时间+1
+//        int addTimeUnit = TUNIT_MAP.get(checkTimeIndex - 1);
+//        calendar.add(addTimeUnit, 1);
+//
+////		_tp.tunit[checkTimeIndex - 1] = c.get(TUNIT_MAP.get(checkTimeIndex - 1));
+//        for (int i = 0; i < checkTimeIndex; i++) {
+//            timePoint.timeUnit[i] = calendar.get(TUNIT_MAP.get(i));
+//            if (TUNIT_MAP.get(i) == Calendar.MONTH) {
+//                ++timePoint.timeUnit[i];
+//            }
+//        }
+//
+//    }
+
     private void preferFuture(int checkTimeIndex) {
         /**1. 检查被检查的时间级别之前，是否没有更高级的已经确定的时间，如果有，则不进行处理.*/
         for (int i = 0; i < checkTimeIndex; i++) {
@@ -1141,7 +1502,21 @@ public class TimeUnit {
 
     }
 
-    private void preferFutureOrHistory2(int checkTimeIndex) {
+    private void preferFutureOrHistory(int checkTimeIndex) {
+//        preferFutureOrHistory(checkTimeIndex, normalizer.isPreferFuture() ? "future" : "history");
+        preferFutureOrHistory(checkTimeIndex, preferFutureOrHistory);
+
+    }
+
+    /**
+     * 如果用户选项是倾向于未来时间，检查checkTimeIndex所指的时间是否是过去的时间，如果是的话，将大一级的时间设为当前时间的+1。
+     * <p>
+     * 如在晚上说“早上8点看书”，则识别为明天早上;
+     * 12月31日说“3号买菜”，则识别为明年1月的3号。
+     *preferFutureOrHistory
+     * @param checkTimeIndex _tp.tunit时间数组的下标
+     */
+    private void preferFutureOrHistory(int checkTimeIndex,String  preferFutureOrHistory) {
         /**1. 检查被检查的时间级别之前，是否没有更高级的已经确定的时间，如果有，则不进行处理.*/
         for (int i = 0; i < checkTimeIndex; i++) {
             if (timePoint.timeUnit[i] != -1) return;

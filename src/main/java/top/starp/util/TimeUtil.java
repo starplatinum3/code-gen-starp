@@ -91,6 +91,15 @@ public static List<LocalDateTime> today() {
     return list;
 }
 
+    public static List<LocalDateTime> todayToNow() {
+        // 获取当前日期和时间
+        LocalDateTime now = LocalDateTime.now();
+        List<LocalDateTime> list = u.list(now.withHour(0).withMinute(0).withSecond(0)
+                , now
+        );
+        return list;
+    }
+
     public static List<LocalDateTime> tomorrow() {
         LocalDateTime localDateTime = now();
 //        LocalDateTime localDateTime = now().withHour(0).withMinute(0).withSecond(0);
@@ -134,11 +143,23 @@ public static List<LocalDateTime> today() {
         return u.list(beforeYesterdayStart, beforeYesterdayEnd);
     }
 
+    public static long strToTimestamp(String timeStr, String format) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Date date = sdf.parse(timeStr);
+        return date.getTime() / 1000;
+    }
+
     // 前年
     public static List<LocalDateTime> beforeLastYear() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime beforeLastYearStart = now.minusYears(1).withHour(0).withMinute(0).withSecond(0);
-        LocalDateTime beforeLastYearEnd = now.minusYears(1).withHour(23).withMinute(59).withSecond(59);
+        long beforeLastYearMinus=2;
+//        LocalDateTime beforeLastYearStart = now.minusYears(1).withHour(0).withMinute(0).withSecond(0);
+//        LocalDateTime beforeLastYearEnd = now.minusYears(1).withHour(23).withMinute(59).withSecond(59);
+
+        LocalDateTime beforeLastYearStart =
+                now.minusYears(beforeLastYearMinus).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime beforeLastYearEnd =
+                now.minusYears(beforeLastYearMinus).withHour(23).withMinute(59).withSecond(59);
         return u.list(beforeLastYearStart, beforeLastYearEnd);
     }
 
@@ -245,6 +266,7 @@ public static List<LocalDateTime> nextMonth() {
             , u.p("后天", afterTomorrow())
             , u.p("大后天", afterAfterTomorrow())
             , u.p("昨天", yesterday())
+//            , u.p("昨天", minusDays(1))
             , u.p("前天", beforeYesterday())
             , u.p("上个月", lastMonth())
             , u.p("前年", beforeLastYear())
@@ -257,6 +279,27 @@ public static List<LocalDateTime> nextMonth() {
             , u.p("上个年份",lastYear() )
             , u.p("去年",lastYear() )
             , u.p("下个年份",nextYear() )
+            , u.p("三天内",minusDays3() )
+            , u.p("两天内",minusDays(2) )
+            , u.p("两天前",minusDays(2) )
+//            谁出学校 两天前 那一天出去的 不是 两天内
+            , u.p("七天内",minusDays(7 ))
+            , u.p("今天内",todayToNow() )
+//            , u.p("一周内",workdays11())
+//            , u.p("这周",minusWeek(1) )
+            , u.p("这周",thisWeek())
+            , u.p("两周内",weekBefore(1) )
+            , u.p("上上周",weekBefore(2) )
+            , u.p("上个礼拜",weekBefore(1) )
+            , u.p("上礼拜",weekBefore(1) )
+
+            , u.p("上周",weekBefore(1) )
+//            , u.p("两周内",minusWeek(2) )
+            , u.p("2周前",minusWeek(2) )
+            , u.p("两周前",minusWeek(2) )
+//            , u.p("前两周",weekBefore(1) )
+            , u.p("前两周",weekBefore(2) )
+//            , u.p("前两周",minusWeek(2) )
 
 //            上周：lastWeek()
 //            下周：nextWeek()
@@ -272,6 +315,32 @@ public static List<LocalDateTime> nextMonth() {
 
     );
 
+   static   List<LocalDateTime> thisWeek(){
+     return   weekBefore(0);
+//       today()
+//        // 获取当前日期和时间
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        // 获取本周六的日期和时间
+//        LocalDateTime monday = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
+//                .withHour(0).withMinute(0).withSecond(0).withNano(0);
+//        List<LocalDateTime> list = u.list(monday, now);
+//        return list;
+    }
+
+    static   List<LocalDateTime> weekBefore(long weekDiff){
+//       today()
+        // 获取当前日期和时间
+        LocalDateTime now = LocalDateTime.now();
+        // 获取本周六的日期和时间
+        LocalDateTime monday = now
+//                .with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                .minusWeeks(weekDiff)
+                .withHour(0).withMinute(0).withSecond(0).withNano(0);
+        List<LocalDateTime> list = u.list(monday, now);
+        return list;
+    }
 
 //    public static List<LocalDateTime> nextMonth() {
 //        LocalDateTime now = LocalDateTime.now();
@@ -284,21 +353,22 @@ public static List<LocalDateTime> nextMonth() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextWeekStart = now.plusWeeks(1).withHour(0).withMinute(0).withSecond(0);
         LocalDateTime nextWeekEnd = now.plusWeeks(1).plusDays(6).withHour(23).withMinute(59).withSecond(59);
-        return list(nextWeekStart, nextWeekEnd);
+//        return list(nextWeekStart, nextWeekEnd);
+        return u.list(nextWeekStart, nextWeekEnd);
     }
 
     public static List<LocalDateTime> lastWeek() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime lastWeekStart = now.minusWeeks(1).withHour(0).withMinute(0).withSecond(0);
         LocalDateTime lastWeekEnd = now.minusWeeks(1).plusDays(6).withHour(23).withMinute(59).withSecond(59);
-        return list(lastWeekStart, lastWeekEnd);
+        return u.list(lastWeekStart, lastWeekEnd);
     }
 
     public static List<LocalDateTime> previousWeek() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime previousWeekStart = now.minusWeeks(1).withHour(0).withMinute(0).withSecond(0);
         LocalDateTime previousWeekEnd = now.minusWeeks(1).plusDays(6).withHour(23).withMinute(59).withSecond(59);
-        return list(previousWeekStart, previousWeekEnd);
+        return u.list(previousWeekStart, previousWeekEnd);
     }
 
     public static List<LocalDateTime> lastQuarter() {
@@ -307,7 +377,7 @@ public static List<LocalDateTime> nextMonth() {
         int quarterStartMonthValue = ((currentMonth.getValue() - 1) / 3) * 3 + 1;
         LocalDateTime lastQuarterStart = now.withMonth(quarterStartMonthValue).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
         LocalDateTime lastQuarterEnd = lastQuarterStart.plusMonths(3).minusDays(1).withHour(23).withMinute(59).withSecond(59);
-        return list(lastQuarterStart, lastQuarterEnd);
+        return u.list(lastQuarterStart, lastQuarterEnd);
     }
 
     public static List<LocalDateTime> lastYear() {
@@ -324,14 +394,87 @@ public static List<LocalDateTime> nextMonth() {
         return list(nextYearStart, nextYearEnd);
     }
 
-    public static List<LocalDateTime> list(LocalDateTime start, LocalDateTime end) {
-        List<LocalDateTime> dates = new ArrayList<>();
-        LocalDateTime current = start;
-        while (!current.isAfter(end)) {
-            dates.add(current);
-            current = current.plusSeconds(1);
+    public static List<LocalDateTime> minusDays3() {
+       return minusDays(3);
+//        LocalDateTime now = LocalDateTime.now();
+//        return list( now.minusDays(3), now);
+    }
+
+    public static List<LocalDateTime> minusDays(long days ) {
+        LocalDateTime now = LocalDateTime.now();
+        return u.list( now.minusDays(days), now);
+    }
+
+    public static List<LocalDateTime> minusDaysStart0(long days ) {
+        LocalDateTime now = LocalDateTime.now();
+        return u.list(
+                now.minusDays(days).withHour(0).withMinute(0).withSecond(0)
+                , now);
+    }
+ public static String    toBetweenAndSql( List<LocalDateTime> localDateTimes){
+
+       if(localDateTimes.size()==1){
+              LocalDateTime localDateTime = localDateTimes.get(0);
+              return "  = '{fromTime}' "
+                     .replace("{fromTime}",    toMysqlCanDateStr(localDateTime))
+                      ;
+
+       }
+     if (localDateTimes.size()<2) {
+         log.info("localDateTimes");
+         log.info(localDateTimes);
+         Map<String, Object> map = u.mapOf(
+                 u.p("localDateTimes.size()", localDateTimes.size())
+                 , u.p("localDateTimes", localDateTimes)
+         );
+         log.error(map);
+         return null;
+//         throw new RuntimeException("localDateTimes.size()<2");
+     }
+       String tpl= "  BETWEEN '{fromTime}' AND '{toTime}' ";
+      return tpl
+                .replace("{fromTime}",    toMysqlCanDateStr(localDateTimes.get(0)))
+                .replace("{toTime}",    toMysqlCanDateStr(localDateTimes.get(1)));
+    }
+
+    public static List<LocalDateTime> minusWeek(long weeks ) {
+       return minusWeek(weeks,true);
+    }
+    public static List<LocalDateTime> minusWeek(long weeks,boolean start0 ) {
+
+//        LocalDateTime now = LocalDateTime.now();
+////        minusDays.
+////        long weeks
+////        now.minusWeeks(days)
+////        DateTimeParams
+//        return u.list(   now.minusWeeks(weeks), now);
+        if(start0){
+            return    minusWeekStart0(weeks);
         }
-        return dates;
+        return   minusWeekNotStart0(weeks);
+
+    }
+
+    public static List<LocalDateTime> minusWeekNotStart0(long weeks ) {
+        LocalDateTime now = LocalDateTime.now();
+//        now.adjustInto()
+        return u.list(   now.minusWeeks(weeks), now);
+    }
+
+    public static List<LocalDateTime> minusWeekStart0(long weeks ) {
+        LocalDateTime now = LocalDateTime.now();
+        return u.list(   now.minusWeeks(weeks)
+                .withHour(0).withMinute(0).withSecond(0), now);
+    }
+    public static List<LocalDateTime> list(LocalDateTime start, LocalDateTime end) {
+        return u.list(start,end);
+//        List<LocalDateTime> dates = new ArrayList<>();
+//        LocalDateTime current = start;
+//        while (!current.isAfter(end)) {
+//            dates.add(current);
+//            current = current.plusSeconds(1);
+//        }
+//        return dates;
     }
     public static List<LocalDateTime> thisYearRange() {
 
@@ -387,7 +530,27 @@ public static List<LocalDateTime> nextMonth() {
 //        StringUtils.sub
 //        String next = StringUtils.subString(Sentence, idx + 1, 1);
 //        String next = StringUtils.subString(Sentence, idx + 1+ tag.length(), 1);
-        String next = StringUtils.subString(Sentence, idx + tag.length(), 1);
+       int beginIdx= idx + tag.length();
+        int length = Sentence.length();
+        if(beginIdx>=length){
+           Map<String, String> stringStringMap = u.mapOf(
+                   u.p("Sentence", Sentence),
+                   u.p("tag", tag)
+                   ,  u.p(k.msg, "beginIdx>=Sentence.length()")
+                   ,  u.p("beginIdx",""+beginIdx)
+                   ,  u.p("Sentence.length",""+length)
+           );
+//           stringStringMap.toString()
+//           throw new RuntimeException("beginIdx>=Sentence.length()");
+
+//           log.error(stringStringMap);
+           return null;
+//           throw new RuntimeException(   StringUtils.getMapStr(stringStringMap));
+       }
+        String next = StringUtils.subString(Sentence, beginIdx, 1);
+       if(next==null){
+           return null;
+       }
 //        String next = Sentence.substring(idx + 1, 1);
         boolean nextIsBlank = u.list("的", " ").contains(next);
         if(nextIsBlank){

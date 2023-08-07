@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Api(tags = "acc")
 @Transactional
-@CrossOrigin
+//@CrossOrigin
 public class AccController {
 
     @Autowired

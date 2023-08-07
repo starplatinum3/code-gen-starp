@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.util.StrUtil;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,11 +18,149 @@ public class StringUtils {
 //    subString(String  Sentence,int beginIndex,int endIndex){
 //        String next = Sentence.substring( beginIndex,  endIndex);
 //    }
+   public static final Integer notFound=-1;
 
    public static String  subString(String  Sentence,int beginIndex,int len){
-        String next = Sentence.substring( beginIndex,  len+beginIndex);
-        return  next;
+       try{
+           String next = Sentence.substring( beginIndex,  len+beginIndex);
+           return  next;
+       }catch (Exception e){
+//           Map<String, Serializable> stringSerializableMap = u.mapOf(
+//                   u.p("Sentence", Sentence),
+//                   u.p("beginIndex", beginIndex),
+//                   u.p("len", len)
+//                   , u.p("e", e)
+//                   , u.p("Message", e.getMessage())
+//           );
+           log.error(
+                           u.mapOf(
+                                   u.p("Sentence",Sentence),
+                                   u.p("beginIndex",beginIndex),
+                                   u.p("len",len)
+                                   ,u.p("e",e)
+                                   ,u.p("Message",e.getMessage())
+                                   )
+
+                   );
+                   return null;
+//           log.e
+       }
+
     }
+
+
+//    public static List<NumberInfo> extractNumbers(String inputString) {
+//        // 定义中文数字与阿拉伯数字的映射表
+//        Map<String, Integer> chineseToArabic = new HashMap<>();
+//        chineseToArabic.put("一", 1);
+//        chineseToArabic.put("二", 2);
+//        chineseToArabic.put("三", 3);
+//        chineseToArabic.put("四", 4);
+//        chineseToArabic.put("五", 5);
+//        // 可以继续添加其他中文数字及其对应的阿拉伯数字
+//
+//        // 构建正则表达式匹配中文数字的模式
+//        String regexPattern = "(" + String.join("|", chineseToArabic.keySet()) + ")";
+//        Pattern pattern = Pattern.compile(regexPattern);
+//
+//        // 使用Matcher进行匹配
+//        Matcher matcher = pattern.matcher(inputString);
+//        List<NumberInfo> result = new ArrayList<>();
+//        int index = 0;
+//        while (matcher.find()) {
+//            String matched = matcher.group(1);
+//            Integer arabicNumber = chineseToArabic.get(matched);
+//            NumberInfo info = new NumberInfo(matched, arabicNumber, index);
+//            result.add(info);
+//            index++;
+//        }
+//
+//        return result;
+//    }
+
+    public static List<NumberInfo> extractNumbers(String inputString) {
+        // 定义中文数字与阿拉伯数字的映射表
+        Map<String, Integer> chineseToArabic = new HashMap<>();
+//        chineseToArabic.put("一", 1);
+//        chineseToArabic.put("二", 2);
+//        chineseToArabic.put("三", 3);
+//        chineseToArabic.put("四", 4);
+//        chineseToArabic.put("五", 5);
+        // 可以继续添加其他中文数字及其对应的阿拉伯数字
+
+        chineseToArabic.put("零", 0);
+        chineseToArabic.put("一", 1);
+        chineseToArabic.put("二", 2);
+        chineseToArabic.put("三", 3);
+        chineseToArabic.put("四", 4);
+        chineseToArabic.put("五", 5);
+        chineseToArabic.put("六", 6);
+        chineseToArabic.put("七", 7);
+        chineseToArabic.put("八", 8);
+        chineseToArabic.put("九", 9);
+        chineseToArabic.put("十", 10);
+        chineseToArabic.put("百", 100);
+        chineseToArabic.put("千", 1000);
+        chineseToArabic.put("万", 10000);
+        chineseToArabic.put("亿", 100000000);
+
+        // 构建正则表达式匹配中文数字的模式
+        String regexPattern = "(" + String.join("|", chineseToArabic.keySet()) + ")";
+        Pattern pattern = Pattern.compile(regexPattern);
+
+        // 使用Matcher进行匹配
+        Matcher matcher = pattern.matcher(inputString);
+        List<NumberInfo> result = new ArrayList<>();
+        int lastIndex = 0;
+        while (matcher.find()) {
+            int start = matcher.start(1);
+            int end = matcher.end(1);
+            String matched = matcher.group(1);
+            Integer arabicNumber = chineseToArabic.get(matched);
+            NumberInfo info = new NumberInfo(matched, arabicNumber, start, end);
+            result.add(info);
+            lastIndex = end;
+        }
+
+        // 处理剩余部分（数字后面的内容）
+        if (lastIndex < inputString.length()) {
+            String remainingText = inputString.substring(lastIndex);
+            NumberInfo remainingInfo = new NumberInfo(remainingText, -1, lastIndex, inputString.length());
+            result.add(remainingInfo);
+        }
+
+        return result;
+    }
+
+
+
+    public static String convertChineseToArabic(String inputString) {
+        // 定义中文数字与阿拉伯数字的映射表
+        Map<String, Integer> chineseToArabic = new HashMap<>();
+        chineseToArabic.put("一", 1);
+        chineseToArabic.put("二", 2);
+        chineseToArabic.put("三", 3);
+        chineseToArabic.put("四", 4);
+        chineseToArabic.put("五", 5);
+        // 可以继续添加其他中文数字及其对应的阿拉伯数字
+
+        // 构建正则表达式匹配中文数字的模式
+        String regexPattern = "(" + String.join("|", chineseToArabic.keySet()) + ")";
+        Pattern pattern = Pattern.compile(regexPattern);
+
+        // 使用Matcher进行匹配和替换
+        Matcher matcher = pattern.matcher(inputString);
+        StringBuffer result = new StringBuffer();
+        while (matcher.find()) {
+            String matched = matcher.group(1);
+            Integer arabicNumber = chineseToArabic.get(matched);
+            matcher.appendReplacement(result, String.valueOf(arabicNumber));
+        }
+        matcher.appendTail(result);
+
+        return result.toString();
+    }
+
     public  static  <T> void printList(List<T> list){
         for (T elm : list) {
 //            if (elm instanceof Map) {
@@ -281,6 +420,15 @@ public class StringUtils {
 
     public static String like(Object object) {
         return " '%" + object + "%' ";
+    }
+
+
+    // 将字符串首字母大写
+    private static String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return Character.toUpperCase(str.charAt(0)) + (str.length() > 1 ? str.substring(1) : "");
     }
 
     //首字母大写

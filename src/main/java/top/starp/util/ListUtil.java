@@ -6,6 +6,27 @@ import java.util.*;
 
 public class ListUtil {
 
+    public static Long sum(List<Integer> numbers) {
+        long sum=0;
+        for (Integer number : numbers) {
+            sum+=number;
+        }
+        return  sum;
+    }
+
+    public static List<Integer> generateRandomList(int size, int minValue, int maxValue) {
+        List<Integer> list = new ArrayList<>();
+
+        Random random = new Random();
+
+        for (int i = 0; i < size; i++) {
+            int randomNumber = random.nextInt(maxValue - minValue + 1) + minValue;
+            list.add(randomNumber);
+        }
+
+        return list;
+    }
+
     public static Map<String, List<HashMap<String, Object>>>
     groupByHashMap(List<HashMap<String, Object>> records, String groupByName) {
         // 创建一个用于存储分组后记录的Map

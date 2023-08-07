@@ -28,7 +28,7 @@ import java.util.Optional;
 @Slf4j
 @Api(tags = "hum")
 @Transactional
-@CrossOrigin
+//@CrossOrigin
 
 public class HumController {
 

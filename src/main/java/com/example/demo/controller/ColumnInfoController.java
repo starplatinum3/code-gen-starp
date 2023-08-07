@@ -36,7 +36,7 @@ import javax.persistence.criteria.Predicate;
 @Slf4j
 @Api(tags = "columnInfo")
 //@CrossOrigin
-@CrossOrigin(allowCredentials = "true")
+//@CrossOrigin(allowCredentials = "true")
 @RestController
 //@RequestMapping("/columnInfo")
 @RequestMapping("/api/columnInfo")

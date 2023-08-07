@@ -6,6 +6,7 @@ import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MongoUtil {
    public  static   List<Map> countField(MongoReq mongoReq,MongoTemplate mongoTemplate){
@@ -43,7 +45,8 @@ public class MongoUtil {
 
     public static Update getUpdate(MongoReq mongoReq) {
 //        Update update = new Update();
-        Map<String, Object> updateMap = mongoReq.getUpdateMap();
+//        Map<String, Object> updateMap = mongoReq.getUpdateMap();
+        Map<String, Object> updateMap = mongoReq.getData();
 //        for (Map.Entry<String, Object> stringObjectEntry : updateMap.entrySet()) {
 //            Object value = stringObjectEntry.getValue();
 ////          Object value1 = stringObjectEntry.getValue();
@@ -90,7 +93,8 @@ public class MongoUtil {
 
 //        page()
 // Perform the update operation for multiple documents
-        UpdateResult updateResult = mongoTemplate.updateMulti(query, update, entityClass);
+        UpdateResult updateResult = mongoTemplate.updateMulti(query, update
+                , entityClass, mongoReq.getCollectionName());
         return updateResult;
     }
 
@@ -487,11 +491,78 @@ public class MongoUtil {
         return MongoUtil.find(mongoReq, mongoTemplate, query);
     }
 
+    public static List<Map> find(MongoReq mongoReq, MongoTemplate mongoTemplate, String collectionName) {
+        try {
+            //        mongoTemplate.update()
+            Query query = MongoUtil.getQuery(mongoReq);
+
+//            List<Map<?,?>> maps = MongoUtil.find(mongoReq, mongoTemplate, query, Map.class, collectionName);
+//            List<Map<?,?>> maps = MongoUtil.find(mongoReq, mongoTemplate, query, Map<>.class, collectionName);
+//            List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate, query, Map.class, collectionName);
+//            List<Map<String, Object>> maps = mongoTemplate.find(query, Map.class, collectionName);
+
+
+            List<Map> maps = mongoTemplate.find(query, Map.class, collectionName);
+//            List<Map> maps1 = mongoTemplate.find(query, Map<String, Object>.class, collectionName);
+
+//            List<Map<String, Object>> maps = mongoTemplate.query(query
+//                    , new ParameterizedTypeReference<List<Map<String, Object>>>() {}, collectionName);
+
+
+//            List<Map<String, Object>> maps = mongoTemplate.find(query
+//                    , new ParameterizedTypeReference<List<Map<String, Object>>>() {}, collectionName);
+
+
+
+            for (Map map : maps) {
+                ObjectId id =  (ObjectId) map.get("_id");
+                String idStr = id.toString();
+                map.put("id", idStr);
+//                map.put("id", map.get("_id"));
+            }
+
+//            List<Map<String, Object>> maps = mongoTemplate.find(query, Document.class, collectionName)
+//                    .stream()
+//                    .map(Document::toMap)
+//                    .collect(Collectors.toList());
+
+
+            return  maps;
+//            List<Document> documents = MongoUtil.find(mongoReq, mongoTemplate, query, Document.class, collectionName);
+//            for (Document document : documents) {
+//                ObjectId id = (ObjectId) document.get("_id");
+//                String idStr = id.toString();
+//                document.put("id", idStr);
+//            }
+
+//            return documents;
+        } catch (Exception e) {
+//            String collectionName = mongoReq.getCollectionName();
+            String message = e.getMessage();
+//            "Couldn't find PersistentEntity".con
+//            message null
+            if (message != null && message.contains("Couldn't find PersistentEntity")) {
+//                throw new
+                StringUtils.printException(e);
+                LogUtil.error("没有指定数据库名字  查看 collectionName " + collectionName);
+            }
+            return null;
+
+        }
+
+    }
 
     public static List<Document> findDocuments(MongoReq mongoReq, MongoTemplate mongoTemplate, String collectionName) {
         try {
             //        mongoTemplate.update()
             Query query = MongoUtil.getQuery(mongoReq);
+
+//            List<Map<?,?>> maps = MongoUtil.find(mongoReq, mongoTemplate, query, Map.class, collectionName);
+//            List<Map<?,?>> maps = MongoUtil.find(mongoReq, mongoTemplate, query, Map<>.class, collectionName);
+//            List<Map> maps = MongoUtil.find(mongoReq, mongoTemplate, query, Map.class, collectionName);
+//            for (Map map : maps) {
+//                map.put("id", map.get("_id"));
+//            }
 
             List<Document> documents = MongoUtil.find(mongoReq, mongoTemplate, query, Document.class, collectionName);
             for (Document document : documents) {
@@ -499,6 +570,10 @@ public class MongoUtil {
                 String idStr = id.toString();
                 document.put("id", idStr);
             }
+
+//            documents.stream().map(o->{
+//                o.to/
+//            })
 
             return documents;
         } catch (Exception e) {
@@ -559,7 +634,15 @@ public class MongoUtil {
     }
 
 
-
+    /**
+     *  if (key.equals("_id")) {
+     *                     query.addCriteria(
+     *                             Criteria.where(key).ne(
+     *                                     new ObjectId((String) value)
+     *                             )
+     * @param mongoReq
+     * @return
+     */
     public static Query getQuery(MongoReq mongoReq) {
         Query query = new Query();
 
@@ -674,7 +757,8 @@ public class MongoUtil {
 
 //        Integer pageNumberOrDefault = mongoReq.getPageNumberOrDefault();
 //        int  pageNumber =    mongoReq.getPageNumber()==null?1:mongoReq.getPageNumber();
-        Integer pageNumber = mongoReq.getPageNumberOrDefault();
+//        Integer pageNumber = mongoReq.getPageNumberOrDefault();
+        Integer pageNumber = mongoReq.getPageNumberOrDefaultPageReq();
 //        int pageNumber = mongoReq.getPageNumber() == null ? 0 : mongoReq.getPageNumber();
 //        int  pageNumber =    mongoReq.getPageNumber()==null?1:mongoReq.getPageNumber();
         int pageSize = mongoReq.getPageSize() == null ? 10 : mongoReq.getPageSize();

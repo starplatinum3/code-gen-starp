@@ -51,6 +51,7 @@ public class GeoReq {
 //        https://example.com/api/users?city=New+York&name=John+Doe&age=30
        String url = URLBuilder.buildURL("https://restapi.amap.com/v3/place/text", params);
 
+//       HttpUtil
 //       java 拼接 url 参数 路径
 //       String tpl=
 //    "https://restapi.amap.com/v3/place/text?keywords={keywords}&city={city}&offset={offset}&page={page}&key={key}&extensions=all";

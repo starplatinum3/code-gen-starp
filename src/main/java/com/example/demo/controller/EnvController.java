@@ -34,7 +34,7 @@ import javax.persistence.criteria.Predicate;
 @Slf4j
 @Api(tags = "env")
 //@CrossOrigin
-@CrossOrigin(allowCredentials = "true")
+//@CrossOrigin(allowCredentials = "true")
 @RestController
 //@RequestMapping("/env")
 @RequestMapping("/api/env")

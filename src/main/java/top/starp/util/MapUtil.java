@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
 
 public class MapUtil {
 
+    public static Map<?,?>  getMap( Map<?,?> mapNoType,String  key){
+        Map<?,?> data= (Map<?,?>)  mapNoType.get(key);
+        return  data;
+    }
     public static <T> void modifyMapList(List<Map<String, Object>> mapList, MapFunction<T> func, T... args) {
         for (Map<String, Object> map : mapList) {
             func.apply(map, args);

@@ -6,11 +6,25 @@ import java.util.Map;
 
 public class URLBuilder {
 
+    /**
+     * Map<String, String> params null 可以的
+     * @param baseUrl
+     * @param params
+     * @return
+     */
     public static String buildURL(String baseUrl, Map<String, String> params) {
 //      return   buildURL(baseUrl,"/",params);
       return   buildURL(baseUrl,"",params);
 
     }
+
+    /**
+     * Map<String, String> params null 可以的
+     * @param baseUrl
+     * @param path
+     * @param params
+     * @return
+     */
     public static String buildURL(String baseUrl, String path, Map<String, String> params) {
         StringBuilder urlBuilder = new StringBuilder(baseUrl);
         urlBuilder.append(path);
